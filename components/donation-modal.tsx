@@ -79,7 +79,7 @@ export default function DonationModal({
       } Support: ${title}`;
 
       const apiKey = process.env.NEXT_PUBLIC_PAYMENT_API_KEY;
-      const paymentGatewayUrl = "http://localhost:8080/api/payment";
+      const paymentGatewayUrl = "/api/payment";
 
       const response = await fetch(paymentGatewayUrl, {
         method: "POST",
