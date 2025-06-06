@@ -1,38 +1,42 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Heart, Users, ArrowRight, CheckCircle, Calendar } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import DonationModal from "@/components/donation-modal"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Heart, Users, ArrowRight, CheckCircle, Calendar } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import DonationModal from "@/components/donation-modal";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 
 export default function PartnershipPage() {
   const [donationModal, setDonationModal] = useState<{
-    isOpen: boolean
-    type: "project" | "missionary"
-    title: string
-    description?: string
+    isOpen: boolean;
+    type: "project" | "missionary";
+    title: string;
+    description?: string;
   }>({
     isOpen: false,
     type: "missionary",
     title: "",
     description: "",
-  })
+  });
 
-  const openDonationModal = (type: "project" | "missionary", title: string, description?: string) => {
+  const openDonationModal = (
+    type: "project" | "missionary",
+    title: string,
+    description?: string,
+  ) => {
     setDonationModal({
       isOpen: true,
       type,
       title,
       description,
-    })
-  }
+    });
+  };
 
   const closeDonationModal = () => {
     setDonationModal({
@@ -40,8 +44,8 @@ export default function PartnershipPage() {
       type: "missionary",
       title: "",
       description: "",
-    })
-  }
+    });
+  };
 
   const partnershipLevels = [
     {
@@ -103,7 +107,7 @@ export default function PartnershipPage() {
       color: "bg-purple-50 border-purple-200",
       buttonColor: "bg-purple-600 hover:bg-purple-700",
     },
-  ]
+  ];
 
   const partnerStories = [
     {
@@ -130,7 +134,7 @@ export default function PartnershipPage() {
         "Our partnership with Samuel and Ruth Girma has become like supporting family. We pray for them daily, support their education work monthly, and have developed a deep friendship. It's partnership in the truest sense.",
       missionary: "Samuel & Ruth Girma",
     },
-  ]
+  ];
 
   const faqItems = [
     {
@@ -163,13 +167,17 @@ export default function PartnershipPage() {
       answer:
         "Communication varies by partnership level. All partners receive monthly updates. Higher-level partners have opportunities for direct communication through calls, emails, and video chats with their supported missionaries.",
     },
-  ]
+  ];
 
   const impactStats = [
     { label: "Active Monthly Partners", value: "847", icon: Users },
     { label: "Years of Average Partnership", value: "3.2", icon: Calendar },
-    { label: "Lives Transformed Through Partnership", value: "12,500+", icon: Heart },
-  ]
+    {
+      label: "Lives Transformed Through Partnership",
+      value: "12,500+",
+      icon: Heart,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -185,8 +193,9 @@ export default function PartnershipPage() {
               <span className="text-amber-200">Mission Partner</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-amber-100">
-              Join hundreds of faithful partners who are transforming Ethiopia through consistent support of our
-              missionaries. Your partnership creates lasting impact that extends far beyond financial support.
+              Join hundreds of faithful partners who are transforming Ethiopia
+              through consistent support of our missionaries. Your partnership
+              creates lasting impact that extends far beyond financial support.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -220,24 +229,29 @@ export default function PartnershipPage() {
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">Partnership Impact</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
+                Partnership Impact
+              </h2>
               <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-                See how our community of partners is making a difference across Ethiopia
+                See how our community of partners is making a difference across
+                Ethiopia
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               {impactStats.map((stat, index) => {
-                const IconComponent = stat.icon
+                const IconComponent = stat.icon;
                 return (
                   <div key={index} className="text-center">
                     <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <IconComponent className="w-8 h-8 text-amber-600" />
                     </div>
-                    <div className="text-3xl font-bold text-stone-800 mb-2">{stat.value}</div>
+                    <div className="text-3xl font-bold text-stone-800 mb-2">
+                      {stat.value}
+                    </div>
                     <div className="text-stone-600">{stat.label}</div>
                   </div>
-                )
+                );
               })}
             </div>
           </div>
@@ -247,10 +261,12 @@ export default function PartnershipPage() {
         <section id="partnership-levels" className="py-16 bg-stone-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">Partnership Levels</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
+                Partnership Levels
+              </h2>
               <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-                Choose the level of partnership that fits your heart and capacity. Every level makes a meaningful
-                difference.
+                Choose the level of partnership that fits your heart and
+                capacity. Every level makes a meaningful difference.
               </p>
             </div>
 
@@ -266,14 +282,23 @@ export default function PartnershipPage() {
                     </div>
                   )}
                   <CardHeader className="text-center pb-4">
-                    <CardTitle className="text-xl text-stone-800 mb-2">{level.name}</CardTitle>
-                    <div className="text-2xl font-bold text-stone-800 mb-2">{level.amount}</div>
-                    <p className="text-stone-600 text-sm">{level.description}</p>
+                    <CardTitle className="text-xl text-stone-800 mb-2">
+                      {level.name}
+                    </CardTitle>
+                    <div className="text-2xl font-bold text-stone-800 mb-2">
+                      {level.amount}
+                    </div>
+                    <p className="text-stone-600 text-sm">
+                      {level.description}
+                    </p>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 mb-6">
                       {level.benefits.map((benefit, benefitIndex) => (
-                        <li key={benefitIndex} className="flex items-start text-sm">
+                        <li
+                          key={benefitIndex}
+                          className="flex items-start text-sm"
+                        >
                           <CheckCircle className="w-4 h-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
                           <span className="text-stone-700">{benefit}</span>
                         </li>
@@ -281,9 +306,17 @@ export default function PartnershipPage() {
                     </ul>
                     <Button
                       className={`w-full text-white ${level.buttonColor}`}
-                      onClick={() => openDonationModal("missionary", `${level.name} Partnership`, level.description)}
+                      onClick={() =>
+                        openDonationModal(
+                          "missionary",
+                          `${level.name} Partnership`,
+                          level.description,
+                        )
+                      }
                     >
-                      {level.name === "Prayer Partner" ? "Join as Prayer Partner" : "Start Partnership"}
+                      {level.name === "Prayer Partner"
+                        ? "Join as Prayer Partner"
+                        : "Start Partnership"}
                     </Button>
                   </CardContent>
                 </Card>
@@ -297,10 +330,13 @@ export default function PartnershipPage() {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">Why Partnership Matters</h2>
+                <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
+                  Why Partnership Matters
+                </h2>
                 <p className="text-xl text-stone-600">
-                  Monthly partnership provides the stability and consistency that enables missionaries to focus on
-                  ministry rather than fundraising.
+                  Monthly partnership provides the stability and consistency
+                  that enables missionaries to focus on ministry rather than
+                  fundraising.
                 </p>
               </div>
 
@@ -317,25 +353,29 @@ export default function PartnershipPage() {
                       <li className="flex items-start">
                         <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
-                          Predictable income allows focus on ministry instead of constant fundraising
+                          Predictable income allows focus on ministry instead of
+                          constant fundraising
                         </span>
                       </li>
                       <li className="flex items-start">
                         <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
-                          Knowing they have faithful partners provides emotional and spiritual encouragement
+                          Knowing they have faithful partners provides emotional
+                          and spiritual encouragement
                         </span>
                       </li>
                       <li className="flex items-start">
                         <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
-                          Consistent support enables long-term planning and sustainable ministry development
+                          Consistent support enables long-term planning and
+                          sustainable ministry development
                         </span>
                       </li>
                       <li className="flex items-start">
                         <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
-                          Partnership creates accountability and motivation for excellence in ministry
+                          Partnership creates accountability and motivation for
+                          excellence in ministry
                         </span>
                       </li>
                     </ul>
@@ -354,25 +394,29 @@ export default function PartnershipPage() {
                       <li className="flex items-start">
                         <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
-                          Regular updates show exactly how your investment is transforming lives
+                          Regular updates show exactly how your investment is
+                          transforming lives
                         </span>
                       </li>
                       <li className="flex items-start">
                         <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
-                          Personal relationships develop with missionaries through ongoing communication
+                          Personal relationships develop with missionaries
+                          through ongoing communication
                         </span>
                       </li>
                       <li className="flex items-start">
                         <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
-                          Automatic giving makes consistent generosity simple and sustainable
+                          Automatic giving makes consistent generosity simple
+                          and sustainable
                         </span>
                       </li>
                       <li className="flex items-start">
                         <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
-                          Being part of a community of partners provides encouragement and shared purpose
+                          Being part of a community of partners provides
+                          encouragement and shared purpose
                         </span>
                       </li>
                     </ul>
@@ -387,16 +431,21 @@ export default function PartnershipPage() {
         <section className="py-16 bg-stone-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">Partner Stories</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
+                Partner Stories
+              </h2>
               <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-                Hear from faithful partners about how missionary partnership has enriched their lives and expanded their
-                impact.
+                Hear from faithful partners about how missionary partnership has
+                enriched their lives and expanded their impact.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {partnerStories.map((story, index) => (
-                <Card key={index} className="bg-white border-stone-200 hover:shadow-lg transition-shadow duration-300">
+                <Card
+                  key={index}
+                  className="bg-white border-stone-200 hover:shadow-lg transition-shadow duration-300"
+                >
                   <CardHeader className="text-center">
                     <div className="relative w-20 h-20 mx-auto mb-4">
                       <Image
@@ -406,8 +455,13 @@ export default function PartnershipPage() {
                         className="object-cover rounded-full"
                       />
                     </div>
-                    <CardTitle className="text-lg text-stone-800">{story.name}</CardTitle>
-                    <Badge variant="secondary" className="bg-amber-100 text-amber-800">
+                    <CardTitle className="text-lg text-stone-800">
+                      {story.name}
+                    </CardTitle>
+                    <Badge
+                      variant="secondary"
+                      className="bg-amber-100 text-amber-800"
+                    >
                       {story.partnership}
                     </Badge>
                   </CardHeader>
@@ -429,9 +483,12 @@ export default function PartnershipPage() {
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">How Partnership Works</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
+                How Partnership Works
+              </h2>
               <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-                Starting your partnership is simple. Here's how to begin your journey of transformational giving.
+                Starting your partnership is simple. Here's how to begin your
+                journey of transformational giving.
               </p>
             </div>
 
@@ -441,36 +498,48 @@ export default function PartnershipPage() {
                   <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
                     1
                   </div>
-                  <h3 className="text-lg font-semibold text-stone-800 mb-2">Choose Your Level</h3>
+                  <h3 className="text-lg font-semibold text-stone-800 mb-2">
+                    Choose Your Level
+                  </h3>
                   <p className="text-stone-600 text-sm">
-                    Select the partnership level that matches your heart and capacity for giving.
+                    Select the partnership level that matches your heart and
+                    capacity for giving.
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
                     2
                   </div>
-                  <h3 className="text-lg font-semibold text-stone-800 mb-2">Select Missionaries</h3>
+                  <h3 className="text-lg font-semibold text-stone-800 mb-2">
+                    Select Missionaries
+                  </h3>
                   <p className="text-stone-600 text-sm">
-                    Choose specific missionaries to support or let us match you with those who need partners.
+                    Choose specific missionaries to support or let us match you
+                    with those who need partners.
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
                     3
                   </div>
-                  <h3 className="text-lg font-semibold text-stone-800 mb-2">Set Up Giving</h3>
+                  <h3 className="text-lg font-semibold text-stone-800 mb-2">
+                    Set Up Giving
+                  </h3>
                   <p className="text-stone-600 text-sm">
-                    Establish automatic monthly giving through our secure donation system.
+                    Establish automatic monthly giving through our secure
+                    donation system.
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
                     4
                   </div>
-                  <h3 className="text-lg font-semibold text-stone-800 mb-2">Stay Connected</h3>
+                  <h3 className="text-lg font-semibold text-stone-800 mb-2">
+                    Stay Connected
+                  </h3>
                   <p className="text-stone-600 text-sm">
-                    Receive regular updates and build relationships with your supported missionaries.
+                    Receive regular updates and build relationships with your
+                    supported missionaries.
                   </p>
                 </div>
               </div>
@@ -482,9 +551,12 @@ export default function PartnershipPage() {
         <section className="py-16 bg-stone-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">Frequently Asked Questions</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
+                Frequently Asked Questions
+              </h2>
               <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-                Get answers to common questions about missionary partnership and how it works.
+                Get answers to common questions about missionary partnership and
+                how it works.
               </p>
             </div>
 
@@ -499,7 +571,9 @@ export default function PartnershipPage() {
                   {faqItems.slice(0, 2).map((item, index) => (
                     <Card key={index} className="bg-white border-stone-200">
                       <CardHeader>
-                        <CardTitle className="text-lg text-stone-800">{item.question}</CardTitle>
+                        <CardTitle className="text-lg text-stone-800">
+                          {item.question}
+                        </CardTitle>
                       </CardHeader>
                       <CardContent>
                         <p className="text-stone-700">{item.answer}</p>
@@ -511,7 +585,9 @@ export default function PartnershipPage() {
                   {faqItems.slice(2, 4).map((item, index) => (
                     <Card key={index} className="bg-white border-stone-200">
                       <CardHeader>
-                        <CardTitle className="text-lg text-stone-800">{item.question}</CardTitle>
+                        <CardTitle className="text-lg text-stone-800">
+                          {item.question}
+                        </CardTitle>
                       </CardHeader>
                       <CardContent>
                         <p className="text-stone-700">{item.answer}</p>
@@ -523,7 +599,9 @@ export default function PartnershipPage() {
                   {faqItems.slice(4, 6).map((item, index) => (
                     <Card key={index} className="bg-white border-stone-200">
                       <CardHeader>
-                        <CardTitle className="text-lg text-stone-800">{item.question}</CardTitle>
+                        <CardTitle className="text-lg text-stone-800">
+                          {item.question}
+                        </CardTitle>
                       </CardHeader>
                       <CardContent>
                         <p className="text-stone-700">{item.answer}</p>
@@ -539,10 +617,13 @@ export default function PartnershipPage() {
         {/* Call to Action */}
         <section className="py-16 bg-amber-600">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Start Your Partnership?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Ready to Start Your Partnership?
+            </h2>
             <p className="text-xl text-amber-100 mb-8 max-w-2xl mx-auto">
-              Join hundreds of faithful partners who are transforming Ethiopia through consistent support of our
-              missionaries. Your partnership creates lasting impact that extends far beyond financial support.
+              Join hundreds of faithful partners who are transforming Ethiopia
+              through consistent support of our missionaries. Your partnership
+              creates lasting impact that extends far beyond financial support.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -584,5 +665,5 @@ export default function PartnershipPage() {
         description={donationModal.description}
       />
     </div>
-  )
+  );
 }

@@ -1,18 +1,25 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Heart, Calendar, MapPin, Users, Send, ChurchIcon as Praying } from "lucide-react"
-import Link from "next/link"
-import Footer from "@/components/footer"
-import Header from "@/components/header"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Heart,
+  Calendar,
+  MapPin,
+  Users,
+  Send,
+  ChurchIcon as Praying,
+} from "lucide-react";
+import Link from "next/link";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
 
 export default function PrayerRequestsPage() {
   const [prayerForm, setPrayerForm] = useState({
@@ -20,28 +27,31 @@ export default function PrayerRequestsPage() {
     email: "",
     request: "",
     isPublic: false,
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value, type } = e.target;
     setPrayerForm((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
-    }))
-  }
+      [name]:
+        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
 
     // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    setIsSubmitting(false)
-    setIsSubmitted(true)
-  }
+    setIsSubmitting(false);
+    setIsSubmitted(true);
+  };
 
   const currentRequests = [
     {
@@ -110,13 +120,13 @@ export default function PrayerRequestsPage() {
         "We're training 15 new church leaders. Pray for their spiritual growth, wisdom in leadership, and for the churches they will shepherd.",
       category: "Leadership",
     },
-  ]
+  ];
 
   const prayerStats = [
     { label: "Active Prayer Warriors", value: "1,247", icon: Users },
     { label: "Prayer Requests This Month", value: "89", icon: Praying },
     { label: "Answered Prayers Reported", value: "156", icon: Heart },
-  ]
+  ];
 
   if (isSubmitted) {
     return (
@@ -126,28 +136,33 @@ export default function PrayerRequestsPage() {
             <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
               <Praying className="w-8 h-8 text-primary-600" />
             </div>
-            <CardTitle className="text-2xl text-stone-800">Prayer Request Received</CardTitle>
+            <CardTitle className="text-2xl text-stone-800">
+              Prayer Request Received
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-stone-600 mb-6">
-              Thank you for sharing your prayer request. Our prayer team will be lifting this up in prayer, and you'll
-              receive updates on how God is working.
+              Thank you for sharing your prayer request. Our prayer team will be
+              lifting this up in prayer, and you'll receive updates on how God
+              is working.
             </p>
             <div className="space-y-3">
               <Link href="/prayer-requests">
-                <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">View Prayer Requests</Button>
+                <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">
+                  View Prayer Requests
+                </Button>
               </Link>
               <Button
                 variant="outline"
                 className="w-full"
                 onClick={() => {
-                  setIsSubmitted(false)
+                  setIsSubmitted(false);
                   setPrayerForm({
                     name: "",
                     email: "",
                     request: "",
                     isPublic: false,
-                  })
+                  });
                 }}
               >
                 Submit Another Request
@@ -156,7 +171,7 @@ export default function PrayerRequestsPage() {
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
 
   return (
@@ -167,26 +182,31 @@ export default function PrayerRequestsPage() {
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h1 className="text-4xl md:text-5xl font-bold text-stone-800 mb-4">Prayer Requests</h1>
+              <h1 className="text-4xl md:text-5xl font-bold text-stone-800 mb-4">
+                Prayer Requests
+              </h1>
               <p className="text-xl text-stone-600 max-w-3xl mx-auto">
-                Join our community of prayer warriors in lifting up our missionaries and the communities they serve
-                across Ethiopia. Your prayers make a real difference.
+                Join our community of prayer warriors in lifting up our
+                missionaries and the communities they serve across Ethiopia.
+                Your prayers make a real difference.
               </p>
             </div>
 
             {/* Prayer Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               {prayerStats.map((stat, index) => {
-                const IconComponent = stat.icon
+                const IconComponent = stat.icon;
                 return (
                   <div key={index} className="text-center">
                     <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                       <IconComponent className="w-8 h-8 text-primary-600" />
                     </div>
-                    <div className="text-3xl font-bold text-stone-800 mb-2">{stat.value}</div>
+                    <div className="text-3xl font-bold text-stone-800 mb-2">
+                      {stat.value}
+                    </div>
                     <div className="text-stone-600">{stat.label}</div>
                   </div>
-                )
+                );
               })}
             </div>
           </div>
@@ -196,9 +216,12 @@ export default function PrayerRequestsPage() {
         <section className="py-16 bg-stone-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">Current Prayer Requests</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
+                Current Prayer Requests
+              </h2>
               <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-                These are the most recent prayer requests from our missionaries and the communities they serve.
+                These are the most recent prayer requests from our missionaries
+                and the communities they serve.
               </p>
             </div>
 
@@ -223,11 +246,16 @@ export default function PrayerRequestsPage() {
                       >
                         {request.urgency}
                       </Badge>
-                      <Badge variant="secondary" className="bg-stone-100 text-stone-700">
+                      <Badge
+                        variant="secondary"
+                        className="bg-stone-100 text-stone-700"
+                      >
                         {request.category}
                       </Badge>
                     </div>
-                    <CardTitle className="text-lg text-stone-800">{request.title}</CardTitle>
+                    <CardTitle className="text-lg text-stone-800">
+                      {request.title}
+                    </CardTitle>
                     <div className="space-y-1 text-sm text-stone-600">
                       <div className="flex items-center">
                         <Users className="w-4 h-4 mr-2" />
@@ -244,7 +272,9 @@ export default function PrayerRequestsPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-stone-700 text-sm leading-relaxed">{request.description}</p>
+                    <p className="text-stone-700 text-sm leading-relaxed">
+                      {request.description}
+                    </p>
                   </CardContent>
                 </Card>
               ))}
@@ -257,21 +287,29 @@ export default function PrayerRequestsPage() {
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto">
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-stone-800 mb-4">Submit a Prayer Request</h2>
+                <h2 className="text-3xl font-bold text-stone-800 mb-4">
+                  Submit a Prayer Request
+                </h2>
                 <p className="text-xl text-stone-600">
-                  Share your prayer needs with our community. We believe in the power of united prayer.
+                  Share your prayer needs with our community. We believe in the
+                  power of united prayer.
                 </p>
               </div>
 
               <Card className="bg-stone-50 border-stone-200">
                 <CardHeader>
-                  <CardTitle className="text-xl text-stone-800 text-center">Prayer Request Form</CardTitle>
+                  <CardTitle className="text-xl text-stone-800 text-center">
+                    Prayer Request Form
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="name" className="text-stone-700 mb-2 block">
+                        <Label
+                          htmlFor="name"
+                          className="text-stone-700 mb-2 block"
+                        >
                           Your Name
                         </Label>
                         <Input
@@ -285,7 +323,10 @@ export default function PrayerRequestsPage() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="email" className="text-stone-700 mb-2 block">
+                        <Label
+                          htmlFor="email"
+                          className="text-stone-700 mb-2 block"
+                        >
                           Email Address
                         </Label>
                         <Input
@@ -301,7 +342,10 @@ export default function PrayerRequestsPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="request" className="text-stone-700 mb-2 block">
+                      <Label
+                        htmlFor="request"
+                        className="text-stone-700 mb-2 block"
+                      >
                         Prayer Request *
                       </Label>
                       <Textarea
@@ -324,8 +368,12 @@ export default function PrayerRequestsPage() {
                         onChange={handleInputChange}
                         className="rounded border-stone-300 text-primary-600 focus:ring-primary-600"
                       />
-                      <Label htmlFor="isPublic" className="text-stone-700 text-sm">
-                        I'm comfortable with this request being shared publicly (anonymously) to encourage others
+                      <Label
+                        htmlFor="isPublic"
+                        className="text-stone-700 text-sm"
+                      >
+                        I'm comfortable with this request being shared publicly
+                        (anonymously) to encourage others
                       </Label>
                     </div>
 
@@ -347,13 +395,19 @@ export default function PrayerRequestsPage() {
         {/* Prayer Community */}
         <section className="py-16 bg-gradient-to-r from-primary-500 to-primary-600">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Join Our Prayer Community</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Join Our Prayer Community
+            </h2>
             <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-              Receive weekly prayer updates and join thousands of believers praying for Ethiopia's transformation.
+              Receive weekly prayer updates and join thousands of believers
+              praying for Ethiopia's transformation.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/newsletter">
-                <Button size="lg" className="bg-white text-primary-600 hover:bg-neutral-50 px-8 py-3 text-lg shadow-lg">
+                <Button
+                  size="lg"
+                  className="bg-white text-primary-600 hover:bg-neutral-50 px-8 py-3 text-lg shadow-lg"
+                >
                   Subscribe to Prayer Updates
                 </Button>
               </Link>
@@ -372,5 +426,5 @@ export default function PrayerRequestsPage() {
       </div>
       <Footer />
     </div>
-  )
+  );
 }

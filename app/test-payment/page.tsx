@@ -1,25 +1,31 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { toast } from 'sonner';
-import { ExternalLink } from 'lucide-react';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { ExternalLink } from "lucide-react";
 
 export default function TestPaymentPage() {
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<any>(null);
 
   const handleTestPayment = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/test-payment', {
-        method: 'POST',
+      const response = await fetch("/api/test-payment", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ amount: parseFloat(amount) }),
       });
@@ -28,13 +34,13 @@ export default function TestPaymentPage() {
       setResponse(data);
 
       if (response.ok) {
-        toast.success('Payment URL generated successfully');
+        toast.success("Payment URL generated successfully");
       } else {
-        toast.error(data.message || 'Payment test failed');
+        toast.error(data.message || "Payment test failed");
       }
     } catch (error) {
-      console.error('Error testing payment:', error);
-      toast.error('An error occurred while testing payment');
+      console.error("Error testing payment:", error);
+      toast.error("An error occurred while testing payment");
     } finally {
       setLoading(false);
     }
@@ -42,7 +48,7 @@ export default function TestPaymentPage() {
 
   const handleProceedToPayment = () => {
     if (response?.paymentUrl) {
-      window.open(response.paymentUrl, '_blank');
+      window.open(response.paymentUrl, "_blank");
     }
   };
 
@@ -74,7 +80,7 @@ export default function TestPaymentPage() {
               disabled={loading || !amount}
               className="w-full"
             >
-              {loading ? 'Generating Payment URL...' : 'Generate Payment URL'}
+              {loading ? "Generating Payment URL..." : "Generate Payment URL"}
             </Button>
 
             {response?.paymentUrl && (
@@ -109,4 +115,4 @@ export default function TestPaymentPage() {
       </Card>
     </div>
   );
-} 
+}

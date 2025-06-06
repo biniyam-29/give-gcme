@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Heart, Users, Globe, Target, Award, BookOpen } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Heart, Users, Globe, Target, Award, BookOpen } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 
 export default function AboutPage() {
   const values = [
@@ -29,19 +29,22 @@ export default function AboutPage() {
     {
       icon: Target,
       title: "Sustainable Impact",
-      description: "We focus on long-term solutions that empower communities to thrive independently.",
+      description:
+        "We focus on long-term solutions that empower communities to thrive independently.",
     },
     {
       icon: Award,
       title: "Excellence & Integrity",
-      description: "We maintain the highest standards in all our work, ensuring transparency and accountability.",
+      description:
+        "We maintain the highest standards in all our work, ensuring transparency and accountability.",
     },
     {
       icon: BookOpen,
       title: "Holistic Ministry",
-      description: "We address spiritual, physical, educational, and economic needs in every community we serve.",
+      description:
+        "We address spiritual, physical, educational, and economic needs in every community we serve.",
     },
-  ]
+  ];
 
   const leadership = [
     {

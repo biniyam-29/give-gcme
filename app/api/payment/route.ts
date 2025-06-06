@@ -24,7 +24,7 @@ if (
   if (!PAYMENT_NOTIFY_URL) missingVars.push("NEXT_PUBLIC_NOTIFY_URL");
 
   throw new Error(
-    `Missing required environment variables: ${missingVars.join(", ")}`
+    `Missing required environment variables: ${missingVars.join(", ")}`,
   );
 }
 
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       console.error("Failed to parse request body:", e);
       return NextResponse.json(
         { error: "Invalid request body" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
       });
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
 
     console.log(
       "Payment gateway request body:",
-      JSON.stringify(requestBody, null, 2)
+      JSON.stringify(requestBody, null, 2),
     );
     console.log("Making request to payment gateway...");
     console.log("Request URL:", PAYMENT_GATEWAY_URL);
@@ -118,7 +118,7 @@ export async function POST(request: Request) {
       ) {
         console.error(
           "Received an HTML error page from payment gateway:",
-          responseText
+          responseText,
         );
         try {
           const errorUrl = new URL(responseText);
@@ -128,19 +128,19 @@ export async function POST(request: Request) {
           return NextResponse.json(
             {
               error: `Payment gateway redirect error: ${decodeURIComponent(
-                errorMessage
+                errorMessage,
               )}`,
             },
-            { status: 400 }
+            { status: 400 },
           );
         } catch (urlError) {
           console.error(
             "Failed to parse error URL from HTML response:",
-            urlError
+            urlError,
           );
           return NextResponse.json(
             { error: "Payment gateway returned an unparsable HTML error page" },
-            { status: 500 }
+            { status: 500 },
           );
         }
       }
@@ -156,7 +156,7 @@ export async function POST(request: Request) {
             error: `Payment gateway error: ${response.statusText}`,
             details: responseText,
           },
-          { status: response.status }
+          { status: response.status },
         );
       }
 
@@ -180,7 +180,7 @@ export async function POST(request: Request) {
           console.error("Invalid payment URL received:", paymentUrl);
           return NextResponse.json(
             { error: "Invalid payment URL format received from gateway" },
-            { status: 500 }
+            { status: 500 },
           );
         }
       }
@@ -192,14 +192,14 @@ export async function POST(request: Request) {
       } catch (e) {
         console.error(
           "Failed to parse response as JSON from payment gateway:",
-          e
+          e,
         );
         return NextResponse.json(
           {
             error: "Failed to parse payment gateway response as JSON",
             rawResponse: responseText,
           },
-          { status: 500 }
+          { status: 500 },
         );
       }
     } catch (error) {
@@ -219,7 +219,7 @@ export async function POST(request: Request) {
           error: "Failed to communicate with payment gateway",
           details: error instanceof Error ? error.message : "Unknown error",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
   } catch (error: unknown) {
@@ -229,7 +229,7 @@ export async function POST(request: Request) {
         error: "Internal server error in payment route",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

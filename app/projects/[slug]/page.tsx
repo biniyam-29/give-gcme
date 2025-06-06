@@ -1,5 +1,5 @@
-import { notFound } from "next/navigation"
-import ProjectDetailClient from "./project-detail-client"
+import { notFound } from "next/navigation";
+import ProjectDetailClient from "./project-detail-client";
 
 // Project data with detailed information
 const projectsData = {
@@ -551,16 +551,18 @@ const projectsData = {
 
 interface ProjectDetailPageProps {
   params: {
-    slug: string
-  }
+    slug: string;
+  };
 }
 
-export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
-  const project = projectsData[params.slug as keyof typeof projectsData]
+export default async function ProjectDetailPage({
+  params,
+}: ProjectDetailPageProps) {
+  const project = projectsData[params.slug as keyof typeof projectsData];
 
   if (!project) {
-    notFound()
+    notFound();
   }
 
-  return <ProjectDetailClient project={project} />
+  return <ProjectDetailClient project={project} />;
 }

@@ -1,13 +1,23 @@
-import React from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Users, Globe, Target, TrendingUp, Droplets, Stethoscope, GraduationCap, Home, Sprout } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import Footer from "@/components/footer"
-import Header from "@/components/header"
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Users,
+  Globe,
+  Target,
+  TrendingUp,
+  Droplets,
+  Stethoscope,
+  GraduationCap,
+  Home,
+  Sprout,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
 
 export default function ImpactPage() {
   const impactStats = [
@@ -15,7 +25,7 @@ export default function ImpactPage() {
     { label: "Regions Reached", value: "11", icon: Globe },
     { label: "Communities Served", value: "127", icon: Home },
     { label: "Projects Completed", value: "43", icon: Target },
-  ]
+  ];
 
   const impactCategories = [
     {
@@ -86,7 +96,7 @@ export default function ImpactPage() {
         image: "/placeholder.svg?height=300&width=500",
       },
     },
-  ]
+  ];
 
   const testimonials = [
     {
@@ -110,7 +120,7 @@ export default function ImpactPage() {
       role: "Elder, Amhara Region",
       image: "/placeholder.svg?height=100&width=100",
     },
-  ]
+  ];
 
   const annualImpact = [
     {
@@ -140,7 +150,7 @@ export default function ImpactPage() {
         "Built 6 clean water wells in drought-affected areas",
       ],
     },
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -157,8 +167,9 @@ export default function ImpactPage() {
                 <span className="text-amber-600">Ethiopia</span>
               </h1>
               <p className="text-xl md:text-2xl text-stone-600 mb-8 leading-relaxed">
-                Through the faithful support of our partners and the dedicated work of our missionaries, we're seeing
-                transformation across all regions of Ethiopia. These are the stories of hope and change.
+                Through the faithful support of our partners and the dedicated
+                work of our missionaries, we're seeing transformation across all
+                regions of Ethiopia. These are the stories of hope and change.
               </p>
             </div>
           </div>
@@ -168,16 +179,18 @@ export default function ImpactPage() {
         <section className="py-16 bg-stone-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">Impact by the Numbers</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
+                Impact by the Numbers
+              </h2>
               <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-                Every number represents lives changed and communities transformed through sustainable, holistic
-                ministry.
+                Every number represents lives changed and communities
+                transformed through sustainable, holistic ministry.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
               {impactStats.map((stat, index) => {
-                const IconComponent = stat.icon
+                const IconComponent = stat.icon;
                 return (
                   <Card
                     key={index}
@@ -187,11 +200,13 @@ export default function ImpactPage() {
                       <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <IconComponent className="w-8 h-8 text-amber-600" />
                       </div>
-                      <CardTitle className="text-3xl font-bold text-stone-800 mb-2">{stat.value}</CardTitle>
+                      <CardTitle className="text-3xl font-bold text-stone-800 mb-2">
+                        {stat.value}
+                      </CardTitle>
                       <p className="text-stone-600">{stat.label}</p>
                     </CardHeader>
                   </Card>
-                )
+                );
               })}
             </div>
           </div>
@@ -201,37 +216,58 @@ export default function ImpactPage() {
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">Impact by Category</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
+                Impact by Category
+              </h2>
               <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-                Our holistic approach addresses the physical, spiritual, educational, and economic needs of communities.
+                Our holistic approach addresses the physical, spiritual,
+                educational, and economic needs of communities.
               </p>
             </div>
 
             <div className="max-w-6xl mx-auto">
-              <Tabs defaultValue={impactCategories[0].category.toLowerCase().replace(/\s+/g, "-")} className="w-full">
+              <Tabs
+                defaultValue={impactCategories[0].category
+                  .toLowerCase()
+                  .replace(/\s+/g, "-")}
+                className="w-full"
+              >
                 <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-8">
                   {impactCategories.map((category) => (
                     <TabsTrigger
                       key={category.category}
-                      value={category.category.toLowerCase().replace(/\s+/g, "-")}
+                      value={category.category
+                        .toLowerCase()
+                        .replace(/\s+/g, "-")}
                       className="flex items-center space-x-2"
                     >
-                      {React.createElement(category.icon, { className: "w-4 h-4 mr-2" })}
+                      {React.createElement(category.icon, {
+                        className: "w-4 h-4 mr-2",
+                      })}
                       <span>{category.category}</span>
                     </TabsTrigger>
                   ))}
                 </TabsList>
 
                 {impactCategories.map((category) => (
-                  <TabsContent key={category.category} value={category.category.toLowerCase().replace(/\s+/g, "-")}>
+                  <TabsContent
+                    key={category.category}
+                    value={category.category.toLowerCase().replace(/\s+/g, "-")}
+                  >
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                       <Card className="bg-white border-stone-200">
                         <CardHeader>
                           <div className="flex items-center space-x-2 mb-4">
-                            {React.createElement(category.icon, { className: "w-6 h-6" })}
-                            <Badge className={category.color}>{category.category}</Badge>
+                            {React.createElement(category.icon, {
+                              className: "w-6 h-6",
+                            })}
+                            <Badge className={category.color}>
+                              {category.category}
+                            </Badge>
                           </div>
-                          <CardTitle className="text-2xl text-stone-800">{category.story.title}</CardTitle>
+                          <CardTitle className="text-2xl text-stone-800">
+                            {category.story.title}
+                          </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
                           <div className="relative h-64 rounded-lg overflow-hidden">
@@ -242,20 +278,31 @@ export default function ImpactPage() {
                               className="object-cover"
                             />
                           </div>
-                          <p className="text-stone-700 leading-relaxed">{category.story.content}</p>
+                          <p className="text-stone-700 leading-relaxed">
+                            {category.story.content}
+                          </p>
                         </CardContent>
                       </Card>
 
                       <Card className="bg-white border-stone-200">
                         <CardHeader>
-                          <CardTitle className="text-xl text-stone-800">Key Achievements</CardTitle>
+                          <CardTitle className="text-xl text-stone-800">
+                            Key Achievements
+                          </CardTitle>
                         </CardHeader>
                         <CardContent>
                           <div className="grid grid-cols-2 gap-6">
                             {category.stats.map((stat, index) => (
-                              <div key={index} className="text-center p-4 bg-stone-50 rounded-lg">
-                                <div className="text-2xl font-bold text-amber-600 mb-2">{stat.value}</div>
-                                <div className="text-sm text-stone-600">{stat.label}</div>
+                              <div
+                                key={index}
+                                className="text-center p-4 bg-stone-50 rounded-lg"
+                              >
+                                <div className="text-2xl font-bold text-amber-600 mb-2">
+                                  {stat.value}
+                                </div>
+                                <div className="text-sm text-stone-600">
+                                  {stat.label}
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -281,9 +328,12 @@ export default function ImpactPage() {
         <section className="py-16 bg-stone-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">Annual Impact</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
+                Annual Impact
+              </h2>
               <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-                Year by year, we're seeing sustainable growth and lasting transformation across Ethiopia.
+                Year by year, we're seeing sustainable growth and lasting
+                transformation across Ethiopia.
               </p>
             </div>
 
@@ -297,7 +347,9 @@ export default function ImpactPage() {
                           <TrendingUp className="inline-block w-6 h-6 mr-2 text-amber-600" />
                           {year.year} Impact Highlights
                         </CardTitle>
-                        <Badge className="bg-amber-100 text-amber-800">{year.year}</Badge>
+                        <Badge className="bg-amber-100 text-amber-800">
+                          {year.year}
+                        </Badge>
                       </div>
                     </CardHeader>
                     <CardContent>
@@ -316,7 +368,10 @@ export default function ImpactPage() {
 
               <div className="text-center mt-8">
                 <Link href="/transparency">
-                  <Button variant="outline" className="border-amber-600 text-amber-600 hover:bg-amber-50">
+                  <Button
+                    variant="outline"
+                    className="border-amber-600 text-amber-600 hover:bg-amber-50"
+                  >
                     View Detailed Annual Reports
                   </Button>
                 </Link>
@@ -329,15 +384,21 @@ export default function ImpactPage() {
         <section className="py-16 bg-amber-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">Voices of Transformation</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
+                Voices of Transformation
+              </h2>
               <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-                Hear directly from those whose lives have been transformed through our work in Ethiopia.
+                Hear directly from those whose lives have been transformed
+                through our work in Ethiopia.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {testimonials.map((testimonial, index) => (
-                <Card key={index} className="bg-white border-stone-200 hover:shadow-lg transition-shadow duration-300">
+                <Card
+                  key={index}
+                  className="bg-white border-stone-200 hover:shadow-lg transition-shadow duration-300"
+                >
                   <CardContent className="pt-8">
                     <div className="relative w-20 h-20 mx-auto mb-6">
                       <Image
@@ -347,10 +408,16 @@ export default function ImpactPage() {
                         className="object-cover rounded-full"
                       />
                     </div>
-                    <blockquote className="text-stone-700 italic mb-6 text-center">"{testimonial.quote}"</blockquote>
+                    <blockquote className="text-stone-700 italic mb-6 text-center">
+                      "{testimonial.quote}"
+                    </blockquote>
                     <div className="text-center">
-                      <div className="font-semibold text-stone-800">{testimonial.name}</div>
-                      <div className="text-stone-600 text-sm">{testimonial.role}</div>
+                      <div className="font-semibold text-stone-800">
+                        {testimonial.name}
+                      </div>
+                      <div className="text-stone-600 text-sm">
+                        {testimonial.role}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -362,13 +429,19 @@ export default function ImpactPage() {
         {/* Call to Action */}
         <section className="py-16 bg-amber-600">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Be Part of the Transformation</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Be Part of the Transformation
+            </h2>
             <p className="text-xl text-amber-100 mb-8 max-w-2xl mx-auto">
-              Your partnership makes this impact possible. Join us in continuing to transform lives across Ethiopia.
+              Your partnership makes this impact possible. Join us in continuing
+              to transform lives across Ethiopia.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/partnership">
-                <Button size="lg" className="bg-white text-amber-600 hover:bg-stone-50 px-8 py-3 text-lg">
+                <Button
+                  size="lg"
+                  className="bg-white text-amber-600 hover:bg-stone-50 px-8 py-3 text-lg"
+                >
                   Become a Partner
                 </Button>
               </Link>
@@ -388,5 +461,5 @@ export default function ImpactPage() {
 
       <Footer />
     </div>
-  )
+  );
 }

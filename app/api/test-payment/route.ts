@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import fetch from 'node-fetch';
+import { NextResponse } from "next/server";
+import fetch from "node-fetch";
 
 export async function POST(request: Request) {
   try {
@@ -7,40 +7,40 @@ export async function POST(request: Request) {
 
     if (!amount || isNaN(amount) || amount <= 0) {
       return NextResponse.json(
-        { message: 'Invalid amount provided' },
-        { status: 400 }
+        { message: "Invalid amount provided" },
+        { status: 400 },
       );
     }
 
     const apiKey = process.env.PAYMENT_GATEWAY_API_KEY;
     if (!apiKey) {
-      console.error('Payment gateway API key is not configured');
+      console.error("Payment gateway API key is not configured");
       return NextResponse.json(
-        { message: 'Payment gateway configuration error' },
-        { status: 500 }
+        { message: "Payment gateway configuration error" },
+        { status: 500 },
       );
     }
 
     // Using the correct endpoint for test payments
-    const paymentGatewayUrl = 'http://localhost:8080/api/payment';
+    const paymentGatewayUrl = "http://localhost:8080/api/payment";
 
-    console.log('Making request to payment gateway:', {
+    console.log("Making request to payment gateway:", {
       url: paymentGatewayUrl,
       amount,
-      hasApiKey: !!apiKey
+      hasApiKey: !!apiKey,
     });
 
     const response = await fetch(paymentGatewayUrl, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         amount,
-        currency: 'USD',
-        title: 'Test Payment', // Adding the required title field
-        description: 'Test payment transaction',
+        currency: "USD",
+        title: "Test Payment", // Adding the required title field
+        description: "Test payment transaction",
         test: true, // Indicate this is a test transaction
       }),
     });
@@ -48,34 +48,34 @@ export async function POST(request: Request) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error('Payment gateway error:', {
+      console.error("Payment gateway error:", {
         status: response.status,
         statusText: response.statusText,
-        data
+        data,
       });
-      
+
       return NextResponse.json(
-        { 
-          message: 'Payment gateway error',
+        {
+          message: "Payment gateway error",
           error: data,
           details: {
             status: response.status,
-            statusText: response.statusText
-          }
+            statusText: response.statusText,
+          },
         },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error processing test payment:', error);
+    console.error("Error processing test payment:", error);
     return NextResponse.json(
-      { 
-        message: 'Internal server error',
-        error: error instanceof Error ? error.message : 'Unknown error'
+      {
+        message: "Internal server error",
+        error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
-} 
+}

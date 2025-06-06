@@ -1,37 +1,47 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Heart, Users, Globe, ArrowRight, Clock, Target } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import DonationModal from "@/components/donation-modal"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Heart, Users, Globe, ArrowRight, Clock, Target } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import DonationModal from "@/components/donation-modal";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 
 export default function MissionaryDonationPlatform() {
   const [donationModal, setDonationModal] = useState<{
-    isOpen: boolean
-    type: "project" | "missionary"
-    title: string
-    description?: string
+    isOpen: boolean;
+    type: "project" | "missionary";
+    title: string;
+    description?: string;
   }>({
     isOpen: false,
     type: "project",
     title: "",
     description: "",
-  })
+  });
 
-  const openDonationModal = (type: "project" | "missionary", title: string, description?: string) => {
+  const openDonationModal = (
+    type: "project" | "missionary",
+    title: string,
+    description?: string,
+  ) => {
     setDonationModal({
       isOpen: true,
       type,
       title,
       description,
-    })
-  }
+    });
+  };
 
   const closeDonationModal = () => {
     setDonationModal({
@@ -39,14 +49,14 @@ export default function MissionaryDonationPlatform() {
       type: "project",
       title: "",
       description: "",
-    })
-  }
+    });
+  };
 
   const impactStats = [
     { label: "Missionaries Supported", value: "127", icon: Users },
     { label: "Ethiopian Regions Reached", value: "11", icon: Globe },
     { label: "Lives Transformed", value: "8,500+", icon: Heart },
-  ]
+  ];
 
   const projects = [
     {
@@ -167,8 +177,8 @@ export default function MissionaryDonationPlatform() {
               <span className="text-primary-300">Be the Light.</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-neutral-100 max-w-2xl mx-auto">
-              Join us in spreading hope, love, and transformation to communities across Ethiopia through faithful
-              missionary work.
+              Join us in spreading hope, love, and transformation to communities
+              across Ethiopia through faithful missionary work.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -205,21 +215,25 @@ export default function MissionaryDonationPlatform() {
               <blockquote className="text-2xl md:text-3xl font-light text-neutral-700 italic mb-4 max-w-4xl mx-auto">
                 "How beautiful are the feet of those who bring good news!"
               </blockquote>
-              <cite className="text-primary-600 font-semibold">Romans 10:15</cite>
+              <cite className="text-primary-600 font-semibold">
+                Romans 10:15
+              </cite>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               {impactStats.map((stat, index) => {
-                const IconComponent = stat.icon
+                const IconComponent = stat.icon;
                 return (
                   <div key={index} className="text-center">
                     <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-primary-200 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                       <IconComponent className="w-8 h-8 text-primary-600" />
                     </div>
-                    <div className="text-3xl font-bold text-neutral-800 mb-2">{stat.value}</div>
+                    <div className="text-3xl font-bold text-neutral-800 mb-2">
+                      {stat.value}
+                    </div>
                     <div className="text-neutral-600">{stat.label}</div>
                   </div>
-                )
+                );
               })}
             </div>
           </div>
@@ -229,9 +243,12 @@ export default function MissionaryDonationPlatform() {
         <section id="projects" className="py-16 bg-neutral-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-neutral-800 mb-4">Current Projects in Ethiopia</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-neutral-800 mb-4">
+                Current Projects in Ethiopia
+              </h2>
               <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-                Support specific initiatives that are making a real difference in communities across Ethiopian regions.
+                Support specific initiatives that are making a real difference
+                in communities across Ethiopian regions.
               </p>
             </div>
 
@@ -268,7 +285,9 @@ export default function MissionaryDonationPlatform() {
                       <CardTitle className="text-xl text-neutral-800 group-hover:text-primary-600 transition-colors">
                         {project.title}
                       </CardTitle>
-                      <CardDescription className="text-neutral-600">{project.description}</CardDescription>
+                      <CardDescription className="text-neutral-600">
+                        {project.description}
+                      </CardDescription>
                     </CardHeader>
                   </Link>
                   <CardContent>
@@ -278,22 +297,31 @@ export default function MissionaryDonationPlatform() {
                           <Clock className="w-4 h-4 mr-2 text-primary-600" />
                           <span className="font-medium">Duration:</span>
                         </div>
-                        <div className="text-neutral-800">{project.duration}</div>
+                        <div className="text-neutral-800">
+                          {project.duration}
+                        </div>
 
                         <div className="flex items-center text-neutral-600">
                           <Target className="w-4 h-4 mr-2 text-primary-600" />
                           <span className="font-medium">Beneficiaries:</span>
                         </div>
-                        <div className="text-neutral-800">{project.beneficiaries}</div>
+                        <div className="text-neutral-800">
+                          {project.beneficiaries}
+                        </div>
 
                         <div className="flex items-center text-neutral-600">
                           <Users className="w-4 h-4 mr-2 text-primary-600" />
                           <span className="font-medium">Team Size:</span>
                         </div>
-                        <div className="text-neutral-800">{project.teamSize}</div>
+                        <div className="text-neutral-800">
+                          {project.teamSize}
+                        </div>
                       </div>
                       <div className="flex space-x-3">
-                        <Link href={`/projects/${project.slug}`} className="flex-1">
+                        <Link
+                          href={`/projects/${project.slug}`}
+                          className="flex-1"
+                        >
                           <Button
                             variant="outline"
                             className="w-full border-primary-600 text-primary-600 hover:bg-primary-50"
@@ -304,8 +332,12 @@ export default function MissionaryDonationPlatform() {
                         <Button
                           className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white shadow-lg"
                           onClick={(e) => {
-                            e.preventDefault()
-                            openDonationModal("project", project.title, project.description)
+                            e.preventDefault();
+                            openDonationModal(
+                              "project",
+                              project.title,
+                              project.description,
+                            );
                           }}
                         >
                           Donate
@@ -322,9 +354,12 @@ export default function MissionaryDonationPlatform() {
         {/* Call to Action */}
         <section className="py-16 bg-gradient-to-r from-primary-500 to-primary-600">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Make a Difference?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Ready to Make a Difference?
+            </h2>
             <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-              Your support enables missionaries to continue their vital work spreading hope and love across Ethiopia.
+              Your support enables missionaries to continue their vital work
+              spreading hope and love across Ethiopia.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -363,5 +398,5 @@ export default function MissionaryDonationPlatform() {
         description={donationModal.description}
       />
     </div>
-  )
+  );
 }
