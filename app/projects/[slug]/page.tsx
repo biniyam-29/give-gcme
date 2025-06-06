@@ -69,7 +69,7 @@ const projectsData = {
         name: "Pastor Daniel Getachew",
         role: "Lead Pastor, Light of Grace Church",
         quote:
-          "Yotor has completely transformed how we manage our ministry—it’s like moving from darkness to light.",
+          "Yotor has completely transformed how we manage our ministry—it's like moving from darkness to light.",
       },
       {
         name: "Hanna Mulu",
@@ -152,7 +152,7 @@ const projectsData = {
         name: "Bethel Samuel",
         role: "Student, Bahir Dar University",
         quote:
-          "Before using MY FELLOW, I didn’t know where to start. Now I’m growing spiritually and even leading a Bible group.",
+          "Before using MY FELLOW, I didn't know where to start. Now I'm growing spiritually and even leading a Bible group.",
       },
       {
         name: "Bro. Elias Mekonnen",
@@ -174,7 +174,7 @@ const projectsData = {
     slug: "melhk-poadcast",
     title: "MELHIK - PODCAST",
     shortDescription:
-      "Biblically grounded podcast equipping Christian youth for spiritual, emotional, and social maturity in today’s culture.",
+      "Biblically grounded podcast equipping Christian youth for spiritual, emotional, and social maturity in today's culture.",
     image: "/images/projects/melhk.png?height=400&width=600",
     category: "Podcast",
     location: "Nationwide (Online)",
@@ -184,9 +184,9 @@ const projectsData = {
     urgency: "Ongoing",
     fundingGoal: 120000,
     fundingRaised: 41000,
-    problem: `Today’s Christian youth face increasing challenges in navigating identity, relationships, purpose, and culture. Social media, peer pressure, and distorted worldviews often shape their thinking more than Scripture.
+    problem: `Today's Christian youth face increasing challenges in navigating identity, relationships, purpose, and culture. Social media, peer pressure, and distorted worldviews often shape their thinking more than Scripture.
 
-  Many lack access to relevant, Bible-based teaching that speaks directly to their struggles in a way they understand and relate to. Churches often don’t have the resources or platforms to reach them consistently and holistically.
+  Many lack access to relevant, Bible-based teaching that speaks directly to their struggles in a way they understand and relate to. Churches often don't have the resources or platforms to reach them consistently and holistically.
 
   The result is confusion, isolation, and shallow spiritual growth among thousands of young believers.`,
     solution: `MELHIK is a youth-focused podcast that speaks life into the hearts of young people through biblical conversations, interviews, and stories.
@@ -315,7 +315,7 @@ const projectsData = {
         name: "Daniel M.",
         role: "Christian Counselor",
         quote:
-          "This program is a vital bridge between pain and healing. It’s a ministry of presence through media.",
+          "This program is a vital bridge between pain and healing. It's a ministry of presence through media.",
       },
     ],
     urgencyFactors: [
@@ -344,7 +344,7 @@ const projectsData = {
 
   Most schools and campuses lack access to sound biblical teachings that address real-life questions, especially in a digital form accessible to students wherever they are.
 
-  There is a need for a clear, engaging platform where youth can explore faith, ask tough questions, and discover God’s truth in a safe and structured way.`,
+  There is a need for a clear, engaging platform where youth can explore faith, ask tough questions, and discover God's truth in a safe and structured way.`,
     solution: `Habesha Students is a dynamic digital discipleship platform offering structured biblical lessons through the addishiwot.net website and mobile app.
 
   The platform guides students through a progressive learning journey—covering identity, purpose, salvation, and biblical worldview. It uses a conversational tone, visual aids, and interactive questions to deepen understanding.
@@ -464,7 +464,7 @@ const projectsData = {
         name: "Eyob Lemma",
         role: "Content Contributor",
         quote:
-          "It’s rare to find a platform that combines self-improvement with biblical integrity. HULENTENAWI does it beautifully.",
+          "It's rare to find a platform that combines self-improvement with biblical integrity. HULENTENAWI does it beautifully.",
       },
     ],
     urgencyFactors: [
@@ -549,16 +549,18 @@ const projectsData = {
   },
 };
 
-interface ProjectDetailPageProps {
-  params: {
-    slug: string;
-  };
+interface PageProps {
+  params?: Promise<{ slug: string }>
+  searchParams?: Promise<any>
 }
 
-export default async function ProjectDetailPage({
-  params,
-}: ProjectDetailPageProps) {
-  const project = projectsData[params.slug as keyof typeof projectsData];
+export default async function ProjectDetailPage({ params }: PageProps) {
+  const resolvedParams = await params
+  if (!resolvedParams) {
+    notFound()
+  }
+  const slug = resolvedParams.slug
+  const project = projectsData[slug as keyof typeof projectsData];
 
   if (!project) {
     notFound();

@@ -107,7 +107,7 @@ export default function MissionaryDetail({
                     </div>
                     <div>
                       <CardTitle className="text-2xl">{missionary.name}</CardTitle>
-                      <p className="text-stone-600 mt-1">{missionary.role}</p>
+                      <p className="text-gray-600">{missionary.location}</p>
                       <div className="flex items-center space-x-4 mt-2">
                         <Badge variant="secondary">{missionary.focus}</Badge>
                         <div className="flex items-center text-sm text-stone-500">
@@ -116,7 +116,7 @@ export default function MissionaryDetail({
                         </div>
                         <div className="flex items-center text-sm text-stone-500">
                           <Calendar className="w-4 h-4 mr-1" />
-                          {missionary.startDate}
+                          {missionary.years}
                         </div>
                       </div>
                     </div>

@@ -950,23 +950,22 @@ const missionariesData = {
   },
 };
 
-interface MissionaryDetailPageProps {
-  params: {
-    slug: string;
-  };
+interface PageProps {
+  params?: Promise<{ slug: string }>
+  searchParams?: Promise<any>
 }
 
-export default async function MissionaryDetailPage({
-  params,
-}: MissionaryDetailPageProps) {
-  // Ensure params is resolved before accessing any properties
-  const resolvedParams = await Promise.resolve(params);
-  const missionary =
-    missionariesData[resolvedParams.slug as keyof typeof missionariesData];
+export default async function MissionaryDetailPage({ params }: PageProps) {
+  const resolvedParams = await params
+  if (!resolvedParams) {
+    notFound()
+  }
+  const slug = resolvedParams.slug
+  const missionary = missionariesData[slug as keyof typeof missionariesData]
 
   if (!missionary) {
-    notFound();
+    notFound()
   }
 
-  return <MissionaryDetail missionary={missionary} />;
+  return <MissionaryDetail missionary={missionary} />
 }
