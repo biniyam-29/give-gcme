@@ -63,7 +63,7 @@ export default function PartnershipPage() {
     },
     {
       name: "Support Partner",
-      amount: "ብር 500-2,000",
+      amount: "ብር 2,500-10,000",
       description: "Monthly financial partnership",
       benefits: [
         "All Prayer Partner benefits",
@@ -78,7 +78,7 @@ export default function PartnershipPage() {
     },
     {
       name: "Champion Partner",
-      amount: "ብር 2,500-5,000",
+      amount: "ብር 10,000-25,000",
       description: "Significant monthly investment",
       benefits: [
         "All Support Partner benefits",
@@ -93,7 +93,7 @@ export default function PartnershipPage() {
     },
     {
       name: "Legacy Partner",
-      amount: "ብር 5,000+",
+      amount: "ብር 30,000+",
       description: "Transformational partnership",
       benefits: [
         "All Champion Partner benefits",

@@ -46,7 +46,7 @@ export default function DonationModal({
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
 
-  const predefinedAmounts = ["25", "50", "100", "250", "500", "1000"];
+  const predefinedAmounts = ["2,000", "5,000", "10,000", "25,000", "50,000", "100,000"];
 
   const handleAmountSelect = (selectedAmount: string) => {
     setAmount(selectedAmount);
