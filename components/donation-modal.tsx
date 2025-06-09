@@ -67,8 +67,10 @@ export default function DonationModal({
     setPaymentError(null);
 
     try {
-      // Validate amount
-      const amount = getCurrentAmount();
+      // Validate and clean amount
+      const rawAmount = getCurrentAmount();
+      const amount = rawAmount.replace(/,/g, ''); // Remove commas
+
       if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
         throw new Error("Please enter a valid amount");
       }
