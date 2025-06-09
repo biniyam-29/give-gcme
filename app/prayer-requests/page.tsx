@@ -148,13 +148,13 @@ export default function PrayerRequestsPage() {
             </p>
             <div className="space-y-3">
               <Link href="/prayer-requests">
-                <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">
+                <Button className="w-full bg-[#f97316] hover:bg-[#ea580c] text-white">
                   View Prayer Requests
                 </Button>
               </Link>
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full border-primary-200 text-primary-800 hover:bg-primary-50 hover:text-primary-900"
                 onClick={() => {
                   setIsSubmitted(false);
                   setPrayerForm({
@@ -236,11 +236,11 @@ export default function PrayerRequestsPage() {
                       <Badge
                         className={`${
                           request.urgency === "Urgent"
-                            ? "bg-urgent-100 text-urgent-800"
+                            ? "bg-primary-100 text-primary-800"
                             : request.urgency === "Critical"
                               ? "bg-primary-100 text-primary-800"
                               : request.urgency === "Praise"
-                                ? "bg-success-100 text-success-800"
+                                ? "bg-primary-100 text-primary-800"
                                 : "bg-secondary-100 text-secondary-800"
                         }`}
                       >
@@ -304,83 +304,64 @@ export default function PrayerRequestsPage() {
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <Label
-                          htmlFor="name"
-                          className="text-stone-700 mb-2 block"
-                        >
-                          Your Name
-                        </Label>
+                        <Label htmlFor="name" className="text-stone-700">Your Name</Label>
                         <Input
+                          type="text"
                           id="name"
                           name="name"
-                          type="text"
                           value={prayerForm.name}
                           onChange={handleInputChange}
-                          className="border-stone-300 focus:border-primary-600 focus:ring-primary-600"
-                          placeholder="Your name (optional)"
+                          placeholder="John Doe"
+                          required
+                          className="border-stone-300 focus:border-primary-500 focus:ring-primary-500"
                         />
                       </div>
                       <div>
-                        <Label
-                          htmlFor="email"
-                          className="text-stone-700 mb-2 block"
-                        >
-                          Email Address
-                        </Label>
+                        <Label htmlFor="email" className="text-stone-700">Your Email</Label>
                         <Input
+                          type="email"
                           id="email"
                           name="email"
-                          type="email"
                           value={prayerForm.email}
                           onChange={handleInputChange}
-                          className="border-stone-300 focus:border-primary-600 focus:ring-primary-600"
-                          placeholder="your.email@example.com (optional)"
+                          placeholder="john.doe@example.com"
+                          required
+                          className="border-stone-300 focus:border-primary-500 focus:ring-primary-500"
                         />
                       </div>
                     </div>
-
                     <div>
-                      <Label
-                        htmlFor="request"
-                        className="text-stone-700 mb-2 block"
-                      >
-                        Prayer Request *
-                      </Label>
+                      <Label htmlFor="request" className="text-stone-700">Your Prayer Request</Label>
                       <Textarea
                         id="request"
                         name="request"
-                        required
                         value={prayerForm.request}
                         onChange={handleInputChange}
-                        className="border-stone-300 focus:border-primary-600 focus:ring-primary-600 min-h-32"
-                        placeholder="Please share your prayer request. Be as specific as you'd like - our prayer team will lift this up with care and confidentiality."
+                        placeholder="Type your prayer request here..."
+                        rows={5}
+                        required
+                        className="border-stone-300 focus:border-primary-500 focus:ring-primary-500"
                       />
                     </div>
-
                     <div className="flex items-center space-x-2">
-                      <input
+                      <Input
                         type="checkbox"
                         id="isPublic"
                         name="isPublic"
                         checked={prayerForm.isPublic}
                         onChange={handleInputChange}
-                        className="rounded border-stone-300 text-primary-600 focus:ring-primary-600"
+                        className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-stone-300 rounded"
                       />
-                      <Label
-                        htmlFor="isPublic"
-                        className="text-stone-700 text-sm"
-                      >
-                        I'm comfortable with this request being shared publicly
-                        (anonymously) to encourage others
+                      <Label htmlFor="isPublic" className="text-stone-700">
+                        Make this request public (visible to other prayer warriors)
                       </Label>
                     </div>
-
                     <Button
                       type="submit"
+                      className="w-full bg-primary-600 hover:bg-primary-700 text-white"
                       disabled={isSubmitting}
-                      className="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white py-3 shadow-lg"
                     >
                       {isSubmitting ? "Submitting..." : "Submit Prayer Request"}
                       <Send className="ml-2 w-4 h-4" />
@@ -393,33 +374,39 @@ export default function PrayerRequestsPage() {
         </section>
 
         {/* Prayer Community */}
-        <section className="py-16 bg-gradient-to-r from-primary-500 to-primary-600">
+        <section className="py-16 bg-gradient-to-r from-primary-600 to-primary-700">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Join Our Prayer Community
+              Ready to Join Our Prayer Movement?
             </h2>
             <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-              Receive weekly prayer updates and join thousands of believers
-              praying for Ethiopia's transformation.
+              Your prayers fuel our mission. Sign up for updates or share your
+              personal requests.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/newsletter">
-                <Button
-                  size="lg"
-                  className="bg-white text-primary-600 hover:bg-neutral-50 px-8 py-3 text-lg shadow-lg"
-                >
-                  Subscribe to Prayer Updates
-                </Button>
-              </Link>
-              <Link href="/partnership">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 text-lg bg-primary-600/30 backdrop-blur-sm"
-                >
-                  Become a Prayer Partner
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                className="bg-white text-[#e2730c] hover:bg-neutral-50 px-8 py-3 text-lg shadow-lg"
+                onClick={() =>
+                  document.getElementById("subscription-form")?.scrollIntoView({
+                    behavior: "smooth",
+                  })
+                }
+              >
+                Subscribe to Prayer Updates
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white hover:text-[#e2730c] px-8 py-3 text-lg bg-white/20 backdrop-blur-sm"
+                onClick={() =>
+                  document.getElementById("prayer-form")?.scrollIntoView({
+                    behavior: "smooth",
+                  })
+                }
+              >
+                Share Your Prayer Request
+              </Button>
             </div>
           </div>
         </section>

@@ -58,8 +58,8 @@ export default function PartnershipPage() {
         "Quarterly prayer partner calls",
         "Special prayer partner newsletter",
       ],
-      color: "bg-blue-50 border-blue-200",
-      buttonColor: "bg-blue-600 hover:bg-blue-700",
+      color: "bg-primary-50 border-primary-200",
+      buttonColor: "bg-primary-600 hover:bg-primary-700",
     },
     {
       name: "Support Partner",
@@ -72,8 +72,8 @@ export default function PartnershipPage() {
         "Direct communication with missionaries",
         "Recognition in annual report",
       ],
-      color: "bg-green-50 border-green-200",
-      buttonColor: "bg-green-600 hover:bg-green-700",
+      color: "bg-primary-50 border-primary-200",
+      buttonColor: "bg-primary-600 hover:bg-primary-700",
       popular: true,
     },
     {
@@ -88,8 +88,8 @@ export default function PartnershipPage() {
         "Invitation to annual partner gathering",
         "Custom prayer card with missionary photo",
       ],
-      color: "bg-amber-50 border-amber-200",
-      buttonColor: "bg-amber-600 hover:bg-amber-700",
+      color: "bg-primary-50 border-primary-200",
+      buttonColor: "bg-primary-600 hover:bg-primary-700",
     },
     {
       name: "Legacy Partner",
@@ -104,8 +104,8 @@ export default function PartnershipPage() {
         "Exclusive legacy partner events",
         "Personal missionary liaison",
       ],
-      color: "bg-purple-50 border-purple-200",
-      buttonColor: "bg-purple-600 hover:bg-purple-700",
+      color: "bg-primary-50 border-primary-200",
+      buttonColor: "bg-primary-600 hover:bg-primary-700",
     },
   ];
 
@@ -184,15 +184,15 @@ export default function PartnershipPage() {
       <Header currentPage="partnership" />
       <div className="pt-20">
         {/* Hero Section */}
-        <section className="relative py-20 bg-gradient-to-r from-amber-600 to-amber-700 overflow-hidden">
+        <section className="relative py-20 bg-gradient-to-r from-primary-600 to-primary-700 overflow-hidden">
           <div className="absolute inset-0 bg-black/20" />
           <div className="relative container mx-auto px-4 text-center text-white">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Become a
               <br />
-              <span className="text-amber-200">Mission Partner</span>
+              <span className="text-primary-200">Mission Partner</span>
             </h1>
-            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-amber-100">
+            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-primary-100">
               Join hundreds of faithful partners who are transforming Ethiopia
               through consistent support of our missionaries. Your partnership
               creates lasting impact that extends far beyond financial support.
@@ -200,7 +200,7 @@ export default function PartnershipPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
-                className="bg-white text-amber-600 hover:bg-stone-50 px-8 py-3 text-lg"
+                className="bg-white text-primary-600 hover:bg-stone-50 px-8 py-3 text-lg"
                 onClick={() =>
                   openDonationModal(
                     "missionary",
@@ -216,7 +216,7 @@ export default function PartnershipPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-amber-600 px-8 py-3 text-lg w-full bg-white/20 backdrop-blur-sm"
+                  className="border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 text-lg w-full bg-white/20 backdrop-blur-sm"
                 >
                   Explore Partnership Levels
                 </Button>
@@ -243,8 +243,8 @@ export default function PartnershipPage() {
                 const IconComponent = stat.icon;
                 return (
                   <div key={index} className="text-center">
-                    <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <IconComponent className="w-8 h-8 text-amber-600" />
+                    <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <IconComponent className="w-8 h-8 text-primary-600" />
                     </div>
                     <div className="text-3xl font-bold text-stone-800 mb-2">
                       {stat.value}
@@ -277,7 +277,7 @@ export default function PartnershipPage() {
                   className={`relative overflow-hidden hover:shadow-lg transition-all duration-300 ${level.color}`}
                 >
                   {level.popular && (
-                    <div className="absolute top-0 right-0 bg-green-600 text-white px-3 py-1 text-sm font-semibold">
+                    <div className="absolute top-0 right-0 bg-primary-600 text-white px-3 py-1 text-sm font-semibold">
                       Most Popular
                     </div>
                   )}
@@ -299,7 +299,7 @@ export default function PartnershipPage() {
                           key={benefitIndex}
                           className="flex items-start text-sm"
                         >
-                          <CheckCircle className="w-4 h-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="w-4 h-4 text-primary-600 mr-2 mt-0.5 flex-shrink-0" />
                           <span className="text-stone-700">{benefit}</span>
                         </li>
                       ))}
@@ -344,35 +344,35 @@ export default function PartnershipPage() {
                 <Card className="bg-stone-50 border-stone-200">
                   <CardHeader>
                     <CardTitle className="text-xl text-stone-800 flex items-center">
-                      <Heart className="w-6 h-6 mr-3 text-red-600" />
+                      <Heart className="w-6 h-6 mr-3 text-primary-600" />
                       For Missionaries
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
                       <li className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-5 h-5 text-primary-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
                           Predictable income allows focus on ministry instead of
                           constant fundraising
                         </span>
                       </li>
                       <li className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-5 h-5 text-primary-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
                           Knowing they have faithful partners provides emotional
                           and spiritual encouragement
                         </span>
                       </li>
                       <li className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-5 h-5 text-primary-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
                           Consistent support enables long-term planning and
                           sustainable ministry development
                         </span>
                       </li>
                       <li className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-5 h-5 text-primary-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
                           Partnership creates accountability and motivation for
                           excellence in ministry
@@ -385,35 +385,35 @@ export default function PartnershipPage() {
                 <Card className="bg-stone-50 border-stone-200">
                   <CardHeader>
                     <CardTitle className="text-xl text-stone-800 flex items-center">
-                      <Users className="w-6 h-6 mr-3 text-blue-600" />
+                      <Users className="w-6 h-6 mr-3 text-primary-600" />
                       For Partners
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
                       <li className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-5 h-5 text-primary-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
                           Regular updates show exactly how your investment is
                           transforming lives
                         </span>
                       </li>
                       <li className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-5 h-5 text-primary-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
                           Personal relationships develop with missionaries
                           through ongoing communication
                         </span>
                       </li>
                       <li className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-5 h-5 text-primary-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
                           Automatic giving makes consistent generosity simple
                           and sustainable
                         </span>
                       </li>
                       <li className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-5 h-5 text-primary-600 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-stone-700">
                           Being part of a community of partners provides
                           encouragement and shared purpose
@@ -460,7 +460,7 @@ export default function PartnershipPage() {
                     </CardTitle>
                     <Badge
                       variant="secondary"
-                      className="bg-amber-100 text-amber-800"
+                      className="bg-primary-100 text-primary-800"
                     >
                       {story.partnership}
                     </Badge>
@@ -495,7 +495,7 @@ export default function PartnershipPage() {
             <div className="max-w-4xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
+                  <div className="w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
                     1
                   </div>
                   <h3 className="text-lg font-semibold text-stone-800 mb-2">
@@ -507,7 +507,7 @@ export default function PartnershipPage() {
                   </p>
                 </div>
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
+                  <div className="w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
                     2
                   </div>
                   <h3 className="text-lg font-semibold text-stone-800 mb-2">
@@ -519,7 +519,7 @@ export default function PartnershipPage() {
                   </p>
                 </div>
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
+                  <div className="w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
                     3
                   </div>
                   <h3 className="text-lg font-semibold text-stone-800 mb-2">
@@ -531,7 +531,7 @@ export default function PartnershipPage() {
                   </p>
                 </div>
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
+                  <div className="w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
                     4
                   </div>
                   <h3 className="text-lg font-semibold text-stone-800 mb-2">
@@ -615,12 +615,12 @@ export default function PartnershipPage() {
         </section>
 
         {/* Call to Action */}
-        <section className="py-16 bg-amber-600">
+        <section className="py-16 bg-primary-600">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Ready to Start Your Partnership?
             </h2>
-            <p className="text-xl text-amber-100 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
               Join hundreds of faithful partners who are transforming Ethiopia
               through consistent support of our missionaries. Your partnership
               creates lasting impact that extends far beyond financial support.
@@ -628,7 +628,7 @@ export default function PartnershipPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
-                className="bg-white text-amber-600 hover:bg-stone-50 px-8 py-3 text-lg"
+                className="bg-white text-primary-600 hover:bg-stone-50 px-8 py-3 text-lg"
                 onClick={() =>
                   openDonationModal(
                     "missionary",
@@ -643,7 +643,7 @@ export default function PartnershipPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-amber-600 px-8 py-3 text-lg bg-white/20 backdrop-blur-sm"
+                  className="border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 text-lg bg-white/20 backdrop-blur-sm"
                 >
                   Meet Our Missionaries
                 </Button>

@@ -186,7 +186,7 @@ export default function MissionaryDonationPlatform() {
                 openDonationModal(
                   "project",
                   "Ethiopian Mission Projects",
-                  "Support our ongoing projects across Ethiopia",
+                  "Support our ongoing projects across Ethiopia"
                 )
               }
             >
@@ -213,9 +213,7 @@ export default function MissionaryDonationPlatform() {
             <blockquote className="text-2xl md:text-3xl font-light text-neutral-700 italic mb-4 max-w-4xl mx-auto">
               "How beautiful are the feet of those who bring good news!"
             </blockquote>
-            <cite className="text-primary-600 font-semibold">
-              Romans 10:15
-            </cite>
+            <cite className="text-primary-600 font-semibold">Romans 10:15</cite>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
@@ -223,7 +221,7 @@ export default function MissionaryDonationPlatform() {
               const IconComponent = stat.icon;
               return (
                 <div key={index} className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-primary-200 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#B8C0D4] to-[#8E9BBF] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                     <IconComponent className="w-8 h-8 text-primary-600" />
                   </div>
                   <div className="text-3xl font-bold text-neutral-800 mb-2">
@@ -245,8 +243,8 @@ export default function MissionaryDonationPlatform() {
               Current Projects in Ethiopia
             </h2>
             <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-              Support specific initiatives that are making a real difference
-              in communities across Ethiopian regions.
+              Support specific initiatives that are making a real difference in
+              communities across Ethiopian regions.
             </p>
           </div>
 
@@ -267,10 +265,10 @@ export default function MissionaryDonationPlatform() {
                     <Badge
                       className={`absolute top-3 right-3 text-white shadow-lg ${
                         project.urgency === "Critical Need"
-                          ? "bg-urgent-500"
+                          ? "bg-primary-600"
                           : project.urgency === "High Priority"
-                            ? "bg-primary-500"
-                            : "bg-secondary-500"
+                          ? "bg-primary-500"
+                          : "bg-secondary-500"
                       }`}
                     >
                       {project.urgency}
@@ -295,9 +293,7 @@ export default function MissionaryDonationPlatform() {
                         <Clock className="w-4 h-4 mr-2 text-primary-600" />
                         <span className="font-medium">Duration:</span>
                       </div>
-                      <div className="text-neutral-800">
-                        {project.duration}
-                      </div>
+                      <div className="text-neutral-800">{project.duration}</div>
 
                       <div className="flex items-center text-neutral-600">
                         <Target className="w-4 h-4 mr-2 text-primary-600" />
@@ -311,9 +307,7 @@ export default function MissionaryDonationPlatform() {
                         <Users className="w-4 h-4 mr-2 text-primary-600" />
                         <span className="font-medium">Team Size:</span>
                       </div>
-                      <div className="text-neutral-800">
-                        {project.teamSize}
-                      </div>
+                      <div className="text-neutral-800">{project.teamSize}</div>
                     </div>
                     <div className="flex space-x-3">
                       <Link
@@ -334,7 +328,7 @@ export default function MissionaryDonationPlatform() {
                           openDonationModal(
                             "project",
                             project.title,
-                            project.description,
+                            project.description
                           );
                         }}
                       >
@@ -350,7 +344,7 @@ export default function MissionaryDonationPlatform() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-primary-500 to-primary-600">
+      <section className="py-16 bg-gradient-to-r from-[#102C80] to-[#0E276E]">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Ready to Make a Difference?
@@ -362,12 +356,12 @@ export default function MissionaryDonationPlatform() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="bg-white text-primary-600 hover:bg-neutral-50 px-8 py-3 text-lg shadow-lg transform hover:scale-105 transition-all duration-200"
+              className="bg-white text-[#0E276E] hover:bg-neutral-50 px-8 py-3 text-lg shadow-lg transform hover:scale-105 transition-all duration-200"
               onClick={() =>
                 openDonationModal(
                   "project",
                   "Ethiopian Mission Support",
-                  "General support for all our Ethiopian missions",
+                  "General support for all our Ethiopian missions"
                 )
               }
             >
@@ -376,7 +370,7 @@ export default function MissionaryDonationPlatform() {
             <Button
               size="lg"
               variant="outline"
-              className="border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 text-lg bg-primary-600/30 backdrop-blur-sm"
+              className="border-white text-white hover:bg-white hover:text-[#0E276E] px-8 py-3 text-lg bg-[#f0f9ff]/30 backdrop-blur-sm"
             >
               Learn More About Our Mission
             </Button>

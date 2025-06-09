@@ -88,8 +88,8 @@ export default function ContactPage() {
       <div className="min-h-screen bg-stone-50 flex items-center justify-center">
         <Card className="max-w-md mx-auto text-center">
           <CardHeader>
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Send className="w-8 h-8 text-green-600" />
+            <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Send className="w-8 h-8 text-primary-600" />
             </div>
             <CardTitle className="text-2xl text-stone-800">
               Message Sent!
@@ -108,7 +108,7 @@ export default function ContactPage() {
               </Link>
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white"
                 onClick={() => {
                   setIsSubmitted(false);
                   setFormData({
@@ -161,8 +161,8 @@ export default function ContactPage() {
                     className="text-center hover:shadow-lg transition-shadow duration-300 bg-white border-stone-200"
                   >
                     <CardHeader>
-                      <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <IconComponent className="w-6 h-6 text-amber-600" />
+                      <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <IconComponent className="w-6 h-6 text-primary-600" />
                       </div>
                       <CardTitle className="text-lg text-stone-800">
                         {info.title}
@@ -206,7 +206,7 @@ export default function ContactPage() {
                           required
                           value={formData.name}
                           onChange={handleInputChange}
-                          className="border-stone-300 focus:border-amber-600 focus:ring-amber-600"
+                          className="border-stone-300 focus:border-primary-600 focus:ring-primary-600"
                           placeholder="Your full name"
                         />
                       </div>
@@ -224,7 +224,7 @@ export default function ContactPage() {
                           required
                           value={formData.email}
                           onChange={handleInputChange}
-                          className="border-stone-300 focus:border-amber-600 focus:ring-amber-600"
+                          className="border-stone-300 focus:border-primary-600 focus:ring-primary-600"
                           placeholder="your.email@example.com"
                         />
                       </div>
@@ -242,7 +242,7 @@ export default function ContactPage() {
                         name="inquiryType"
                         value={formData.inquiryType}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-stone-300 rounded-md focus:border-amber-600 focus:ring-amber-600 focus:ring-1"
+                        className="w-full px-3 py-2 border border-stone-300 rounded-md focus:border-primary-600 focus:ring-primary-600 focus:ring-1"
                       >
                         {inquiryTypes.map((type) => (
                           <option key={type.value} value={type.value}>
@@ -266,7 +266,7 @@ export default function ContactPage() {
                         required
                         value={formData.subject}
                         onChange={handleInputChange}
-                        className="border-stone-300 focus:border-amber-600 focus:ring-amber-600"
+                        className="border-stone-300 focus:border-primary-600 focus:ring-primary-600"
                         placeholder="Brief subject of your message"
                       />
                     </div>
@@ -284,7 +284,7 @@ export default function ContactPage() {
                         required
                         value={formData.message}
                         onChange={handleInputChange}
-                        className="border-stone-300 focus:border-amber-600 focus:ring-amber-600 min-h-32"
+                        className="border-stone-300 focus:border-primary-600 focus:ring-primary-600 min-h-32"
                         placeholder="Please share your message, questions, or how we can help you..."
                       />
                     </div>
@@ -292,7 +292,7 @@ export default function ContactPage() {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-amber-600 hover:bg-amber-700 text-white py-3"
+                      className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3"
                     >
                       {isSubmitting ? "Sending..." : "Send Message"}
                       <Send className="ml-2 w-4 h-4" />
@@ -329,7 +329,7 @@ export default function ContactPage() {
                     missionaries.
                   </p>
                   <Link href="/partnership">
-                    <Button className="bg-amber-600 hover:bg-amber-700 text-white">
+                    <Button className="bg-primary-600 hover:bg-primary-700 text-white">
                       Partnership Info
                     </Button>
                   </Link>
@@ -348,7 +348,7 @@ export default function ContactPage() {
                     Ethiopia.
                   </p>
                   <Link href="/#projects">
-                    <Button className="bg-amber-600 hover:bg-amber-700 text-white">
+                    <Button className="bg-primary-600 hover:bg-primary-700 text-white">
                       View Projects
                     </Button>
                   </Link>
@@ -367,7 +367,7 @@ export default function ContactPage() {
                     updates.
                   </p>
                   <Link href="/prayer-requests">
-                    <Button className="bg-amber-600 hover:bg-amber-700 text-white">
+                    <Button className="bg-primary-600 hover:bg-primary-700 text-white">
                       Prayer Requests
                     </Button>
                   </Link>

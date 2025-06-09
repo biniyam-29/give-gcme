@@ -78,22 +78,22 @@ export default function TestPaymentPage() {
             <Button
               onClick={handleTestPayment}
               disabled={loading || !amount}
-              className="w-full"
+              className="w-full bg-[#f97316] hover:bg-[#ea580c] text-white"
             >
               {loading ? "Generating Payment URL..." : "Generate Payment URL"}
             </Button>
 
             {response?.paymentUrl && (
               <div className="mt-4 space-y-4">
-                <div className="p-4 bg-muted rounded-lg">
-                  <h3 className="font-semibold mb-2">Payment URL Generated:</h3>
-                  <p className="text-sm text-muted-foreground break-all">
+                <div className="p-4 bg-primary-50 rounded-lg">
+                  <h3 className="font-semibold mb-2 text-primary-800">Payment URL Generated:</h3>
+                  <p className="text-sm text-primary-700 break-all">
                     {response.paymentUrl}
                   </p>
                 </div>
                 <Button
                   onClick={handleProceedToPayment}
-                  className="w-full"
+                  className="w-full bg-[#f97316] hover:bg-[#ea580c] text-white"
                   variant="default"
                 >
                   <ExternalLink className="w-4 h-4 mr-2" />
@@ -103,9 +103,9 @@ export default function TestPaymentPage() {
             )}
 
             {response && !response.paymentUrl && (
-              <div className="mt-4 p-4 bg-muted rounded-lg">
-                <h3 className="font-semibold mb-2">Response:</h3>
-                <pre className="text-sm overflow-auto">
+              <div className="mt-4 p-4 bg-primary-50 rounded-lg">
+                <h3 className="font-semibold mb-2 text-primary-800">Response:</h3>
+                <pre className="text-sm text-primary-700 overflow-auto">
                   {JSON.stringify(response, null, 2)}
                 </pre>
               </div>

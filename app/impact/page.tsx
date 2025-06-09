@@ -31,7 +31,7 @@ export default function ImpactPage() {
     {
       category: "Water & Sanitation",
       icon: Droplets,
-      color: "bg-blue-100 text-blue-800",
+      color: "bg-primary-100 text-primary-800",
       stats: [
         { label: "Clean Water Wells", value: "28" },
         { label: "People with Water Access", value: "12,400" },
@@ -48,7 +48,7 @@ export default function ImpactPage() {
     {
       category: "Healthcare",
       icon: Stethoscope,
-      color: "bg-red-100 text-red-800",
+      color: "bg-primary-100 text-primary-800",
       stats: [
         { label: "Mobile Clinics Established", value: "12" },
         { label: "Patients Treated", value: "18,750" },
@@ -65,7 +65,7 @@ export default function ImpactPage() {
     {
       category: "Education",
       icon: GraduationCap,
-      color: "bg-amber-100 text-amber-800",
+      color: "bg-primary-100 text-primary-800",
       stats: [
         { label: "Schools Built/Renovated", value: "15" },
         { label: "Students Enrolled", value: "3,200" },
@@ -82,7 +82,7 @@ export default function ImpactPage() {
     {
       category: "Agriculture",
       icon: Sprout,
-      color: "bg-green-100 text-green-800",
+      color: "bg-primary-100 text-primary-800",
       stats: [
         { label: "Community Gardens", value: "32" },
         { label: "Families with Food Security", value: "1,850" },
@@ -164,7 +164,7 @@ export default function ImpactPage() {
               <h1 className="text-4xl md:text-6xl font-bold text-stone-800 mb-6">
                 Our Impact in
                 <br />
-                <span className="text-amber-600">Ethiopia</span>
+                <span className="text-primary-600">Ethiopia</span>
               </h1>
               <p className="text-xl md:text-2xl text-stone-600 mb-8 leading-relaxed">
                 Through the faithful support of our partners and the dedicated
@@ -197,8 +197,8 @@ export default function ImpactPage() {
                     className="text-center hover:shadow-lg transition-shadow duration-300 bg-white border-stone-200"
                   >
                     <CardHeader>
-                      <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <IconComponent className="w-8 h-8 text-amber-600" />
+                      <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <IconComponent className="w-8 h-8 text-primary-600" />
                       </div>
                       <CardTitle className="text-3xl font-bold text-stone-800 mb-2">
                         {stat.value}
@@ -297,7 +297,7 @@ export default function ImpactPage() {
                                 key={index}
                                 className="text-center p-4 bg-stone-50 rounded-lg"
                               >
-                                <div className="text-2xl font-bold text-amber-600 mb-2">
+                                <div className="text-2xl font-bold text-primary-600 mb-2">
                                   {stat.value}
                                 </div>
                                 <div className="text-sm text-stone-600">
@@ -309,7 +309,7 @@ export default function ImpactPage() {
 
                           <div className="mt-8">
                             <Link href={`/projects`}>
-                              <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">
+                              <Button className="w-full bg-primary-600 hover:bg-primary-700 text-white">
                                 Support {category.category} Projects
                               </Button>
                             </Link>
@@ -344,10 +344,10 @@ export default function ImpactPage() {
                     <CardHeader>
                       <div className="flex items-center justify-between">
                         <CardTitle className="text-2xl text-stone-800">
-                          <TrendingUp className="inline-block w-6 h-6 mr-2 text-amber-600" />
+                          <TrendingUp className="inline-block w-6 h-6 mr-2 text-primary-600" />
                           {year.year} Impact Highlights
                         </CardTitle>
-                        <Badge className="bg-amber-100 text-amber-800">
+                        <Badge className="bg-primary-100 text-primary-800">
                           {year.year}
                         </Badge>
                       </div>
@@ -356,7 +356,7 @@ export default function ImpactPage() {
                       <ul className="space-y-3">
                         {year.highlights.map((highlight, index) => (
                           <li key={index} className="flex items-start">
-                            <span className="w-2 h-2 bg-amber-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            <span className="w-2 h-2 bg-primary-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
                             <span className="text-stone-700">{highlight}</span>
                           </li>
                         ))}
@@ -370,7 +370,7 @@ export default function ImpactPage() {
                 <Link href="/transparency">
                   <Button
                     variant="outline"
-                    className="border-amber-600 text-amber-600 hover:bg-amber-50"
+                    className="border-primary-600 text-primary-600 hover:bg-primary-50"
                   >
                     View Detailed Annual Reports
                   </Button>
@@ -381,7 +381,7 @@ export default function ImpactPage() {
         </section>
 
         {/* Testimonials */}
-        <section className="py-16 bg-amber-50">
+        <section className="py-16 bg-primary-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
@@ -427,12 +427,12 @@ export default function ImpactPage() {
         </section>
 
         {/* Call to Action */}
-        <section className="py-16 bg-amber-600">
+        <section className="py-16 bg-primary-600">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Be Part of the Transformation
             </h2>
-            <p className="text-xl text-amber-100 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
               Your partnership makes this impact possible. Join us in continuing
               to transform lives across Ethiopia.
             </p>
@@ -440,7 +440,7 @@ export default function ImpactPage() {
               <Link href="/partnership">
                 <Button
                   size="lg"
-                  className="bg-white text-amber-600 hover:bg-stone-50 px-8 py-3 text-lg"
+                  className="bg-white text-primary-600 hover:bg-stone-50 px-8 py-3 text-lg"
                 >
                   Become a Partner
                 </Button>
@@ -449,7 +449,7 @@ export default function ImpactPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-amber-600 px-8 py-3 text-lg bg-white/20 backdrop-blur-sm"
+                  className="border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 text-lg bg-white/20 backdrop-blur-sm"
                 >
                   Support a Project
                 </Button>

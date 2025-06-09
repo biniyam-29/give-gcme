@@ -22,17 +22,17 @@ const config: Config = {
       colors: {
         // Primary giving colors - warm, compassionate, trustworthy
         primary: {
-          50: "#fef7ed", // Very light warm cream
-          100: "#fdedd3", // Light warm cream
-          200: "#fbd9a6", // Soft warm beige
-          300: "#f8c174", // Light warm gold
-          400: "#f4a340", // Medium warm gold
-          500: "#f18b1e", // Primary warm orange-gold (main CTA color)
-          600: "#e2730c", // Deeper warm orange
-          700: "#bb5a0c", // Rich warm brown-orange
-          800: "#964711", // Deep warm brown
-          900: "#7a3b12", // Very deep warm brown
-          950: "#421e08", // Darkest warm brown
+          50: "#E0E3EB",
+          100: "#B8C0D4",
+          200: "#8E9BBF",
+          300: "#6476AA",
+          400: "#3A5195",
+          500: "#102C80",
+          600: "#0E276E",
+          700: "#0C215C",
+          800: "#0A1C4A",
+          900: "#081638",
+          950: "#050B1B",
         },
         // Secondary compassion colors - soft, nurturing blues
         secondary: {

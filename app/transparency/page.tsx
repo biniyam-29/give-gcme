@@ -2,10 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  Download,
   PieChart,
   DollarSign,
-  FileText,
   Shield,
   CheckCircle,
 } from "lucide-react";
@@ -37,18 +35,12 @@ export default function TransparencyPage() {
     },
   ];
 
-  const annualReports = [
-    { year: "2023", fileSize: "2.4 MB", pages: 32 },
-    { year: "2022", fileSize: "2.1 MB", pages: 28 },
-    { year: "2021", fileSize: "1.9 MB", pages: 24 },
-  ];
-
   const accountabilityMeasures = [
     {
       title: "Independent Audit",
       description:
         "Annual financial audit by certified public accountants to ensure accuracy and compliance",
-      icon: FileText,
+      icon: Shield,
     },
     {
       title: "Board Oversight",
@@ -86,12 +78,6 @@ export default function TransparencyPage() {
                 and transparency. Your trust is important to us, and we want you
                 to know exactly how your generous gifts are being used.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2">
-                  <Download className="w-4 h-4 mr-2" />
-                  Download Latest Annual Report
-                </Button>
-              </div>
             </div>
           </div>
         </section>
@@ -113,10 +99,10 @@ export default function TransparencyPage() {
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <div className="relative h-80 w-80 mx-auto">
-                  <PieChart className="w-full h-full text-amber-600" />
+                  <PieChart className="w-full h-full text-primary-600" />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-amber-600">
+                      <div className="text-4xl font-bold text-primary-600">
                         72%
                       </div>
                       <div className="text-sm text-stone-600">
@@ -135,13 +121,13 @@ export default function TransparencyPage() {
                         <span className="font-semibold text-stone-800">
                           {item.category}
                         </span>
-                        <span className="font-bold text-amber-600">
+                        <span className="font-bold text-primary-600">
                           {item.percentage}%
                         </span>
                       </div>
                       <div className="w-full bg-stone-200 rounded-full h-2.5">
                         <div
-                          className="bg-amber-600 h-2.5 rounded-full"
+                          className="bg-primary-600 h-2.5 rounded-full"
                           style={{ width: `${item.percentage}%` }}
                         ></div>
                       </div>
@@ -152,55 +138,6 @@ export default function TransparencyPage() {
                   ))}
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Annual Reports */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">
-                Annual Reports
-              </h2>
-              <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-                Our annual reports provide detailed information about our
-                finances, activities, and impact for each fiscal year.
-              </p>
-            </div>
-
-            <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-              {annualReports.map((report) => (
-                <Card
-                  key={report.year}
-                  className="bg-white border-stone-200 hover:shadow-lg transition-shadow duration-300"
-                >
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl text-stone-800">
-                        Annual Report
-                      </CardTitle>
-                      <Badge className="bg-amber-100 text-amber-800">
-                        {report.year}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-center h-32 bg-stone-50 rounded-lg mb-4">
-                      <FileText className="w-16 h-16 text-amber-600" />
-                    </div>
-                    <div className="text-center space-y-2">
-                      <div className="text-sm text-stone-600">
-                        {report.pages} pages • {report.fileSize} PDF
-                      </div>
-                      <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">
-                        <Download className="w-4 h-4 mr-2" />
-                        Download {report.year} Report
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
             </div>
           </div>
         </section>
@@ -225,8 +162,8 @@ export default function TransparencyPage() {
                   <Card key={index} className="bg-white border-stone-200">
                     <CardHeader>
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
-                          <IconComponent className="w-5 h-5 text-amber-600" />
+                        <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                          <IconComponent className="w-5 h-5 text-primary-600" />
                         </div>
                         <CardTitle className="text-lg text-stone-800">
                           {measure.title}
@@ -415,12 +352,12 @@ export default function TransparencyPage() {
         </section>
 
         {/* Call to Action */}
-        <section className="py-16 bg-amber-600">
+        <section className="py-16 bg-primary-600">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Partner With Confidence
             </h2>
-            <p className="text-xl text-amber-100 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
               Your gifts are managed with the highest standards of integrity and
               directed where they can make the greatest impact in Ethiopia.
             </p>
@@ -428,7 +365,7 @@ export default function TransparencyPage() {
               <Link href="/partnership">
                 <Button
                   size="lg"
-                  className="bg-white text-amber-600 hover:bg-stone-50 px-8 py-3 text-lg"
+                  className="bg-white text-primary-600 hover:bg-stone-50 px-8 py-3 text-lg"
                 >
                   Become a Partner
                 </Button>
@@ -437,7 +374,7 @@ export default function TransparencyPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-amber-600 px-8 py-3 text-lg bg-white/20 backdrop-blur-sm"
+                  className="border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 text-lg bg-white/20 backdrop-blur-sm"
                 >
                   Ask a Question
                 </Button>

@@ -16,7 +16,7 @@ export default function Header({ currentPage }: HeaderProps) {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/50 backdrop-blur-sm shadow-sm border-b border-neutral-200">
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-sm shadow-sm border-b border-neutral-200">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link
           href="/"
@@ -37,9 +37,9 @@ export default function Header({ currentPage }: HeaderProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`transition-colors font-medium ${
+              className={`transition-colors font-medium relative ${
                 currentPage === item.label.toLowerCase()
-                  ? "text-primary-600 font-semibold"
+                  ? "text-primary-600 font-semibold after:absolute after:bottom-[-0.5rem] after:left-0 after:right-0 after:h-0.5 after:bg-primary-600"
                   : "text-neutral-600 hover:text-primary-600"
               }`}
             >

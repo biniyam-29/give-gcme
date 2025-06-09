@@ -166,7 +166,7 @@ export default function MissionaryDetail({
                         <div key={index} className="border-b border-stone-200 pb-6 last:border-0 last:pb-0">
                           <div className="flex items-center justify-between mb-2">
                             <h3 className="text-lg font-semibold">{need.item}</h3>
-                            <span className="text-sm font-medium text-orange-600">{need.amount}</span>
+                            <span className="text-sm font-medium text-primary-600">{need.amount}</span>
                           </div>
                           <p className="text-stone-600">{need.description}</p>
                         </div>
@@ -233,7 +233,7 @@ export default function MissionaryDetail({
 
               {/* Donate Button */}
               <Button
-                className="w-full bg-orange-500 hover:bg-orange-600"
+                className="w-full bg-primary-600 hover:bg-primary-700 text-white transition-colors"
                 onClick={() => openDonationModal("missionary", missionary.name, missionary.shortBio)}
               >
                 Support {missionary.name.split(" ")[0]}

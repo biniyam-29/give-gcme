@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center shadow-lg">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg">
                 <Heart className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold">

@@ -80,7 +80,7 @@ export default function AboutPage() {
               <h1 className="text-4xl md:text-6xl font-bold text-stone-800 mb-6">
                 Our Mission in
                 <br />
-                <span className="text-amber-600">Ethiopia</span>
+                <span className="text-primary-600">Ethiopia</span>
               </h1>
               <p className="text-xl md:text-2xl text-stone-600 mb-8 leading-relaxed">
                 Great Commission Ethiopia exists to empower indigenous
@@ -92,7 +92,8 @@ export default function AboutPage() {
                 <Link href="/partnership">
                   <Button
                     size="lg"
-                    className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 text-lg"
+                    variant="outline"
+                    className="border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white px-8 py-3 text-lg"
                   >
                     Partner With Us
                   </Button>
@@ -101,7 +102,7 @@ export default function AboutPage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-amber-600 text-amber-600 hover:bg-amber-50 px-8 py-3 text-lg"
+                    className="border-primary-600 text-primary-600 hover:text-white hover:bg-primary-600 px-8 py-3 text-lg"
                   >
                     Meet Our Team
                   </Button>
@@ -187,8 +188,8 @@ export default function AboutPage() {
                     className="text-center hover:shadow-lg transition-shadow duration-300 bg-white border-stone-200"
                   >
                     <CardHeader>
-                      <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <IconComponent className="w-8 h-8 text-amber-600" />
+                      <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <IconComponent className="w-8 h-8 text-primary-600" />
                       </div>
                       <CardTitle className="text-xl text-stone-800">
                         {value.title}
@@ -235,7 +236,7 @@ export default function AboutPage() {
                     <CardTitle className="text-lg text-stone-800">
                       {leader.name}
                     </CardTitle>
-                    <p className="text-amber-600 font-semibold">
+                    <p className="text-primary-600 font-semibold">
                       {leader.role}
                     </p>
                   </CardHeader>
@@ -249,7 +250,7 @@ export default function AboutPage() {
         </section>
 
         {/* Call to Action */}
-        <section className="py-16 bg-amber-600">
+        <section className="py-16 bg-primary-600">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Join Our Mission

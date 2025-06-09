@@ -102,8 +102,8 @@ export default function NewsletterPage() {
       <div className="min-h-screen bg-stone-50 flex items-center justify-center">
         <Card className="max-w-md mx-auto text-center">
           <CardHeader>
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-8 h-8 text-green-600" />
+            <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-8 h-8 text-primary-600" />
             </div>
             <CardTitle className="text-2xl text-stone-800">
               Welcome to Our Community!
@@ -117,12 +117,12 @@ export default function NewsletterPage() {
             </p>
             <div className="space-y-3">
               <Link href="/">
-                <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">
+                <Button className="w-full bg-[#f97316] hover:bg-[#ea580c] text-white">
                   Return to Home
                 </Button>
               </Link>
               <Link href="/missionaries">
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full border-primary-200 text-primary-800 hover:bg-primary-50">
                   Meet Our Missionaries
                 </Button>
               </Link>
@@ -175,8 +175,8 @@ export default function NewsletterPage() {
                     className="text-center hover:shadow-lg transition-shadow duration-300 bg-white border-stone-200"
                   >
                     <CardHeader>
-                      <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <IconComponent className="w-6 h-6 text-amber-600" />
+                      <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <IconComponent className="w-6 h-6 text-primary-600" />
                       </div>
                       <CardTitle className="text-lg text-stone-800">
                         {feature.title}
@@ -230,7 +230,7 @@ export default function NewsletterPage() {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="border-stone-300 focus:border-amber-600 focus:ring-amber-600"
+                        className="border-stone-300 focus:border-primary-600 focus:ring-primary-600"
                         placeholder="your.email@example.com"
                       />
                     </div>
@@ -250,7 +250,7 @@ export default function NewsletterPage() {
                               id={option.id}
                               checked={interests.includes(option.id)}
                               onChange={() => handleInterestChange(option.id)}
-                              className="mt-1 rounded border-stone-300 text-amber-600 focus:ring-amber-600"
+                              className="mt-1 rounded border-stone-300 text-primary-600 focus:ring-primary-600"
                             />
                             <div className="flex-1">
                               <Label
@@ -268,11 +268,11 @@ export default function NewsletterPage() {
                       </div>
                     </div>
 
-                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-amber-800 mb-2">
+                    <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+                      <h4 className="font-semibold text-primary-800 mb-2">
                         Frequency
                       </h4>
-                      <p className="text-amber-700 text-sm">
+                      <p className="text-primary-700 text-sm">
                         We send newsletters twice monthly - one mid-month update
                         with missionary stories and project progress, and one
                         end-of-month prayer and partnership update. You can
@@ -283,7 +283,7 @@ export default function NewsletterPage() {
                     <Button
                       type="submit"
                       disabled={isSubmitting || !email}
-                      className="w-full bg-amber-600 hover:bg-amber-700 text-white py-3"
+                      className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3"
                     >
                       {isSubmitting
                         ? "Subscribing..."
@@ -306,19 +306,19 @@ export default function NewsletterPage() {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-amber-600 mb-2">
+                  <div className="text-3xl font-bold text-primary-600 mb-2">
                     3,247
                   </div>
                   <div className="text-stone-600">Newsletter Subscribers</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-amber-600 mb-2">
+                  <div className="text-3xl font-bold text-primary-600 mb-2">
                     127
                   </div>
                   <div className="text-stone-600">Missionaries Supported</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-amber-600 mb-2">
+                  <div className="text-3xl font-bold text-primary-600 mb-2">
                     11
                   </div>
                   <div className="text-stone-600">Ethiopian Regions Served</div>
@@ -350,12 +350,12 @@ export default function NewsletterPage() {
         </section>
 
         {/* Call to Action */}
-        <section className="py-16 bg-amber-600">
+        <section className="py-16 bg-primary-600">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Ready to Stay Connected?
             </h2>
-            <p className="text-xl text-amber-100 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
               Don't miss out on the incredible stories of transformation
               happening across Ethiopia. Subscribe today and be part of the
               mission.
@@ -363,7 +363,7 @@ export default function NewsletterPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
-                className="bg-white text-amber-600 hover:bg-stone-50 px-8 py-3 text-lg"
+                className="bg-white text-primary-600 hover:bg-stone-50 px-8 py-3 text-lg"
                 onClick={() =>
                   document
                     .getElementById("email")
@@ -376,7 +376,7 @@ export default function NewsletterPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-amber-600 px-8 py-3 text-lg"
+                  className="border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 text-lg"
                 >
                   Become a Partner
                 </Button>

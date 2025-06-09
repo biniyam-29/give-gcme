@@ -79,14 +79,14 @@ export default function MissionariesPage() {
       id: 3,
       name: "Cherinet Alemu",
       mission:
-        "Raising digital mentors and sharing Christ with Ethiopia’s younger generation online through various digital tools and platforms.",
+        "Raising digital mentors and sharing Christ with Ethiopia's younger generation online through various digital tools and platforms.",
       image: "/images/missionaries/cherinet.png?height=400&width=400",
       location: "Ethiopia",
       years: "5+ years",
       focus: "Digital Missions & Mentorship",
       slug: "cherinet-alemu",
       shortBio:
-        "A dedicated missionary raising digital mentors and sharing Christ with Ethiopia’s younger generation online.",
+        "A dedicated missionary raising digital mentors and sharing Christ with Ethiopia's younger generation online.",
     },
     {
       id: 4,
@@ -282,8 +282,8 @@ export default function MissionariesPage() {
                 const IconComponent = stat.icon;
                 return (
                   <div key={index} className="text-center">
-                    <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <IconComponent className="w-8 h-8 text-amber-600" />
+                    <div className="w-16 h-16 bg-[#B8C0D4] rounded-full flex items-center justify-center mx-auto mb-4">
+                      <IconComponent className="w-8 h-8 text-[#0E276E]" />
                     </div>
                     <div className="text-3xl font-bold text-stone-800 mb-2">
                       {stat.value}
@@ -307,7 +307,7 @@ export default function MissionariesPage() {
                   placeholder="Search missionaries by name..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-3 w-full border-stone-300 focus:border-amber-600 focus:ring-amber-600"
+                  className="pl-10 pr-4 py-3 w-full border-stone-300 focus:border-primary-600 focus:ring-neutral-600"
                 />
               </div>
             </div>
@@ -340,7 +340,7 @@ export default function MissionariesPage() {
                             className="object-cover rounded-full group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>
-                        <CardTitle className="text-lg text-stone-800 group-hover:text-amber-600 transition-colors">
+                        <CardTitle className="text-lg text-stone-800 group-hover:text-primary-600 transition-colors">
                           {missionary.name}
                         </CardTitle>
                         <div className="flex items-center justify-center text-sm text-stone-500 mb-2">
@@ -363,19 +363,29 @@ export default function MissionariesPage() {
                         <Calendar className="w-3 h-3 mr-1" />
                         {missionary.years} of service
                       </div>
-                      <Button
-                        className="w-full bg-stone-700 hover:bg-stone-800 text-white group-hover:bg-amber-600 group-hover:hover:bg-amber-700 transition-colors"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          openDonationModal(
-                            "missionary",
-                            missionary.name,
-                            missionary.mission
-                          );
-                        }}
-                      >
-                        Support {missionary.name.split(" ")[0]}
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          className="flex-1 bg-primary-600 hover:bg-primary-700 text-white transition-colors"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            openDonationModal(
+                              "missionary",
+                              missionary.name,
+                              missionary.mission
+                            );
+                          }}
+                        >
+                          Support {missionary.name.split(" ")[0]}
+                        </Button>
+                        <Link href={`/missionaries/${missionary.slug}`} className="flex-1">
+                          <Button
+                            variant="outline"
+                            className="w-full border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white transition-colors"
+                          >
+                            Learn More
+                          </Button>
+                        </Link>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
@@ -385,7 +395,7 @@ export default function MissionariesPage() {
         </section>
 
         {/* Call to Action */}
-        <section className="py-16 bg-amber-600">
+        <section className="py-16 bg-primary-600">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Support Our Ethiopian Missionaries
@@ -397,7 +407,7 @@ export default function MissionariesPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
-                className="bg-white text-amber-600 hover:bg-stone-50 px-8 py-3 text-lg"
+                className="bg-white text-primary-600 hover:bg-stone-50 px-8 py-3 text-lg"
                 onClick={() =>
                   openDonationModal(
                     "missionary",
@@ -412,7 +422,7 @@ export default function MissionariesPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-amber-600 px-8 py-3 text-lg w-full bg-white/20 backdrop-blur-sm"
+                  className="border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 text-lg w-full bg-white/20 backdrop-blur-sm"
                 >
                   Learn About Partnership
                 </Button>

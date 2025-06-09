@@ -363,7 +363,7 @@ export default function DonationModal({
                     </div>
                   </Label>
                 </div>
-                <div className="flex items-center space-x-2 p-3 border border-neutral-200 rounded-lg hover:bg-neutral-50 hover:border-primary-300 transition-colors">
+                {/* <div className="flex items-center space-x-2 p-3 border border-neutral-200 rounded-lg hover:bg-neutral-50 hover:border-primary-300 transition-colors">
                   <RadioGroupItem value="cbe" id="cbe" />
                   <Label
                     htmlFor="cbe"
@@ -392,7 +392,7 @@ export default function DonationModal({
                       </div>
                     </div>
                   </Label>
-                </div>
+                </div> */}
               </RadioGroup>
             </div>
 

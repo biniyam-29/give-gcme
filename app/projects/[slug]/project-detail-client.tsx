@@ -127,7 +127,7 @@ export default function ProjectDetailClient({
                 />
 
                 <Button
-                  className="w-full"
+                  className="w-full bg-[#f18b1e] hover:bg-[#e2730c] text-white"
                   onClick={() => openDonationModal("project", project.title)}
                 >
                   Donate Now
