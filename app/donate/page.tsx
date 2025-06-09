@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import DonationModal from "@/components/donation-modal";
 import Header from "@/components/header";
 
-export default function DonatePage() {
+function DonateContent() {
   const searchParams = useSearchParams();
   const type = searchParams.get("type") as "project" | "missionary" | null;
   const title = searchParams.get("title");
@@ -22,5 +22,13 @@ export default function DonatePage() {
         description={description || undefined}
       />
     </div>
+  );
+}
+
+export default function DonatePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DonateContent />
+    </Suspense>
   );
 } 
