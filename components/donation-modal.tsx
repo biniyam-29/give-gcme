@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Heart, CreditCard, Banknote, Smartphone, Loader2 } from "lucide-react";
+import { Heart, CreditCard, Banknote, Smartphone, Loader2, Share2 } from "lucide-react";
 import fetch from "node-fetch";
 
 interface DonationModalProps {
@@ -176,6 +176,39 @@ export default function DonationModal({
     }
   };
 
+  const generateShareableLink = () => {
+    const baseUrl = window.location.origin;
+    const params = new URLSearchParams({
+      type,
+      title,
+      ...(description && { description }),
+    });
+    return `${baseUrl}/donate?${params.toString()}`;
+  };
+
+  const handleShare = async () => {
+    const shareableLink = generateShareableLink();
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Support ${type === "project" ? "Project" : "Missionary"}: ${title}`,
+          text: `Join me in supporting ${title} through Great Commission Ethiopia.`,
+          url: shareableLink,
+        });
+      } catch (error) {
+        console.error("Error sharing:", error);
+        // Fallback to copying to clipboard
+        await navigator.clipboard.writeText(shareableLink);
+        alert("Link copied to clipboard!");
+      }
+    } else {
+      // Fallback to copying to clipboard
+      await navigator.clipboard.writeText(shareableLink);
+      alert("Link copied to clipboard!");
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-md mx-auto max-h-[90vh] overflow-y-auto">
@@ -193,6 +226,14 @@ export default function DonationModal({
                     : `Support ${type === "project" ? "Project" : "Missionary"}`}
               </DialogTitle>
             </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleShare}
+              className="text-neutral-600 hover:text-primary-600"
+            >
+              <Share2 className="w-5 h-5" />
+            </Button>
           </div>
           {step !== 4 && step !== 5 && (
             <DialogDescription className="text-neutral-600">
