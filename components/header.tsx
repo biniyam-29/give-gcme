@@ -1,5 +1,6 @@
 import { Heart } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface HeaderProps {
   currentPage?: string;
@@ -15,18 +16,21 @@ export default function Header({ currentPage }: HeaderProps) {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm border-b border-neutral-200">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/50 backdrop-blur-sm shadow-sm border-b border-neutral-200">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link
           href="/"
-          className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+          className="flex items-center hover:opacity-80 transition-opacity"
         >
-          <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center shadow-lg">
-            <Heart className="w-5 h-5 text-white" />
+          <div className="relative w-32 h-12">
+            <Image
+              src="/logo/gcme-logo.png"
+              alt="Great Commission Ethiopia Logo"
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
-          <span className="text-xl font-bold text-neutral-800">
-            Great Commission Ethiopia
-          </span>
         </Link>
         <nav className="hidden md:flex space-x-6">
           {navItems.map((item) => (
