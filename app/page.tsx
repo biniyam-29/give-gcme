@@ -31,26 +31,24 @@ export default function MissionaryDonationPlatform() {
     description: "",
   });
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    align: "start", 
+  // Embla Carousel configuration for Projects
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "start",
     loop: true,
     dragFree: true,
     containScroll: "trimSnaps",
     slidesToScroll: 1,
-    speed: 20,
     inViewThreshold: 0.7
   });
 
+  // Embla Carousel configuration for Missionaries (no speed/duration for CSS animation)
   const [missionariesRef, missionariesApi] = useEmblaCarousel({
     align: "start",
     loop: true,
     dragFree: true,
     containScroll: "trimSnaps",
     slidesToScroll: 1,
-    speed: 5,
-    inViewThreshold: 0.7,
-    skipSnaps: false,
-    duration: 20
+    inViewThreshold: 0.7
   });
 
   const missionaries = [
@@ -104,7 +102,7 @@ export default function MissionaryDonationPlatform() {
     },
   ];
 
-  // Create a duplicated array for seamless looping
+  // Create a duplicated array for seamless looping (for CSS animation)
   const duplicatedMissionaries = [...missionaries, ...missionaries];
 
   const autoplay = useCallback(() => {
@@ -112,15 +110,10 @@ export default function MissionaryDonationPlatform() {
     emblaApi.scrollNext();
   }, [emblaApi]);
 
-  const missionariesAutoplay = useCallback(() => {
-    if (!missionariesApi) return;
-    missionariesApi.scrollNext();
-  }, [missionariesApi]);
-
   useEffect(() => {
     if (!emblaApi) return;
 
-    const autoplayInterval = setInterval(autoplay, 5000);
+    const autoplayInterval = setInterval(autoplay, 5000); // Projects autoplay
 
     const onUserInteraction = () => {
       clearInterval(autoplayInterval);
@@ -139,15 +132,7 @@ export default function MissionaryDonationPlatform() {
     };
   }, [emblaApi, autoplay]);
 
-  useEffect(() => {
-    if (!missionariesApi) return;
-
-    const autoplayInterval = setInterval(missionariesAutoplay, 50);
-
-    return () => {
-      clearInterval(autoplayInterval);
-    };
-  }, [missionariesApi, missionariesAutoplay]);
+  // Missionary carousel CSS animation does not use Embla API for direct scroll, so no autoplay function for it here.
 
   const openDonationModal = (
     type: "project" | "missionary",
@@ -275,7 +260,7 @@ export default function MissionaryDonationPlatform() {
       <Header currentPage="home" />
 
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative h-screen w-full text-center flex items-end justify-center">
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/hero.png?height=800&width=1200"
@@ -284,16 +269,19 @@ export default function MissionaryDonationPlatform() {
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-neutral-900/70 to-neutral-900/40" />
+
+          {/* Bottom-up gradient overlay for the text area */}
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent z-10" />
         </div>
 
-        <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+        {/* Text content container, absolutely positioned and constrained */}
+        <div className="relative z-20 w-[90%] max-w-3xl p-4 text-primary-00 mb-0 ">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight drop-shadow-lg">
             Support Ethiopian Missions.
             <br />
             <span className="text-primary-300">Be the Light.</span>
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-neutral-100 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto drop-shadow-md">
             Join us in spreading hope, love, and transformation to communities
             across Ethiopia through faithful missionary work.
           </p>
@@ -370,8 +358,8 @@ export default function MissionaryDonationPlatform() {
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex gap-8 pb-8 transition-transform duration-500 ease-out">
               {projects.map((project) => (
-                <div 
-                  key={project.id} 
+                <div
+                  key={project.id}
                   className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 transform transition-all duration-300 ease-out hover:scale-[1.02]"
                 >
                   <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 bg-white border-neutral-200 cursor-pointer group transform hover:-translate-y-1 h-full">
@@ -414,7 +402,9 @@ export default function MissionaryDonationPlatform() {
                             <Clock className="w-4 h-4 mr-2 text-primary-600" />
                             <span className="font-medium">Duration:</span>
                           </div>
-                          <div className="text-neutral-800">{project.duration}</div>
+                          <div className="text-neutral-800">
+                            {project.duration}
+                          </div>
 
                           <div className="flex items-center text-neutral-600">
                             <Target className="w-4 h-4 mr-2 text-primary-600" />
@@ -428,7 +418,9 @@ export default function MissionaryDonationPlatform() {
                             <Users className="w-4 h-4 mr-2 text-primary-600" />
                             <span className="font-medium">Team Size:</span>
                           </div>
-                          <div className="text-neutral-800">{project.teamSize}</div>
+                          <div className="text-neutral-800">
+                            {project.teamSize}
+                          </div>
                         </div>
                         <div className="flex space-x-3">
                           <Link
@@ -474,32 +466,73 @@ export default function MissionaryDonationPlatform() {
               Our Dedicated Missionaries
             </h2>
             <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-              Meet the passionate individuals who are making a difference in communities across Ethiopia.
+              Meet the passionate individuals who are making a difference in
+              communities across Ethiopia.
             </p>
           </div>
 
           <div className="relative overflow-hidden">
+            {/* Outer container for the animated tracks */}
             <div className="flex animate-missionary-slide">
-              {duplicatedMissionaries.map((missionary, index) => (
-                <div 
-                  key={`${missionary.id}-${index}`}
-                  className="flex-[0_0_280px] min-w-0 mx-4 transform transition-all duration-500 ease-in-out hover:scale-105"
-                >
-                  <div className="relative aspect-[3/4] rounded-2xl overflow-hidden group">
-                    <Image
-                      src={missionary.image}
-                      alt={missionary.name}
-                      fill
-                      className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out" />
-                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-in-out">
-                      <h3 className="text-xl font-semibold mb-1">{missionary.name}</h3>
-                      <p className="text-sm text-neutral-200">{missionary.role}</p>
+              {/* Track 1 */}
+              <div className="flex flex-nowrap shrink-0">
+                {duplicatedMissionaries.map((missionary, index) => (
+                  <div
+                    key={`${missionary.id}-1-${index}`}
+                    className={`flex-[0_0_280px] min-w-0 ${
+                      index < missionaries.length - 1 ? "mr-8" : ""
+                    }`}
+                  >
+                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden group">
+                      <Image
+                        src={missionary.image}
+                        alt={missionary.name}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out" />
+                      <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-in-out">
+                        <h3 className="text-xl font-semibold mb-1">
+                          {missionary.name}
+                        </h3>
+                        <p className="text-sm text-neutral-200">
+                          {missionary.role}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              {/* Track 2 - Duplicate for seamless looping */}
+              <div className="flex flex-nowrap shrink-0">
+                {duplicatedMissionaries.map((missionary, index) => (
+                  <div
+                    key={`${missionary.id}-2-${index}`}
+                    className={`flex-[0_0_280px] min-w-0 ${
+                      index < missionaries.length - 1 ? "mr-8" : ""
+                    }`}
+                  >
+                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden group">
+                      <Image
+                        src={missionary.image}
+                        alt={missionary.name}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out" />
+                      <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-in-out">
+                        <h3 className="text-xl font-semibold mb-1">
+                          {missionary.name}
+                        </h3>
+                        <p className="text-sm text-neutral-200">
+                          {missionary.role}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -566,3 +599,4 @@ export default function MissionaryDonationPlatform() {
     </div>
   );
 }
+ 
