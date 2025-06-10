@@ -384,20 +384,20 @@ export default function PrayerRequestsPage() {
               personal requests.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
+                <Button
+                  size="lg"
                 className="bg-white text-[#e2730c] hover:bg-neutral-50 px-8 py-3 text-lg shadow-lg"
                 onClick={() =>
                   document.getElementById("subscription-form")?.scrollIntoView({
                     behavior: "smooth",
                   })
                 }
-              >
-                Subscribe to Prayer Updates
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
+                >
+                  Subscribe to Prayer Updates
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
                 className="border-white text-white hover:bg-white hover:text-[#e2730c] px-8 py-3 text-lg bg-white/20 backdrop-blur-sm"
                 onClick={() =>
                   document.getElementById("prayer-form")?.scrollIntoView({
@@ -406,7 +406,7 @@ export default function PrayerRequestsPage() {
                 }
               >
                 Share Your Prayer Request
-              </Button>
+                </Button>
             </div>
           </div>
         </section>

@@ -364,19 +364,19 @@ export default function MissionariesPage() {
                         {missionary.years} of service
                       </div>
                       <div className="flex gap-2">
-                        <Button
+                      <Button
                           className="flex-1 bg-primary-600 hover:bg-primary-700 text-white transition-colors"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            openDonationModal(
-                              "missionary",
-                              missionary.name,
-                              missionary.mission
-                            );
-                          }}
-                        >
-                          Support {missionary.name.split(" ")[0]}
-                        </Button>
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openDonationModal(
+                            "missionary",
+                            missionary.name,
+                            missionary.mission
+                          );
+                        }}
+                      >
+                        Support {missionary.name.split(" ")[0]}
+                      </Button>
                         <Link href={`/missionaries/${missionary.slug}`} className="flex-1">
                           <Button
                             variant="outline"

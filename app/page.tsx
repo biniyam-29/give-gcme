@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,6 +16,7 @@ import Link from "next/link";
 import DonationModal from "@/components/donation-modal";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import useEmblaCarousel from "embla-carousel-react";
 
 export default function MissionaryDonationPlatform() {
   const [donationModal, setDonationModal] = useState<{
@@ -29,6 +30,45 @@ export default function MissionaryDonationPlatform() {
     title: "",
     description: "",
   });
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    align: "start", 
+    loop: true,
+    dragFree: true,
+    containScroll: "trimSnaps",
+    slidesToScroll: 1,
+    speed: 20,
+    inViewThreshold: 0.7
+  });
+
+  const autoplay = useCallback(() => {
+    if (!emblaApi) return;
+    emblaApi.scrollNext();
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    const autoplayInterval = setInterval(autoplay, 5000); // Auto-slide every 5 seconds
+
+    // Pause autoplay when user interacts with the carousel
+    const onUserInteraction = () => {
+      clearInterval(autoplayInterval);
+      // Resume autoplay after 10 seconds of no interaction
+      setTimeout(() => {
+        setInterval(autoplay, 5000);
+      }, 10000);
+    };
+
+    emblaApi.on('pointerDown', onUserInteraction);
+    emblaApi.on('pointerUp', onUserInteraction);
+
+    return () => {
+      clearInterval(autoplayInterval);
+      emblaApi.off('pointerDown', onUserInteraction);
+      emblaApi.off('pointerUp', onUserInteraction);
+    };
+  }, [emblaApi, autoplay]);
 
   const openDonationModal = (
     type: "project" | "missionary",
@@ -248,97 +288,101 @@ export default function MissionaryDonationPlatform() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {projects.map((project) => (
-              <Card
-                key={project.id}
-                className="overflow-hidden hover:shadow-xl transition-all duration-300 bg-white border-neutral-200 cursor-pointer group transform hover:-translate-y-1"
-              >
-                <Link href={`/projects/${project.slug}`}>
-                  <div className="relative h-48">
-                    <Image
-                      src={project.image || "/placeholder.svg"}
-                      alt={project.title}
-                      fill
-                      className="object-cover"
-                    />
-                    <Badge
-                      className={`absolute top-3 right-3 text-white shadow-lg ${
-                        project.urgency === "Critical Need"
-                          ? "bg-primary-600"
-                          : project.urgency === "High Priority"
-                          ? "bg-primary-500"
-                          : "bg-secondary-500"
-                      }`}
-                    >
-                      {project.urgency}
-                    </Badge>
-                    <Badge className="absolute top-3 left-3 bg-neutral-700 text-white shadow-lg">
-                      {project.category}
-                    </Badge>
-                  </div>
-                  <CardHeader>
-                    <CardTitle className="text-xl text-neutral-800 group-hover:text-primary-600 transition-colors">
-                      {project.title}
-                    </CardTitle>
-                    <CardDescription className="text-neutral-600">
-                      {project.description}
-                    </CardDescription>
-                  </CardHeader>
-                </Link>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div className="flex items-center text-neutral-600">
-                        <Clock className="w-4 h-4 mr-2 text-primary-600" />
-                        <span className="font-medium">Duration:</span>
-                      </div>
-                      <div className="text-neutral-800">{project.duration}</div>
-
-                      <div className="flex items-center text-neutral-600">
-                        <Target className="w-4 h-4 mr-2 text-primary-600" />
-                        <span className="font-medium">Beneficiaries:</span>
-                      </div>
-                      <div className="text-neutral-800">
-                        {project.beneficiaries}
-                      </div>
-
-                      <div className="flex items-center text-neutral-600">
-                        <Users className="w-4 h-4 mr-2 text-primary-600" />
-                        <span className="font-medium">Team Size:</span>
-                      </div>
-                      <div className="text-neutral-800">{project.teamSize}</div>
-                    </div>
-                    <div className="flex space-x-3">
-                      <Link
-                        href={`/projects/${project.slug}`}
-                        className="flex-1"
-                      >
-                        <Button
-                          variant="outline"
-                          className="w-full border-primary-600 text-primary-600 hover:bg-primary-50"
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex gap-8 pb-8 transition-transform duration-500 ease-out">
+              {projects.map((project) => (
+                <div 
+                  key={project.id} 
+                  className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 transform transition-all duration-300 ease-out hover:scale-[1.02]"
+                >
+                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 bg-white border-neutral-200 cursor-pointer group transform hover:-translate-y-1 h-full">
+                    <Link href={`/projects/${project.slug}`}>
+                      <div className="relative h-48">
+                        <Image
+                          src={project.image || "/placeholder.svg"}
+                          alt={project.title}
+                          fill
+                          className="object-cover"
+                        />
+                        <Badge
+                          className={`absolute top-3 right-3 text-white shadow-lg ${
+                            project.urgency === "Critical Need"
+                              ? "bg-primary-600"
+                              : project.urgency === "High Priority"
+                              ? "bg-primary-500"
+                              : "bg-secondary-500"
+                          }`}
                         >
-                          Learn More
-                        </Button>
-                      </Link>
-                      <Button
-                        className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white shadow-lg"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          openDonationModal(
-                            "project",
-                            project.title,
-                            project.description
-                          );
-                        }}
-                      >
-                        Donate
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                          {project.urgency}
+                        </Badge>
+                        <Badge className="absolute top-3 left-3 bg-neutral-700 text-white shadow-lg">
+                          {project.category}
+                        </Badge>
+                      </div>
+                      <CardHeader>
+                        <CardTitle className="text-xl text-neutral-800 group-hover:text-primary-600 transition-colors">
+                          {project.title}
+                        </CardTitle>
+                        <CardDescription className="text-neutral-600 line-clamp-2">
+                          {project.description}
+                        </CardDescription>
+                      </CardHeader>
+                    </Link>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div className="flex items-center text-neutral-600">
+                            <Clock className="w-4 h-4 mr-2 text-primary-600" />
+                            <span className="font-medium">Duration:</span>
+                          </div>
+                          <div className="text-neutral-800">{project.duration}</div>
+
+                          <div className="flex items-center text-neutral-600">
+                            <Target className="w-4 h-4 mr-2 text-primary-600" />
+                            <span className="font-medium">Beneficiaries:</span>
+                          </div>
+                          <div className="text-neutral-800">
+                            {project.beneficiaries}
+                          </div>
+
+                          <div className="flex items-center text-neutral-600">
+                            <Users className="w-4 h-4 mr-2 text-primary-600" />
+                            <span className="font-medium">Team Size:</span>
+                          </div>
+                          <div className="text-neutral-800">{project.teamSize}</div>
+                        </div>
+                        <div className="flex space-x-3">
+                          <Link
+                            href={`/projects/${project.slug}`}
+                            className="flex-1"
+                          >
+                            <Button
+                              variant="outline"
+                              className="w-full border-primary-600 text-primary-600 hover:bg-primary-50"
+                            >
+                              Learn More
+                            </Button>
+                          </Link>
+                          <Button
+                            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white shadow-lg"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              openDonationModal(
+                                "project",
+                                project.title,
+                                project.description
+                              );
+                            }}
+                          >
+                            Donate
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
