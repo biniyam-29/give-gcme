@@ -9,7 +9,7 @@ interface HeaderProps {
 export default function Header({ currentPage }: HeaderProps) {
   const navItems = [
     { href: "/", label: "Home" },
-    { href: "/#projects", label: "Projects" },
+    { href: "/projects", label: "Projects" },
     { href: "/missionaries", label: "Missionaries" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
