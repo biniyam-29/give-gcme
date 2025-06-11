@@ -41,75 +41,90 @@ interface ProjectsSectionProps {
 export default function ProjectsSection({ projects, openDonationModal }: ProjectsSectionProps) {
   const [isHovered, setIsHovered] = useState(false);
   const projectsContainerRef = useRef<HTMLDivElement>(null);
-  const animationFrameRef = useRef<number | null>(null);
+  const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const currentTranslateX = useRef(0);
-  const contentWidthRef = useRef(0);
+  const cardWidthWithMargin = useRef(0); // Width of a single card including its margin
+  const totalProjectsWidth = useRef(0); // Total width of one full set of unique projects
 
-  const scrollSpeed = 0.5; // Defines how many pixels per frame the slideshow scrolls.
+  const slideDuration = 1000; // ms for slide animation
+  const pauseDuration = 3000; // ms for pause
 
-  const animateStep = useCallback(() => {
-    currentTranslateX.current -= scrollSpeed;
+  const calculateDimensions = useCallback(() => {
+    if (!projectsContainerRef.current) return;
 
-    if (contentWidthRef.current > 0 && Math.abs(currentTranslateX.current) >= contentWidthRef.current) {
-      currentTranslateX.current = 0;
+    // Get the width of a single card including its right margin
+    const firstCard = projectsContainerRef.current.querySelector('.group.flex-\\[0_0_400px\\]');
+    if (firstCard) {
+      const computedStyle = window.getComputedStyle(firstCard);
+      const marginRight = parseFloat(computedStyle.marginRight);
+      cardWidthWithMargin.current = firstCard.clientWidth + marginRight;
     }
 
-    if (projectsContainerRef.current) {
-      projectsContainerRef.current.style.transform = `translateX(${currentTranslateX.current}px)`;
+    // Get the total width of one complete set of projects (before duplication)
+    const firstProjectGroup = projectsContainerRef.current.querySelector('.flex-nowrap.shrink-0');
+    if (firstProjectGroup) {
+      totalProjectsWidth.current = firstProjectGroup.scrollWidth;
     }
-  }, [scrollSpeed, contentWidthRef]);
-
-  useEffect(() => {
-    const container = projectsContainerRef.current;
-    if (!container) return;
-
-    const calculateContentWidth = () => {
-      if (container) {
-        const totalDuplicatedContentWidth = container.scrollWidth;
-        contentWidthRef.current = totalDuplicatedContentWidth / 3; // Assuming 3 sets for seamless loop
-        console.log('Calculated Projects content width (once): ', contentWidthRef.current);
-      }
-    };
-
-    calculateContentWidth();
-    const observer = new ResizeObserver(calculateContentWidth);
-    observer.observe(container);
-
-    currentTranslateX.current = 0; // Initial position
-    if (projectsContainerRef.current) {
-        projectsContainerRef.current.style.transform = `translateX(0px)`;
-    }
-
-    return () => {
-      if (observer && container) {
-        observer.unobserve(container);
-      }
-    };
   }, []);
 
   useEffect(() => {
-    const loop = () => {
-      animateStep();
-      animationFrameRef.current = requestAnimationFrame(loop);
-    };
+    calculateDimensions();
+    const observer = new ResizeObserver(calculateDimensions);
+    if (projectsContainerRef.current) {
+      observer.observe(projectsContainerRef.current);
+    }
 
-    if (!isHovered) {
-      console.log('Projects Animation STARTING or RESUMING. isHovered:', isHovered);
-      animationFrameRef.current = requestAnimationFrame(loop);
-    } else {
-      console.log('Projects Animation PAUSING. isHovered:', isHovered);
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-        animationFrameRef.current = null;
-      }
+    currentTranslateX.current = 0;
+    if (projectsContainerRef.current) {
+      projectsContainerRef.current.style.transform = `translateX(0px)`;
+      projectsContainerRef.current.style.transition = `none`;
     }
 
     return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
+      if (projectsContainerRef.current) {
+        observer.unobserve(projectsContainerRef.current);
       }
     };
-  }, [isHovered, animateStep]);
+  }, [calculateDimensions]);
+
+  useEffect(() => {
+    const startSlide = () => {
+      if (isHovered || cardWidthWithMargin.current === 0 || totalProjectsWidth.current === 0) {
+        animationTimeoutRef.current = setTimeout(startSlide, 100);
+        return;
+      }
+
+      const container = projectsContainerRef.current;
+      if (!container) return;
+
+      const nextTranslateX = currentTranslateX.current - cardWidthWithMargin.current;
+
+      container.style.transition = `transform ${slideDuration / 1000}s ease-in-out`;
+      container.style.transform = `translateX(${nextTranslateX}px)`;
+
+      animationTimeoutRef.current = setTimeout(() => {
+        currentTranslateX.current = nextTranslateX;
+
+        if (Math.abs(currentTranslateX.current) >= totalProjectsWidth.current) {
+          container.style.transition = 'none';
+          currentTranslateX.current += totalProjectsWidth.current;
+          container.style.transform = `translateX(${currentTranslateX.current}px)`;
+          void container.offsetHeight;
+          container.style.transition = `transform ${slideDuration / 1000}s ease-in-out`;
+        }
+        
+        animationTimeoutRef.current = setTimeout(startSlide, pauseDuration);
+      }, slideDuration);
+    };
+
+    animationTimeoutRef.current = setTimeout(startSlide, pauseDuration);
+
+    return () => {
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current);
+      }
+    };
+  }, [isHovered, slideDuration, pauseDuration, calculateDimensions]);
 
   return (
     <section className="py-12 md:py-20 bg-neutral-50 overflow-hidden">
@@ -124,9 +139,9 @@ export default function ProjectsSection({ projects, openDonationModal }: Project
         </div>
 
         <div
-          className="relative overflow-hidden"
-          onMouseEnter={() => { console.log('onMouseEnter Projects event. Setting isHovered to true'); setIsHovered(true); }}
-          onMouseLeave={() => { console.log('onMouseLeave Projects event. Setting isHovered to false'); setIsHovered(false); }}
+          className="relative overflow-hidden w-full mx-auto max-w-[1264px]"
+          onMouseEnter={() => { setIsHovered(true); }}
+          onMouseLeave={() => { setIsHovered(false); }}
         >
           <div
             ref={projectsContainerRef}
@@ -138,10 +153,10 @@ export default function ProjectsSection({ projects, openDonationModal }: Project
                 {projects.map((project, index) => (
                   <Card
                     key={`${project.id}-${groupIndex}-${index}`}
-                    className="flex-[0_0_280px] min-w-0 mr-4 md:mr-8 overflow-hidden hover:shadow-xl transition-all duration-300 bg-white border-neutral-200 cursor-pointer group transform hover:-translate-y-1"
+                    className="flex-[0_0_400px] min-w-0 mr-6 md:mr-8 overflow-hidden hover:shadow-xl transition-all duration-300 bg-white border-neutral-200 cursor-pointer group transform hover:-translate-y-1"
                   >
                     <Link href={`/projects/${project.slug}`}>
-                      <div className="relative h-48">
+                      <div className="relative h-64">
                         <Image
                           src={project.image || "/placeholder.svg"}
                           alt={project.title}
@@ -149,7 +164,7 @@ export default function ProjectsSection({ projects, openDonationModal }: Project
                           className="object-cover"
                         />
                         <Badge
-                          className={`absolute top-3 right-3 text-white shadow-lg ${
+                          className={`absolute top-4 right-4 text-white shadow-lg ${
                             project.urgency === "Critical Need"
                               ? "bg-primary-600"
                               : project.urgency === "High Priority"
@@ -159,30 +174,30 @@ export default function ProjectsSection({ projects, openDonationModal }: Project
                         >
                           {project.urgency}
                         </Badge>
-                        <Badge className="absolute top-3 left-3 bg-neutral-700 text-white shadow-lg">
+                        <Badge className="absolute top-4 left-4 bg-neutral-700 text-white shadow-lg">
                           {project.category}
                         </Badge>
                       </div>
-                      <CardHeader>
-                        <CardTitle className="text-xl text-neutral-800 group-hover:text-primary-600 transition-colors">
+                      <CardHeader className="p-6">
+                        <CardTitle className="text-2xl text-neutral-800 group-hover:text-primary-600 transition-colors">
                           {project.title}
                         </CardTitle>
-                        <CardDescription className="text-neutral-600 line-clamp-2">
+                        <CardDescription className="text-lg text-neutral-600 line-clamp-2">
                           {project.description}
                         </CardDescription>
                       </CardHeader>
                     </Link>
-                    <CardContent className="p-4">
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4 text-sm">
+                    <CardContent className="p-6">
+                      <div className="space-y-6">
+                        <div className="grid grid-cols-2 gap-6 text-base">
                           <div className="flex items-center text-neutral-600">
-                            <Clock className="w-4 h-4 mr-2 text-primary-600" />
+                            <Clock className="w-5 h-5 mr-3 text-primary-600" />
                             <span className="font-medium">Duration:</span>
                           </div>
                           <div className="text-neutral-800">{project.duration}</div>
 
                           <div className="flex items-center text-neutral-600">
-                            <Target className="w-4 h-4 mr-2 text-primary-600" />
+                            <Target className="w-5 h-5 mr-3 text-primary-600" />
                             <span className="font-medium">Beneficiaries:</span>
                           </div>
                           <div className="text-neutral-800">
@@ -190,25 +205,25 @@ export default function ProjectsSection({ projects, openDonationModal }: Project
                           </div>
 
                           <div className="flex items-center text-neutral-600">
-                            <Users className="w-4 h-4 mr-2 text-primary-600" />
+                            <Users className="w-5 h-5 mr-3 text-primary-600" />
                             <span className="font-medium">Team Size:</span>
                           </div>
                           <div className="text-neutral-800">{project.teamSize}</div>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-4">
                           <Link
                             href={`/projects/${project.slug}`}
                             className="flex-1"
                           >
                             <Button
                               variant="outline"
-                              className="w-full border-primary-600 text-primary-600 hover:bg-primary-50"
+                              className="w-full h-12 text-base border-primary-600 text-primary-600 hover:bg-primary-50"
                             >
                               Learn More
                             </Button>
                           </Link>
                           <Button
-                            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white shadow-lg"
+                            className="flex-1 h-12 text-base bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white shadow-lg"
                             onClick={(e) => {
                               e.preventDefault();
                               openDonationModal(
