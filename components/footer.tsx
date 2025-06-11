@@ -1,5 +1,6 @@
 import { Heart, Mail, Phone } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -7,13 +8,14 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg">
-                <Heart className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold">
-                Great Commission Ethiopia
-              </span>
+            <div className="relative w-48 h-16 mb-4">
+              <Image
+                src="/logo/gcme-logo-white.png"
+                alt="Great Commission Ethiopia Logo"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
             <p className="text-neutral-300 text-sm">
               Empowering Ethiopian missionaries to spread hope, love, and

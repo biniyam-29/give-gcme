@@ -22,7 +22,7 @@ export default function Header({ currentPage }: HeaderProps) {
           href="/"
           className="flex items-center hover:opacity-80 transition-opacity"
         >
-          <div className="relative w-32 h-12">
+          <div className="relative w-32 h-12 md:w-48 md:h-16">
             <Image
               src="/logo/gcme-logo.png"
               alt="Great Commission Ethiopia Logo"
