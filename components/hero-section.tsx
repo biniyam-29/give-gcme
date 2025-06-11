@@ -1,8 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 import Image from "next/image";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 interface HeroSectionProps {
@@ -13,9 +14,167 @@ interface HeroSectionProps {
   ) => void;
 }
 
+interface SearchResult {
+  id: number;
+  type: "project" | "missionary";
+  title: string;
+  description: string;
+  image?: string;
+  slug?: string;
+}
+
 export default function HeroSection({ openDonationModal }: HeroSectionProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  // Actual data from the codebase
+  const projects = [
+    {
+      id: 1,
+      slug: "yotor-church-management-system",
+      title: "Yotor - Modern Church Management",
+      description: "A Secure and Reliable Solution to Manage Your Church",
+      image: "/images/projects/yotor.png?height=200&width=300",
+    },
+    {
+      id: 2,
+      slug: "my-fellow",
+      title: "MY FELLOW",
+      description: "An online platform designed to help you connect with Christian fellowship on campus.",
+      image: "/images/projects/my-fellow.png?height=200&width=300",
+    },
+    {
+      id: 3,
+      slug: "melhk-poadcast",
+      title: "MELHIK - PODCAST",
+      description: "A program that helps Christian youth grow holistically, spiritually, emotionally, physically, and socially.",
+      image: "/images/projects/melhk.png?height=200&width=300",
+    },
+    {
+      id: 4,
+      slug: "gemenaye",
+      title: "GEMENAYE",
+      description: "A platform for sharing testimonies of healing and grace, connecting hurting individuals with support.",
+      image: "/images/projects/gemenaye.png?height=200&width=300",
+    },
+    {
+      id: 5,
+      slug: "habesha-students",
+      title: "HABESHA STUDENTS",
+      description: "A place where students can find true answers to life's questions and God's truth.",
+      image: "/images/projects/habesha-students.png?height=200&width=300",
+    },
+    {
+      id: 6,
+      slug: "hulentenawi",
+      title: "HULENTENAWI",
+      description: "A mobile app that allows users to improve themselves and connect with others on the same journey.",
+      image: "/images/projects/hulentenawi.png?height=200&width=300",
+    },
+    {
+      id: 7,
+      slug: "jesus-film",
+      title: "JESUS FILM",
+      description: "Sharing the Story of Jesus through film, reaching millions with the greatest story ever lived.",
+      image: "/images/projects/jesus-film.png?height=200&width=300",
+    },
+  ];
+
+  const missionaries = [
+    {
+      id: 1,
+      name: "Senay Kumelachew",
+      role: "Digital Missions & Church Tech Mobilization",
+      image: "/images/missionaries/senay.png?height=400&width=400",
+      slug: "senay-kumelachew",
+    },
+    {
+      id: 2,
+      name: "Samson Usmael",
+      role: "Digital Evangelism & Discipleship",
+      image: "/images/missionaries/samson.png?height=400&width=400",
+      slug: "samson-usmael",
+    },
+    {
+      id: 3,
+      name: "Cherinet Alemu",
+      role: "Digital Missions & Mentorship",
+      image: "/images/missionaries/cherinet.png?height=400&width=400",
+      slug: "cherinet-alemu",
+    },
+    {
+      id: 4,
+      name: "Saron Yohannes",
+      role: "Product Leadership & Digital Evangelism",
+      image: "/images/missionaries/saron.png?height=400&width=400",
+      slug: "saron-yohannes",
+    },
+    {
+      id: 5,
+      name: "Rediet Kefetew",
+      role: "Content Creation & Mentorship",
+      image: "/images/missionaries/rediet.png?height=400&width=400",
+      slug: "rediet-kefetew",
+    },
+  ];
+
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setSearchResults([]);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase();
+    const results: SearchResult[] = [];
+
+    // Search in projects
+    projects.forEach((project) => {
+      if (
+        project.title.toLowerCase().includes(query) ||
+        project.description.toLowerCase().includes(query)
+      ) {
+        results.push({
+          id: project.id,
+          type: "project",
+          title: project.title,
+          description: project.description,
+          image: project.image,
+          slug: project.slug,
+        });
+      }
+    });
+
+    // Search in missionaries
+    missionaries.forEach((missionary) => {
+      if (
+        missionary.name.toLowerCase().includes(query) ||
+        missionary.role.toLowerCase().includes(query)
+      ) {
+        results.push({
+          id: missionary.id,
+          type: "missionary",
+          title: missionary.name,
+          description: missionary.role,
+          image: missionary.image,
+          slug: missionary.slug,
+        });
+      }
+    });
+
+    setSearchResults(results);
+  }, [searchQuery]);
+
+  const handleResultClick = (result: SearchResult) => {
+    openDonationModal(
+      result.type,
+      result.title,
+      result.description
+    );
+  };
+
   return (
-    <section className="relative h-screen w-full text-center flex items-end justify-center">
+    <section className="relative h-screen w-full text-center flex items-end justify-center pb-20">
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/hero.png?height=800&width=1200"
@@ -26,45 +185,62 @@ export default function HeroSection({ openDonationModal }: HeroSectionProps) {
         />
 
         {/* Bottom-up gradient overlay for the text area */}
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[#222222]/90 via-[#464545]/70 to-transparent z-10" />
       </div>
 
-      {/* Text content container, absolutely positioned and constrained */}
-      <div className="relative z-20 w-[90%] max-w-3xl p-4 text-primary-00 mb-0">
-        <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight drop-shadow-lg">
-          Support Ethiopian Missions.
-          <br />
-          <span className="text-primary-300">Be the Light.</span>
-        </h1>
-        <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto drop-shadow-md">
-          Join us in spreading hope, love, and transformation to communities
-          across Ethiopia through faithful missionary work.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button
-            size="lg"
-            className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-8 py-3 text-lg shadow-lg transform hover:scale-105 transition-all duration-200"
-            onClick={() =>
-              openDonationModal(
-                "project",
-                "Ethiopian Mission Projects",
-                "Support our ongoing projects across Ethiopia"
-              )
-            }
-          >
-            Donate to a Project
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
-          <Link href="/missionaries">
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white hover:text-neutral-800 px-8 py-3 text-lg w-full bg-white/20 backdrop-blur-sm"
-            >
-              Choose a Missionary
-            </Button>
-          </Link>
+      {/* Content container */}
+      <div className={`relative z-20 w-[90%] max-w-2xl p-4 text-primary-00 flex flex-col justify-end ${isSearching && searchResults.length > 0 ? 'min-h-[35rem]' : ''}`}>
+        <div className="relative mb-8">
+          <Input
+            type="search"
+            placeholder="Search for missionaries or projects..."
+            className="w-full h-14 pl-12 pr-4 text-lg bg-white/90 backdrop-blur-sm border-2 border-white/20 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 rounded-full shadow-lg"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setIsSearching(true)}
+            onBlur={() => setTimeout(() => setIsSearching(false), 200)}
+          />
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-neutral-500" />
+          
+          {/* Search Results Dropdown */}
+          {isSearching && searchResults.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl max-h-96 overflow-y-auto z-30">
+              {searchResults.map((result) => (
+                <button
+                  key={`${result.type}-${result.id}`}
+                  onClick={() => handleResultClick(result)}
+                  className="w-full flex items-center p-4 hover:bg-neutral-50 border-b last:border-b-0 text-left"
+                >
+                  {result.image && (
+                    <div className="w-12 h-12 relative rounded-full overflow-hidden mr-4">
+                      <Image
+                        src={result.image}
+                        alt={result.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <h3 className="font-medium text-neutral-900">{result.title}</h3>
+                    <p className="text-sm text-neutral-600">{result.description}</p>
+                  </div>
+                  <span className="text-xs px-2 py-1 rounded-full bg-primary-100 text-primary-600">
+                    {result.type}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
+        <h2 className="text-2xl md:text-3xl font-bold uppercase text-white drop-shadow-lg tracking-wide leading-relaxed mt-4">
+          <span>Every</span>{" "}
+          <span className="font-bold bg-gradient-to-r from-primary-300 to-primary-400 bg-clip-text text-transparent">DONATION</span>{" "}
+          <span>EMPOWERS A MISSIONARY TO</span>{" "}
+          <span className="font-bold bg-gradient-to-r from-primary-300 to-primary-400 bg-clip-text text-transparent">SPREAD HOPE</span>{" "}
+          <span>AND</span>{" "}
+          <span className="font-bold bg-gradient-to-r from-primary-300 to-primary-400 bg-clip-text text-transparent">TRANSFORMATION</span>
+        </h2>
       </div>
     </section>
   );
