@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,6 +17,7 @@ import DonationModal from "@/components/donation-modal";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import useEmblaCarousel from "embla-carousel-react";
+import MissionariesSection from "@/components/missionaries-section";
 
 export default function MissionaryDonationPlatform() {
   const [donationModal, setDonationModal] = useState<{
@@ -50,60 +51,6 @@ export default function MissionaryDonationPlatform() {
     slidesToScroll: 1,
     inViewThreshold: 0.7
   });
-
-  const missionaries = [
-    {
-      id: 1,
-      name: "Senay Kumelachew",
-      role: "Digital Missions & Church Tech",
-      image: "/images/missionaries/senay.png?height=400&width=400",
-    },
-    {
-      id: 2,
-      name: "Samson Usmael",
-      role: "Digital Evangelism & Discipleship",
-      image: "/images/missionaries/samson.png?height=400&width=400",
-    },
-    {
-      id: 3,
-      name: "Cherinet Alemu",
-      role: "Digital Missions & Mentorship",
-      image: "/images/missionaries/cherinet.png?height=400&width=400",
-    },
-    {
-      id: 4,
-      name: "Saron Yohannes",
-      role: "Product Leadership & Digital Evangelism",
-      image: "/images/missionaries/saron.png?height=400&width=400",
-    },
-    {
-      id: 5,
-      name: "Rediet Kefetew",
-      role: "Content Creation & Mentorship",
-      image: "/images/missionaries/rediet.png?height=400&width=400",
-    },
-    {
-      id: 6,
-      name: "Denamo Markos",
-      role: "Software Development & ML",
-      image: "/images/missionaries/denamo.png?height=400&width=400",
-    },
-    {
-      id: 7,
-      name: "Beka Shiferaw",
-      role: "Graphic Design & Digital Strategy",
-      image: "/images/missionaries/beka.png?height=400&width=400",
-    },
-    {
-      id: 8,
-      name: "Biniam Kassahun",
-      role: "Innovation & Technology",
-      image: "/images/missionaries/biniam.png?height=400&width=400",
-    },
-  ];
-
-  // Create a duplicated array for seamless looping (for CSS animation)
-  const duplicatedMissionaries = [...missionaries, ...missionaries];
 
   const autoplay = useCallback(() => {
     if (!emblaApi) return;
@@ -252,6 +199,105 @@ export default function MissionaryDonationPlatform() {
       beneficiaries: "1000 families",
       teamSize: "5 volunteers",
       urgency: "Ongoing",
+    },
+  ];
+
+  const missionariesContainerRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    const container = missionariesContainerRef.current;
+    if (!container) return;
+
+    let animationFrame: number;
+    let startTime: number | null = null;
+    const duration = 60000; // 60 seconds for one complete cycle
+    const totalWidth = container.scrollWidth / 3; // Divide by 3 since we have three sets
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = (elapsed % duration) / duration;
+
+      if (!isHovered) {
+        // Calculate the position based on progress
+        const translateX = -progress * totalWidth * 2;
+        
+        // When we reach the end of the second set, smoothly transition to the beginning
+        if (translateX <= -totalWidth * 2) {
+          // Remove transition temporarily
+          container.style.transition = 'none';
+          // Reset position
+          container.style.transform = `translateX(0)`;
+          // Force a reflow
+          container.offsetHeight;
+          // Restore transition
+          container.style.transition = 'transform 1000ms linear';
+          // Reset start time
+          startTime = timestamp;
+        } else {
+          container.style.transform = `translateX(${translateX}px)`;
+        }
+      }
+
+      animationFrame = requestAnimationFrame(animate);
+    };
+
+    animationFrame = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [isHovered]);
+
+  const missionaries = [
+    {
+      id: 1,
+      name: "Senay Kumelachew",
+      role: "Digital Missions & Church Tech",
+      image: "/images/missionaries/senay.png?height=400&width=400",
+    },
+    {
+      id: 2,
+      name: "Samson Usmael",
+      role: "Digital Evangelism & Discipleship",
+      image: "/images/missionaries/samson.png?height=400&width=400",
+    },
+    {
+      id: 3,
+      name: "Cherinet Alemu",
+      role: "Digital Missions & Mentorship",
+      image: "/images/missionaries/cherinet.png?height=400&width=400",
+    },
+    {
+      id: 4,
+      name: "Saron Yohannes",
+      role: "Product Leadership & Digital Evangelism",
+      image: "/images/missionaries/saron.png?height=400&width=400",
+    },
+    {
+      id: 5,
+      name: "Rediet Kefetew",
+      role: "Content Creation & Mentorship",
+      image: "/images/missionaries/rediet.png?height=400&width=400",
+    },
+    {
+      id: 6,
+      name: "Denamo Markos",
+      role: "Software Development & ML",
+      image: "/images/missionaries/denamo.png?height=400&width=400",
+    },
+    {
+      id: 7,
+      name: "Beka Shiferaw",
+      role: "Graphic Design & Digital Strategy",
+      image: "/images/missionaries/beka.png?height=400&width=400",
+    },
+    {
+      id: 8,
+      name: "Biniam Kassahun",
+      role: "Innovation & Technology",
+      image: "/images/missionaries/biniam.png?height=400&width=400",
     },
   ];
 
@@ -459,97 +505,7 @@ export default function MissionaryDonationPlatform() {
       </section>
 
       {/* Missionaries Section */}
-      <section className="py-20 bg-white overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-neutral-800 mb-4">
-              Our Dedicated Missionaries
-            </h2>
-            <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-              Meet the passionate individuals who are making a difference in
-              communities across Ethiopia.
-            </p>
-          </div>
-
-          <div className="relative overflow-hidden">
-            {/* Outer container for the animated tracks */}
-            <div className="flex animate-missionary-slide">
-              {/* Track 1 */}
-              <div className="flex flex-nowrap shrink-0">
-                {duplicatedMissionaries.map((missionary, index) => (
-                  <div
-                    key={`${missionary.id}-1-${index}`}
-                    className={`flex-[0_0_280px] min-w-0 ${
-                      index < missionaries.length - 1 ? "mr-8" : ""
-                    }`}
-                  >
-                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden group">
-                      <Image
-                        src={missionary.image}
-                        alt={missionary.name}
-                        fill
-                        className="object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out" />
-                      <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-in-out">
-                        <h3 className="text-xl font-semibold mb-1">
-                          {missionary.name}
-                        </h3>
-                        <p className="text-sm text-neutral-200">
-                          {missionary.role}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Track 2 - Duplicate for seamless looping */}
-              <div className="flex flex-nowrap shrink-0">
-                {duplicatedMissionaries.map((missionary, index) => (
-                  <div
-                    key={`${missionary.id}-2-${index}`}
-                    className={`flex-[0_0_280px] min-w-0 ${
-                      index < missionaries.length - 1 ? "mr-8" : ""
-                    }`}
-                  >
-                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden group">
-                      <Image
-                        src={missionary.image}
-                        alt={missionary.name}
-                        fill
-                        className="object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out" />
-                      <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-in-out">
-                        <h3 className="text-xl font-semibold mb-1">
-                          {missionary.name}
-                        </h3>
-                        <p className="text-sm text-neutral-200">
-                          {missionary.role}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="text-center mt-12">
-            <Link href="/missionaries">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-primary-600 text-primary-600 hover:bg-primary-50 px-8 py-3 text-lg"
-              >
-                View All Missionaries
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      <MissionariesSection missionaries={missionaries} />
 
       {/* Call to Action */}
       <section className="py-16 bg-gradient-to-r from-[#102C80] to-[#0E276E]">
