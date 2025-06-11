@@ -258,48 +258,64 @@ export default function MissionaryDonationPlatform() {
       name: "Senay Kumelachew",
       role: "Digital Missions & Church Tech",
       image: "/images/missionaries/senay.png?height=400&width=400",
+      location: "Addis Ababa, Ethiopia",
+      bio: "Passionate about leveraging technology to strengthen churches and spread the gospel across Ethiopia."
     },
     {
       id: 2,
       name: "Samson Usmael",
       role: "Digital Evangelism & Discipleship",
       image: "/images/missionaries/samson.png?height=400&width=400",
+      location: "Addis Ababa, Ethiopia",
+      bio: "Dedicated to reaching the digital generation with the message of Christ through innovative online platforms."
     },
     {
       id: 3,
       name: "Cherinet Alemu",
       role: "Digital Missions & Mentorship",
       image: "/images/missionaries/cherinet.png?height=400&width=400",
+      location: "Addis Ababa, Ethiopia",
+      bio: "Committed to mentoring young leaders and equipping them for effective digital ministry."
     },
     {
       id: 4,
       name: "Saron Yohannes",
       role: "Product Leadership & Digital Evangelism",
       image: "/images/missionaries/saron.png?height=400&width=400",
+      location: "Addis Ababa, Ethiopia",
+      bio: "Leading innovative digital products that help spread the gospel and disciple believers."
     },
     {
       id: 5,
       name: "Rediet Kefetew",
       role: "Content Creation & Mentorship",
       image: "/images/missionaries/rediet.png?height=400&width=400",
+      location: "Addis Ababa, Ethiopia",
+      bio: "Creating impactful content that resonates with young people and helps them grow in their faith."
     },
     {
       id: 6,
       name: "Denamo Markos",
       role: "Software Development & ML",
       image: "/images/missionaries/denamo.png?height=400&width=400",
+      location: "Addis Ababa, Ethiopia",
+      bio: "Developing cutting-edge software solutions to support ministry and outreach efforts."
     },
     {
       id: 7,
       name: "Beka Shiferaw",
       role: "Graphic Design & Digital Strategy",
       image: "/images/missionaries/beka.png?height=400&width=400",
+      location: "Addis Ababa, Ethiopia",
+      bio: "Creating compelling visual content and strategies to enhance digital ministry impact."
     },
     {
       id: 8,
       name: "Biniam Kassahun",
       role: "Innovation & Technology",
       image: "/images/missionaries/biniam.png?height=400&width=400",
+      location: "Addis Ababa, Ethiopia",
+      bio: "Pioneering innovative technological solutions to advance the kingdom of God in Ethiopia."
     },
   ];
 
@@ -309,75 +325,75 @@ export default function MissionaryDonationPlatform() {
 
       <HeroSection openDonationModal={openDonationModal} />
 
-      {/* Bible Verse & Impact Stats */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <blockquote className="text-2xl md:text-3xl font-light text-neutral-700 italic mb-4 max-w-4xl mx-auto">
-              "How beautiful are the feet of those who bring good news!"
-            </blockquote>
+        {/* Bible Verse & Impact Stats */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <blockquote className="text-2xl md:text-3xl font-light text-neutral-700 italic mb-4 max-w-4xl mx-auto">
+                "How beautiful are the feet of those who bring good news!"
+              </blockquote>
             <cite className="text-primary-600 font-semibold">Romans 10:15</cite>
-          </div>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {impactStats.map((stat, index) => {
-              const IconComponent = stat.icon;
-              return (
-                <div key={index} className="text-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              {impactStats.map((stat, index) => {
+                const IconComponent = stat.icon;
+                return (
+                  <div key={index} className="text-center">
                   <div className="w-16 h-16 bg-gradient-to-br from-[#B8C0D4] to-[#8E9BBF] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <IconComponent className="w-8 h-8 text-primary-600" />
+                      <IconComponent className="w-8 h-8 text-primary-600" />
+                    </div>
+                    <div className="text-3xl font-bold text-neutral-800 mb-2">
+                      {stat.value}
+                    </div>
+                    <div className="text-neutral-600">{stat.label}</div>
                   </div>
-                  <div className="text-3xl font-bold text-neutral-800 mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="text-neutral-600">{stat.label}</div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Projects Section */}
+        {/* Projects Section */}
       <ProjectsSection projects={projects} openDonationModal={openDonationModal} />
 
       {/* Missionaries Section */}
       <MissionariesSection missionaries={missionaries} />
 
-      {/* Call to Action */}
+        {/* Call to Action */}
       <section className="py-16 bg-gradient-to-r from-[#102C80] to-[#0E276E]">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ready to Make a Difference?
-          </h2>
-          <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-            Your support enables missionaries to continue their vital work
-            spreading hope and love across Ethiopia.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Ready to Make a Difference?
+            </h2>
+            <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+              Your support enables missionaries to continue their vital work
+              spreading hope and love across Ethiopia.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                size="lg"
               className="bg-white text-[#0E276E] hover:bg-neutral-50 px-8 py-3 text-lg shadow-lg transform hover:scale-105 transition-all duration-200"
-              onClick={() =>
-                openDonationModal(
-                  "project",
-                  "Ethiopian Mission Support",
+                onClick={() =>
+                  openDonationModal(
+                    "project",
+                    "Ethiopian Mission Support",
                   "General support for all our Ethiopian missions"
-                )
-              }
-            >
-              Start Donating Today
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
+                  )
+                }
+              >
+                Start Donating Today
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
               className="border-white text-white hover:bg-white hover:text-[#0E276E] px-8 py-3 text-lg bg-[#f0f9ff]/30 backdrop-blur-sm"
-            >
-              Learn More About Our Mission
-            </Button>
+              >
+                Learn More About Our Mission
+              </Button>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
       <Footer />
 
