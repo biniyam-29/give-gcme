@@ -18,6 +18,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import useEmblaCarousel from "embla-carousel-react";
 import MissionariesSection from "@/components/missionaries-section";
+import ProjectsSection from "@/components/projects-section";
 
 export default function MissionaryDonationPlatform() {
   const [donationModal, setDonationModal] = useState<{
@@ -389,120 +390,7 @@ export default function MissionaryDonationPlatform() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-16 bg-neutral-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-neutral-800 mb-4">
-              Current Projects in Ethiopia
-            </h2>
-            <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-              Support specific initiatives that are making a real difference in
-              communities across Ethiopian regions.
-            </p>
-          </div>
-
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex gap-8 pb-8 transition-transform duration-500 ease-out">
-              {projects.map((project) => (
-                <div
-                  key={project.id}
-                  className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 transform transition-all duration-300 ease-out hover:scale-[1.02]"
-                >
-                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 bg-white border-neutral-200 cursor-pointer group transform hover:-translate-y-1 h-full">
-                    <Link href={`/projects/${project.slug}`}>
-                      <div className="relative h-48">
-                        <Image
-                          src={project.image || "/placeholder.svg"}
-                          alt={project.title}
-                          fill
-                          className="object-cover"
-                        />
-                        <Badge
-                          className={`absolute top-3 right-3 text-white shadow-lg ${
-                            project.urgency === "Critical Need"
-                              ? "bg-primary-600"
-                              : project.urgency === "High Priority"
-                              ? "bg-primary-500"
-                              : "bg-secondary-500"
-                          }`}
-                        >
-                          {project.urgency}
-                        </Badge>
-                        <Badge className="absolute top-3 left-3 bg-neutral-700 text-white shadow-lg">
-                          {project.category}
-                        </Badge>
-                      </div>
-                      <CardHeader>
-                        <CardTitle className="text-xl text-neutral-800 group-hover:text-primary-600 transition-colors">
-                          {project.title}
-                        </CardTitle>
-                        <CardDescription className="text-neutral-600 line-clamp-2">
-                          {project.description}
-                        </CardDescription>
-                      </CardHeader>
-                    </Link>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div className="flex items-center text-neutral-600">
-                            <Clock className="w-4 h-4 mr-2 text-primary-600" />
-                            <span className="font-medium">Duration:</span>
-                          </div>
-                          <div className="text-neutral-800">
-                            {project.duration}
-                          </div>
-
-                          <div className="flex items-center text-neutral-600">
-                            <Target className="w-4 h-4 mr-2 text-primary-600" />
-                            <span className="font-medium">Beneficiaries:</span>
-                          </div>
-                          <div className="text-neutral-800">
-                            {project.beneficiaries}
-                          </div>
-
-                          <div className="flex items-center text-neutral-600">
-                            <Users className="w-4 h-4 mr-2 text-primary-600" />
-                            <span className="font-medium">Team Size:</span>
-                          </div>
-                          <div className="text-neutral-800">
-                            {project.teamSize}
-                          </div>
-                        </div>
-                        <div className="flex space-x-3">
-                          <Link
-                            href={`/projects/${project.slug}`}
-                            className="flex-1"
-                          >
-                            <Button
-                              variant="outline"
-                              className="w-full border-primary-600 text-primary-600 hover:bg-primary-50"
-                            >
-                              Learn More
-                            </Button>
-                          </Link>
-                          <Button
-                            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white shadow-lg"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              openDonationModal(
-                                "project",
-                                project.title,
-                                project.description
-                              );
-                            }}
-                          >
-                            Donate
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <ProjectsSection projects={projects} openDonationModal={openDonationModal} />
 
       {/* Missionaries Section */}
       <MissionariesSection missionaries={missionaries} />
