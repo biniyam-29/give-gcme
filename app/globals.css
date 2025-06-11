@@ -136,3 +136,9 @@ body {
 .animate-missionary-slide:hover {
   animation-play-state: paused;
 }
+
+.parallax-image {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
