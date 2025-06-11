@@ -156,7 +156,7 @@ export default function ProjectsSection({ projects, openDonationModal }: Project
                     className="flex-[0_0_400px] min-w-0 mr-6 md:mr-8 overflow-hidden hover:shadow-xl transition-all duration-300 bg-white border-neutral-200 cursor-pointer group transform hover:-translate-y-1"
                   >
                     <Link href={`/projects/${project.slug}`}>
-                      <div className="relative h-64">
+                      <div className="relative h-48">
                         <Image
                           src={project.image || "/placeholder.svg"}
                           alt={project.title}
@@ -164,7 +164,7 @@ export default function ProjectsSection({ projects, openDonationModal }: Project
                           className="object-cover"
                         />
                         <Badge
-                          className={`absolute top-4 right-4 text-white shadow-lg ${
+                          className={`absolute top-3 right-3 text-white shadow-lg ${
                             project.urgency === "Critical Need"
                               ? "bg-primary-600"
                               : project.urgency === "High Priority"
@@ -174,30 +174,30 @@ export default function ProjectsSection({ projects, openDonationModal }: Project
                         >
                           {project.urgency}
                         </Badge>
-                        <Badge className="absolute top-4 left-4 bg-neutral-700 text-white shadow-lg">
+                        <Badge className="absolute top-3 left-3 bg-neutral-700 text-white shadow-lg">
                           {project.category}
                         </Badge>
                       </div>
-                      <CardHeader className="p-6">
-                        <CardTitle className="text-2xl text-neutral-800 group-hover:text-primary-600 transition-colors">
+                      <CardHeader>
+                        <CardTitle className="text-xl text-neutral-800 group-hover:text-primary-600 transition-colors">
                           {project.title}
                         </CardTitle>
-                        <CardDescription className="text-lg text-neutral-600 line-clamp-2">
+                        <CardDescription className="text-neutral-600 line-clamp-2">
                           {project.description}
                         </CardDescription>
                       </CardHeader>
                     </Link>
-                    <CardContent className="p-6">
-                      <div className="space-y-6">
-                        <div className="grid grid-cols-2 gap-6 text-base">
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4 text-sm">
                           <div className="flex items-center text-neutral-600">
-                            <Clock className="w-5 h-5 mr-3 text-primary-600" />
+                            <Clock className="w-4 h-4 mr-2 text-primary-600" />
                             <span className="font-medium">Duration:</span>
                           </div>
                           <div className="text-neutral-800">{project.duration}</div>
 
                           <div className="flex items-center text-neutral-600">
-                            <Target className="w-5 h-5 mr-3 text-primary-600" />
+                            <Target className="w-4 h-4 mr-2 text-primary-600" />
                             <span className="font-medium">Beneficiaries:</span>
                           </div>
                           <div className="text-neutral-800">
@@ -205,25 +205,25 @@ export default function ProjectsSection({ projects, openDonationModal }: Project
                           </div>
 
                           <div className="flex items-center text-neutral-600">
-                            <Users className="w-5 h-5 mr-3 text-primary-600" />
+                            <Users className="w-4 h-4 mr-2 text-primary-600" />
                             <span className="font-medium">Team Size:</span>
                           </div>
                           <div className="text-neutral-800">{project.teamSize}</div>
                         </div>
-                        <div className="flex gap-4">
+                        <div className="flex space-x-3">
                           <Link
                             href={`/projects/${project.slug}`}
                             className="flex-1"
                           >
                             <Button
                               variant="outline"
-                              className="w-full h-12 text-base border-primary-600 text-primary-600 hover:bg-primary-50"
+                              className="w-full border-primary-600 text-primary-600 hover:bg-primary-50"
                             >
                               Learn More
                             </Button>
                           </Link>
                           <Button
-                            className="flex-1 h-12 text-base bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white shadow-lg"
+                            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white shadow-lg"
                             onClick={(e) => {
                               e.preventDefault();
                               openDonationModal(
