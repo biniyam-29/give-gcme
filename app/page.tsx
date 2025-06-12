@@ -20,6 +20,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import MissionariesSection from "@/components/missionaries-section";
 import ProjectsSection from "@/components/projects-section";
 import HeroSection from "@/components/hero-section";
+import StrategiesSection from "@/components/strategies-section";
 
 export default function MissionaryDonationPlatform() {
   const [donationModal, setDonationModal] = useState<{
@@ -356,6 +357,9 @@ export default function MissionaryDonationPlatform() {
 
         {/* Projects Section */}
       <ProjectsSection projects={projects} openDonationModal={openDonationModal} />
+
+      {/* Strategies Section */}
+      <StrategiesSection openDonationModal={openDonationModal} />
 
       {/* Missionaries Section */}
       <MissionariesSection missionaries={missionaries} />
