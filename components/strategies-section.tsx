@@ -9,10 +9,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowRight, Users, Globe, Church, BookOpen, Video, Heart, Clipboard, Map, Film } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { strategies } from "@/app/strategies/page"; // Import the strategies data
+import { strategies } from "@/lib/strategies"; // Import the strategies data from the correct location
+import {
+  Users,
+  Globe,
+  Church,
+  BookOpen,
+  Heart,
+  Clipboard,
+  Map,
+  Film
+} from "lucide-react";
 
 interface Strategy {
   title: string;
@@ -29,6 +39,17 @@ interface StrategiesSectionProps {
     description?: string
   ) => void;
 }
+
+const iconMap = {
+  Users,
+  Globe,
+  Church,
+  BookOpen,
+  Heart,
+  Clipboard,
+  Map,
+  Film
+};
 
 export default function StrategiesSection({ openDonationModal }: StrategiesSectionProps) {
   const [isHovered, setIsHovered] = useState(false);
@@ -148,7 +169,10 @@ export default function StrategiesSection({ openDonationModal }: StrategiesSecti
                     <Link href={`/strategies/${strategy.slug}`}>
                       <CardHeader className="flex flex-row items-center space-x-4 pb-2">
                         <div className="p-3 rounded-full bg-primary-100 text-primary-600 flex-shrink-0">
-                            {strategy.icon}
+                          {(() => {
+                            const Icon = iconMap[strategy.icon as keyof typeof iconMap];
+                            return Icon ? <Icon className="w-8 h-8" /> : null;
+                          })()}
                         </div>
                         <CardTitle className="text-xl text-neutral-800 group-hover:text-primary-600 transition-colors leading-tight">
                           {strategy.title}
