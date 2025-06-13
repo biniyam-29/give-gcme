@@ -216,6 +216,7 @@ export default function HeroSection({ openDonationModal }: HeroSectionProps) {
   useEffect(() => {
     const handleScroll = () => {
       latestScrollY.current = window.scrollY;
+
       if (!isTicking.current) {
         window.requestAnimationFrame(() => {
           if (parallaxRef.current) {
@@ -239,23 +240,23 @@ export default function HeroSection({ openDonationModal }: HeroSectionProps) {
   };
 
   return (
-    <section className="relative h-screen w-full text-center flex items-end justify-center pb-20">
+    <section className="relative h-screen w-full text-center flex items-end justify-center pb-20 overflow-hidden">
       <div className="absolute inset-0 z-0 parallax-image overflow-hidden" ref={parallaxRef}>
         <Image
           src="/images/hero.png?height=800&width=1200"
           alt="Ethiopian missionaries helping children in rural communities"
           fill
-          className="object-cover parallax-scale"
+          className="object-cover"
           priority
         />
 
         {/* Bottom-up gradient overlay for the text area */}
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[#222222]/90 via-[#464545]/70 to-transparent z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-white/90 via-white/70 to-transparent z-10" />
       </div>
 
       {/* Content container */}
       <div
-        className={`relative z-20 w-[90%] max-w-2xl p-4 text-primary-00 flex flex-col justify-end ${
+        className={`relative z-20 w-[90%] max-w-2xl p-4 text-black flex flex-col justify-end ${
           isSearching && searchResults.length > 0 ? "min-h-[35rem]" : ""
         }`}
       >
@@ -306,7 +307,7 @@ export default function HeroSection({ openDonationModal }: HeroSectionProps) {
             </div>
           )}
         </div>
-        <h2 className="text-2xl md:text-3xl font-bold uppercase text-white drop-shadow-lg tracking-wide leading-relaxed mt-4">
+        <h2 className="text-2xl md:text-3xl font-bold uppercase text-black drop-shadow-lg tracking-wide leading-relaxed mt-4">
           <span>Every</span>{" "}
           <span className="font-bold bg-gradient-to-r from-primary-300 to-primary-400 bg-clip-text text-transparent">
             DONATION
