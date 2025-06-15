@@ -5,7 +5,7 @@ services:
       - "3000:3000"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/missionary_donation
-      - PAYMENT_GATEWAY_URL=http://localhost:3000/api/payment
+      - PAYMENT_GATEWAY_URL=https://api.payment-gateway.abbirr.com/api/v1/telebirr/createorder
       - PAYMENT_GATEWAY_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInByb2plY3RJZCI6MTQsImlhdCI6MTc0OTQ3Mzg4MH0.njRe6slfyda6Im7fHLSnwp2h1fWyjIJAyQ6vU7Bh89I
       - NEXT_PUBLIC_REDIRECT_URL=http://localhost:3000/thank-you
       - NEXT_PUBLIC_NOTIFY_URL=http://localhost:3000/api/payment-notify
