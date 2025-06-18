@@ -13,17 +13,76 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Project {
-  id          Int      @id @default(autoincrement())
-  slug        String   @unique
-  title       String
-  description String   @db.Text
-  image       String
-  category    String
-  duration    String
-  beneficiaries String
-  teamSize    String
-  urgency     String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model strategy {
+  id              String     @id @default(uuid())
+  title           String
+  image           Bytes?
+  description     String
+  fullDescription String?
+  slug            String     @unique
+  icon            String?
+  activities      String[] // Assuming ARRAY maps to String[] in Prisma, adjust if specific type needed
+  visionText      String?
+  involvedText    String?
+  impactQuote     String?
+  Users           user[]
+  Projects        projects[]
+}
+
+model user {
+  id                String    @id @default(uuid())
+  name              String
+  title             String?
+  email             String    @unique
+  phone             String?
+  shortBio          String?
+  fullBio           String?
+  image             Bytes?
+  location          String?
+  qualification     String?
+  website           String? // Fixed from webAdress typo
+  experience        String?
+  years             String? // Added for years of experience
+  mission           String? // Added for mission statement
+  focus             String? // Added for focus area
+  status            String? // Added for active/inactive status
+  prayerRequests    String[] // Assuming ARRAY maps to String[]
+  recentUpdates     Json?
+  supportNeeds      Json?
+  type              String?
+  role              String?
+  strategyId        String?
+  // Impact statistics fields
+  livesImpacted     Int? // Number of lives impacted
+  communitiesServed Int? // Number of communities served
+  projectsCompleted Int? // Number of projects completed
+  Strategy          strategy? @relation(fields: [strategyId], references: [id])
+
+  @@map("user") // Explicitly map to the 'user' table name if it's reserved or different from 'User'
+}
+
+model projects {
+  id               String    @id @default(uuid())
+  title            String
+  slug             String    @unique
+  shortDescription String
+  image            Bytes?
+  category         String?
+  location         String?
+  duration         String?
+  teamSize         String?
+  fundingGoal      String?
+  fundingRaised    String?
+  beneficiaries    String?
+  problem          String?
+  solution         String?
+  urgency          String?
+  urgencyFactors   String[] // Assuming ARRAY maps to String[]
+  impact           String[] // Assuming ARRAY maps to String[]
+  timeLine         Json?
+  testimonials     Json?
+  strategyId       String?
+  Strategy         strategy? @relation(fields: [strategyId], references: [id])
+
+  @@map("Projects") // Explicitly map to the 'Projects' table name
 }

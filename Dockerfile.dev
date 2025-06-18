@@ -15,22 +15,15 @@ RUN npm install --legacy-peer-deps
 # Generate Prisma Client
 RUN npx prisma generate
 
-# Copy the rest of the application code
-COPY . .
-
-# Generate Prisma Client again after copying all files
-RUN npx prisma generate
+# Copy the development entrypoint script
+COPY docker-entrypoint.dev.sh ./
 
 # Make the entrypoint script executable
-RUN chmod +x docker-entrypoint.sh
-
-# Build the application
-RUN npm run build
+RUN chmod +x docker-entrypoint.dev.sh
 
 # Expose the port
 EXPOSE 3000
 EXPOSE 5555
-EXPOSE 8080
 
-# Use the entrypoint script
-ENTRYPOINT ["./docker-entrypoint.sh"] 
+# Use the development entrypoint script
+ENTRYPOINT ["./docker-entrypoint.dev.sh"] 

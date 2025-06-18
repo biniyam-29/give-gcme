@@ -1,10 +1,11 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
       - "5555:5555"
-      - "8080:8080"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/missionary_donation
       - PAYMENT_GATEWAY_URL=https://api.payment-gateway.abbirr.com/api/v1/telebirr/createorder
@@ -13,10 +14,10 @@ services:
       - NEXT_PUBLIC_NOTIFY_URL=http://localhost:3000/api/payment-notify
     depends_on:
       - db
-    # volumes:
-    #   - .:/app
-    #   - /app/node_modules
-    #   - /app/.next
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
 
   db:
     image: postgres:14-alpine
