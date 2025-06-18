@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { strategies } from "@/lib/strategies";
 import {
   Users,
   Globe,
@@ -15,7 +15,7 @@ import {
   Heart,
   Clipboard,
   Map,
-  Film
+  Film,
 } from "lucide-react";
 
 const iconMap = {
@@ -26,22 +26,24 @@ const iconMap = {
   Heart,
   Clipboard,
   Map,
-  Film
+  Film,
 };
 
-interface Strategy {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  keyPoints: string[];
-  slug: string;
-  fullDescription: string;
-  visionText: string;
-  involvedText: string;
-  impactQuote: string;
-}
-
 export default function StrategiesPage() {
+  const [strategies, setStrategies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchStrategies() {
+      setLoading(true);
+      const res = await fetch("/api/admin/strategies");
+      const data = await res.json();
+      setStrategies(data);
+      setLoading(false);
+    }
+    fetchStrategies();
+  }, []);
+
   return (
     <>
       <Header currentPage="strategies" />
@@ -67,7 +69,7 @@ export default function StrategiesPage() {
 
         {/* Content container */}
         <div className="relative z-20 text-center text-white px-4 max-w-4xl mx-auto w-[90%]">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -75,13 +77,14 @@ export default function StrategiesPage() {
           >
             Our Mission Strategies
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-xl md:text-2xl text-neutral-200 mb-8"
           >
-            Discover how we're reaching communities and transforming lives through innovative mission approaches
+            Discover how we're reaching communities and transforming lives
+            through innovative mission approaches
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -103,35 +106,49 @@ export default function StrategiesPage() {
       {/* Strategies Grid */}
       <section id="strategies" className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {strategies.map((strategy, index) => {
-            const Icon = iconMap[strategy.icon as keyof typeof iconMap];
-            return (
-              <motion.div
-                key={strategy.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-              >
-                <Link href={`/strategies/${strategy.slug}`} className="block p-6">
-                  <div className="mb-4">
-                    {Icon && <Icon className="w-8 h-8 text-primary-600" />}
-                  </div>
-                  <h3 className="text-xl font-bold text-neutral-900 mb-2">{strategy.title}</h3>
-                  <p className="text-neutral-600 mb-4">{strategy.description}</p>
-                  <ul className="space-y-2">
-                    {strategy.keyPoints.map((point) => (
-                      <li key={point} className="flex items-center text-neutral-700">
-                        <span className="w-1.5 h-1.5 bg-primary-500 rounded-full mr-2" />
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-                </Link>
-              </motion.div>
-            );
-          })}
+          {loading ? (
+            <div className="col-span-full text-center text-lg">Loading...</div>
+          ) : (
+            strategies.map((strategy, index) => {
+              const Icon = iconMap[strategy.icon as keyof typeof iconMap];
+              return (
+                <motion.div
+                  key={strategy.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                >
+                  <Link
+                    href={`/strategies/${strategy.slug}`}
+                    className="block p-6"
+                  >
+                    <div className="mb-4">
+                      {Icon && <Icon className="w-8 h-8 text-primary-600" />}
+                    </div>
+                    <h3 className="text-xl font-bold text-neutral-900 mb-2">
+                      {strategy.title}
+                    </h3>
+                    <p className="text-neutral-600 mb-4">
+                      {strategy.description}
+                    </p>
+                    <ul className="space-y-2">
+                      {(strategy.activities || []).map((point: string) => (
+                        <li
+                          key={point}
+                          className="flex items-center text-neutral-700"
+                        >
+                          <span className="w-1.5 h-1.5 bg-primary-500 rounded-full mr-2" />
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </Link>
+                </motion.div>
+              );
+            })
+          )}
         </div>
       </section>
 
@@ -142,7 +159,8 @@ export default function StrategiesPage() {
             Join Us in Our Mission
           </h2>
           <p className="text-lg text-neutral-600 mb-8">
-            Your contribution makes a significant impact on this vital mission strategy.
+            Your contribution makes a significant impact on this vital mission
+            strategy.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
@@ -163,4 +181,4 @@ export default function StrategiesPage() {
       <Footer />
     </>
   );
-} 
+}
