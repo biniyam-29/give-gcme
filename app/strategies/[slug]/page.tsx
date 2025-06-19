@@ -97,13 +97,19 @@ export default function StrategyDetailPage() {
         <section className="relative h-screen w-full flex items-end justify-center pb-20 overflow-hidden">
           {/* Background Image and Overlays */}
           <div className="absolute inset-0 z-0">
-            <Image
-              src={`/images/strategies/${strategy.slug}.png`}
-              alt={strategy.title}
-              fill
-              className="object-cover"
-              priority
-            />
+            {strategy.image ? (
+              <Image
+                src={`data:image/jpeg;base64,${strategy.image}`}
+                alt={strategy.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <span className="text-5xl text-gray-400">No Image</span>
+              </div>
+            )}
             {/* Animated Background Elements */}
             <div className="absolute inset-0 z-0">
               <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary-500/20 rounded-full blur-3xl animate-pulse" />

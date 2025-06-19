@@ -27,7 +27,11 @@ export async function PUT(
     const imageFile = formData.get("image") as File | null;
     let imageBuffer: Buffer | undefined = undefined;
 
-    if (imageFile) {
+    if (
+      imageFile &&
+      typeof imageFile === "object" &&
+      typeof imageFile.arrayBuffer === "function"
+    ) {
       const bytes = await imageFile.arrayBuffer();
       imageBuffer = Buffer.from(bytes);
     }

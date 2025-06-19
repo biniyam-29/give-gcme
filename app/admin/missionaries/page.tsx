@@ -47,6 +47,7 @@ const MissionariesPage = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [strategies, setStrategies] = useState<any[]>([]);
 
   // Fetch missionaries from API
   const fetchMissionaries = async () => {
@@ -70,6 +71,20 @@ const MissionariesPage = () => {
     fetchMissionaries();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, filterStatus, filterType]);
+
+  // Fetch strategies from API
+  useEffect(() => {
+    const fetchStrategies = async () => {
+      try {
+        const res = await fetch("/api/admin/strategies");
+        const data = await res.json();
+        setStrategies(data);
+      } catch (e) {
+        setStrategies([]);
+      }
+    };
+    fetchStrategies();
+  }, []);
 
   // Handle image selection
   const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,7 +170,11 @@ const MissionariesPage = () => {
         item: need.item || "",
       })
     );
-    setEditForm({ ...missionary, supportNeeds: normalizedSupportNeeds });
+    setEditForm({
+      ...missionary,
+      supportNeeds: normalizedSupportNeeds,
+      strategyId: missionary.strategyId || "",
+    });
     setImagePreview(missionary.image);
     setShowEditModal(true);
   };
@@ -1003,21 +1022,19 @@ const MissionariesPage = () => {
                     Strategy
                   </label>
                   <select
-                    value={editForm.strategy || ""}
+                    value={editForm.strategyId || ""}
                     onChange={(e) =>
-                      setEditForm({ ...editForm, strategy: e.target.value })
+                      setEditForm({ ...editForm, strategyId: e.target.value })
                     }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
                   >
                     <option value="">Select Strategy</option>
-                    <option value="Digital Missions">Digital Missions</option>
-                    <option value="Digital Evangelism">
-                      Digital Evangelism
+                    {strategies.map((strategy) => (
+                      <option key={strategy.id} value={strategy.id}>
+                        {strategy.title}
                     </option>
-                    <option value="Digital Mentorship">
-                      Digital Mentorship
-                    </option>
+                    ))}
                   </select>
                 </div>
                 <div>
@@ -1410,21 +1427,19 @@ const MissionariesPage = () => {
                     Strategy
                   </label>
                   <select
-                    value={editForm.strategy || ""}
+                    value={editForm.strategyId || ""}
                     onChange={(e) =>
-                      setEditForm({ ...editForm, strategy: e.target.value })
+                      setEditForm({ ...editForm, strategyId: e.target.value })
                     }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
                   >
                     <option value="">Select Strategy</option>
-                    <option value="Digital Missions">Digital Missions</option>
-                    <option value="Digital Evangelism">
-                      Digital Evangelism
+                    {strategies.map((strategy) => (
+                      <option key={strategy.id} value={strategy.id}>
+                        {strategy.title}
                     </option>
-                    <option value="Digital Mentorship">
-                      Digital Mentorship
-                    </option>
+                    ))}
                   </select>
                 </div>
                 <div>
@@ -1497,8 +1512,8 @@ const MissionariesPage = () => {
                           setEditForm({ ...editForm, supportNeeds: updated });
                         }}
                         className="px-2 py-1 border rounded w-full"
-                        required
-                      />
+                  required
+                />
                       <input
                         type="number"
                         placeholder="Amount"

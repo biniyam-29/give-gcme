@@ -14,29 +14,6 @@ async function main() {
   const strategies = await Promise.all([
     prisma.strategy.create({
       data: {
-        title: "Digital Missions",
-        description:
-          "Empowering churches and ministries to embrace technology for Gospel advancement",
-        fullDescription:
-          "Our Digital Missions strategy focuses on equipping churches and ministries with the tools and training needed to effectively reach people in the digital age. We provide comprehensive training in digital evangelism, social media ministry, and online discipleship.",
-        slug: "digital-missions",
-        icon: "🌐",
-        activities: [
-          "Digital Evangelism Training",
-          "Church Tech Mobilization",
-          "Online Discipleship",
-          "Social Media Ministry",
-        ],
-        visionText:
-          "To see every church equipped and empowered to reach their community through digital platforms",
-        involvedText:
-          "Join us in training churches and ministries to embrace digital tools for Kingdom work",
-        impactQuote:
-          "Over 500 churches trained in digital ministry across Ethiopia",
-      },
-    }),
-    prisma.strategy.create({
-      data: {
         title: "Digital Strategy",
         description:
           "Leveraging the internet and digital technologies to rapidly spread the gospel message and combat negative online influences.",
