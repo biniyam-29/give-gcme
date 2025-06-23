@@ -19,10 +19,6 @@ const navLinks = [
   { href: "/admin/missionaries", label: "Missionaries", icon: Users },
   { href: "/admin/projects", label: "Projects", icon: Target },
   { href: "/admin/strategies", label: "Strategies", icon: TrendingUp },
-  // { href: "/admin/donations", label: "Donations", icon: DollarSign },
-  // { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
-  // { href: "/admin/settings", label: "Settings", icon: Settings },
-  // { href: "/admin/prayer", label: "Prayer Requests", icon: MessageCircle },
 ];
 
 function SidebarLink({ href, label, icon: Icon, active }: any) {
