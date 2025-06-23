@@ -1,19 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { MapPin, Calendar, Search, Users, Globe } from "lucide-react";
+import { MapPin, Calendar, Search, Users, Globe, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import DonationModal from "@/components/donation-modal";
 
+interface Missionary {
+  id: string;
+  name: string;
+  title: string;
+  email: string;
+  phone: string;
+  location: string;
+  qualification: string;
+  experience: string;
+  years: string;
+  mission: string;
+  focus: string;
+  website: string;
+  type: string;
+  status: string;
+  strategy: string;
+  image: string | null;
+  shortBio: string;
+  fullBio: string;
+  prayerRequests: string[];
+  recentUpdates: any;
+  supportNeeds: any;
+}
+
 export default function MissionariesPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [missionaries, setMissionaries] = useState<Missionary[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [donationModal, setDonationModal] = useState<{
     isOpen: boolean;
     type: "project" | "missionary";
@@ -25,6 +52,48 @@ export default function MissionariesPage() {
     title: "",
     description: "",
   });
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(12);
+  const [total, setTotal] = useState(0);
+  const [pages, setPages] = useState(1);
+
+  // Fetch missionaries from API
+  useEffect(() => {
+    const fetchMissionaries = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `/api/admin/missionaries?page=${page}&limit=${limit}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch missionaries");
+        }
+        const data = await response.json();
+        setMissionaries(data.missionaries || []);
+        if (data.pagination) {
+          setPage(data.pagination.page);
+          setLimit(data.pagination.limit);
+          setTotal(data.pagination.total);
+          setPages(data.pagination.pages);
+        }
+      } catch (err) {
+        console.error("Error fetching missionaries:", err);
+        setError("Failed to load missionaries. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMissionaries();
+  }, [page, limit]);
+
+  // Pagination handlers
+  const goToPage = (p: number) => {
+    if (p < 1 || p > pages) return;
+    setPage(p);
+  };
+  const goToPrevious = () => goToPage(page - 1);
+  const goToNext = () => goToPage(page + 1);
 
   const openDonationModal = (
     type: "project" | "missionary",
@@ -48,213 +117,78 @@ export default function MissionariesPage() {
     });
   };
 
-  const missionaries = [
-    {
-      id: 1,
-      name: "Senay Kumelachew",
-      mission:
-        "Empowering churches and ministries to embrace technology for Gospel advancement and digital missions",
-      image: "/images/missionaries/senay.png?height=400&width=400",
-      location: "Ethiopia",
-      years: "6+ years",
-      focus: "Digital Missions & Church Tech Mobilization",
-      slug: "senay-kumelachew",
-      shortBio:
-        "A passionate digital strategist empowering churches and campuses to embrace technology for Gospel advancement.",
-    },
-    {
-      id: 2,
-      name: "Samson Usmael",
-      mission:
-        "Leading digital strategies to raise multiplying missionaries and reach millions with the Gospel through digital platforms",
-      image: "/images/missionaries/samson.png?height=400&width=400",
-      location: "Ethiopia",
-      years: "10+ years",
-      focus: "Digital Evangelism & Discipleship",
-      slug: "samson-usmael",
-      shortBio:
-        "A former atheist turned digital missionary, Samson leads digital strategies to raise multiplying missionaries through tech.",
-    },
-    {
-      id: 3,
-      name: "Cherinet Alemu",
-      mission:
-        "Raising digital mentors and sharing Christ with Ethiopia's younger generation online through various digital tools and platforms.",
-      image: "/images/missionaries/cherinet.png?height=400&width=400",
-      location: "Ethiopia",
-      years: "5+ years",
-      focus: "Digital Missions & Mentorship",
-      slug: "cherinet-alemu",
-      shortBio:
-        "A dedicated missionary raising digital mentors and sharing Christ with Ethiopia's younger generation online.",
-    },
-    {
-      id: 4,
-      name: "Saron Yohannes",
-      mission:
-        "Leading digital product innovation to expand digital missions and share the love of Christ in Ethiopia.",
-      image: "/images/missionaries/saron.png?height=400&width=400",
-      location: "Durame, Ethiopia",
-      years: "5+ years",
-      focus: "Product Leadership & Digital Evangelism",
-      slug: "saron-yohannes",
-      shortBio:
-        "Engineer-turned-digital-missionary leading digital product innovation for the Gospel in Ethiopia.",
-    },
-    {
-      id: 5,
-      name: "Rediet Kefetew",
-      mission:
-        "Creating gospel-centered content and mentoring souls online to share hope through digital platforms.",
-      image: "/images/missionaries/rediet.png?height=400&width=400",
-      location: "Hawassa, Ethiopia",
-      years: "5+ years",
-      focus: "Content Creation & Mentorship",
-      slug: "rediet-kefetew",
-      shortBio:
-        "Former auditor turned full-time digital missionary, creating gospel-centered content and mentoring souls online.",
-    },
-    {
-      id: 6,
-      name: "Denamo Markos",
-      mission:
-        "Utilizing software development and machine learning to build scalable tools and innovate digital solutions for gospel engagement.",
-      image: "/images/missionaries/denamo.png?height=400&width=400",
-      location: "Hawassa, Ethiopia",
-      years: "3+ years",
-      focus: "Software Development & Machine Learning",
-      slug: "denamo-markos",
-      shortBio:
-        "Tech-savvy missionary using code and algorithms to advance the gospel in digital spaces.",
-    },
-    {
-      id: 7,
-      name: "Beka Shiferaw",
-      mission:
-        "Using graphic design and digital tools to communicate the gospel with clarity and visual impact for online evangelism and church engagement.",
-      image: "/images/missionaries/beka.png?height=400&width=400",
-      location: "Bishoftu, Ethiopia",
-      years: "3+ years",
-      focus: "Graphic Design & Digital Strategy",
-      slug: "beka-shiferaw",
-      shortBio:
-        "Engineer-turned-creative using digital tools and design to advance the gospel.",
-    },
-    {
-      id: 8,
-      name: "Biniam Kassahun",
-      mission:
-        "Leading innovation and technology to build digital platforms and strategies that support gospel outreach and discipleship across Ethiopia.",
-      image: "/images/missionaries/biniam.png?height=400&width=400",
-      location: "Ethiopia",
-      years: "4+ years",
-      focus: "Innovation & Technology",
-      slug: "biniam-kassahun",
-      shortBio:
-        "Engineer and innovator passionate about solving social problems through technology and gospel-centered solutions.",
-    },
-    {
-      id: 9,
-      name: "Etsub Yakob",
-      mission:
-        "Managing digital strategy projects and organizing events to empower campuses and spread digital evangelism and discipleship.",
-      image: "/images/missionaries/etsub.png?height=400&width=400",
-      location: "Hawassa, Ethiopia",
-      years: "2+ years",
-      focus: "Event Management & Digital Strategy",
-      slug: "etsub-yakob",
-      shortBio:
-        "Project Manager and Event Organizer with a passion for digital evangelism and discipleship.",
-    },
-    {
-      id: 10,
-      name: "Muluken Mengistu",
-      mission:
-        "Developing software and analyzing data to advance the Gospel through digital platforms and strengthen system security.",
-      image: "/images/missionaries/muluken.png?height=400&width=400",
-      location: "Addis Ababa, Ethiopia",
-      years: "9+ years",
-      focus: "Software Development & Cybersecurity",
-      slug: "muluken-mengistu",
-      shortBio:
-        "Software Developer, Security Researcher, and Digital Evangelist passionate about leveraging technology for God's glory.",
-    },
-    {
-      id: 11,
-      name: "Eyosiyas Ketema",
-      mission:
-        "Creating user-centric design solutions and innovating digital experiences to advance God's kingdom and the Great Commission.",
-      image: "/images/missionaries/eyosiyas.png?height=400&width=400",
-      location: "Addis Ababa, Ethiopia",
-      years: "3+ years",
-      focus: "UX/UI Design & Product Design",
-      slug: "eyosiyas-ketema",
-      shortBio:
-        "A UX designer passionate about creating user-centric solutions and contributing to God's kingdom through design.",
-    },
-    {
-      id: 12,
-      name: "Nardos Kebede",
-      mission:
-        "Transforming ideas into reality through project management and leveraging data analytics for effective digital ministry.",
-      image: "/images/missionaries/nardos.png?height=400&width=400",
-      location: "Addis Ababa, Ethiopia",
-      years: "3+ years",
-      focus: "Project Management & Data Analytics",
-      slug: "nardos-kebede",
-      shortBio:
-        "Project Manager with a passion for transforming ideas into reality and leveraging data for digital ministry.",
-    },
-    {
-      id: 13,
-      name: "Loza Teshome",
-      mission:
-        "Leveraging technology and product management to create digital outreach initiatives specifically designed to impact teenagers for the Gospel.",
-      image: "/images/missionaries/loza.png?height=400&width=400",
-      location: "Addis Ababa, Ethiopia",
-      years: "3+ years",
-      focus: "Product Management & Youth Digital Outreach",
-      slug: "loza-teshome",
-      shortBio:
-        "Product Manager and Digital Missionary passionate about leveraging technology to impact teenagers for the Gospel.",
-    },
-    {
-      id: 14,
-      name: "Misael Dessalegn",
-      mission:
-        "Developing front-end solutions and leading digital strategy teams to spread God's Kingdom through technology.",
-      image: "/images/missionaries/misael.png?height=400&width=400",
-      location: "Addis Ababa, Ethiopia",
-      years: "3+ years",
-      focus: "Front-End Development & Digital Strategy Leadership",
-      slug: "misael-dessalegn",
-      shortBio:
-        "Front-End Developer and former campus Digital Strategy leader passionate about using technology for God's Kingdom.",
-    },
-    {
-      id: 15,
-      name: "Selam Getachew",
-      mission:
-        "Using graphic design and visual communication to effectively convey God's message and inspire others in digital ministry.",
-      image: "/images/missionaries/selam.png?height=400&width=400",
-      location: "Addis Ababa, Ethiopia",
-      years: "2+ years",
-      focus: "Graphics Design & Visual Communication",
-      slug: "selam-getachew",
-      shortBio:
-        "Graphics Designer passionate about using visual art to communicate God's message and inspire others.",
-    },
-  ];
-
-  const filteredMissionaries = missionaries.filter((missionary) =>
-    missionary.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredMissionaries = missionaries.filter(
+    (missionary) =>
+      missionary.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      missionary.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      missionary.focus.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const impactStats = [
-    { label: "Active Missionaries", value: "127", icon: Users },
-    { label: "Ethiopian Regions Served", value: "11", icon: Globe },
-    { label: "Years of Combined Service", value: "800+", icon: Calendar },
+    {
+      label: "Active Missionaries",
+      value: missionaries
+        .filter((m) => m.status === "Active")
+        .length.toString(),
+      icon: Users,
+    },
+    {
+      label: "Ethiopian Regions Served",
+      value: new Set(missionaries.map((m) => m.location)).size.toString(),
+      icon: Globe,
+    },
+    {
+      label: "Years of Combined Service",
+      value:
+        missionaries
+          .reduce((total, m) => {
+            const years = parseInt(m.years?.match(/\d+/)?.[0] || "0");
+            return total + years;
+          }, 0)
+          .toString() + "+",
+      icon: Calendar,
+    },
   ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-stone-50">
+        <Header currentPage="missionaries" />
+        <div className="pt-20">
+          <div className="container mx-auto px-4 py-16">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="text-center">
+                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary-600" />
+                <p className="text-lg text-stone-600">
+                  Loading missionaries...
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-stone-50">
+        <Header currentPage="missionaries" />
+        <div className="pt-20">
+          <div className="container mx-auto px-4 py-16">
+            <div className="text-center">
+              <p className="text-lg text-red-600 mb-4">{error}</p>
+              <Button onClick={() => window.location.reload()}>
+                Try Again
+              </Button>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -304,7 +238,7 @@ export default function MissionariesPage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-stone-400 w-5 h-5" />
                 <Input
                   type="text"
-                  placeholder="Search missionaries by name..."
+                  placeholder="Search missionaries by name, location, or focus..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 pr-4 py-3 w-full border-stone-300 focus:border-primary-600 focus:ring-neutral-600"
@@ -314,58 +248,66 @@ export default function MissionariesPage() {
           </div>
         </section>
 
-        {/* Missionaries Grid */}
-        <section className="py-16 bg-stone-50">
+        {/* Missionaries List */}
+        <section className="py-12">
           <div className="container mx-auto px-4">
-            {filteredMissionaries.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-xl text-stone-600">
-                  No missionaries found matching your search.
-                </p>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+              <div className="flex-1">
+                <Input
+                  type="text"
+                  placeholder="Search missionaries..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full md:w-96"
+                />
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                {filteredMissionaries.map((missionary) => (
-                  <Card
-                    key={missionary.id}
-                    className="text-center hover:shadow-lg transition-all duration-300 bg-white border-stone-200 cursor-pointer group"
-                  >
-                    <Link href={`/missionaries/${missionary.slug}`}>
-                      <CardHeader className="pb-4">
-                        <div className="relative w-32 h-32 mx-auto mb-4">
-                          <Image
-                            src={missionary.image || "/placeholder.svg"}
-                            alt={missionary.name}
-                            fill
-                            className="object-cover rounded-full group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
-                        <CardTitle className="text-lg text-stone-800 group-hover:text-primary-600 transition-colors">
-                          {missionary.name}
-                        </CardTitle>
-                        <div className="flex items-center justify-center text-sm text-stone-500 mb-2">
-                          <MapPin className="w-4 h-4 mr-1" />
-                          {missionary.location}
-                        </div>
-                        <Badge
-                          variant="secondary"
-                          className="bg-stone-100 text-stone-700"
-                        >
-                          {missionary.focus}
-                        </Badge>
-                      </CardHeader>
-                    </Link>
-                    <CardContent>
-                      <p className="text-sm text-stone-600 mb-4 line-clamp-3">
-                        {missionary.shortBio}
-                      </p>
-                      <div className="flex items-center justify-center text-xs text-stone-500 mb-4">
-                        <Calendar className="w-3 h-3 mr-1" />
-                        {missionary.years} of service
+              <div className="text-sm text-stone-600">
+                Showing page {page} of {pages} ({total} missionaries)
+              </div>
+            </div>
+            {/* Missionaries Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {filteredMissionaries.map((missionary) => (
+                <Card
+                  key={missionary.id}
+                  className="text-center hover:shadow-lg transition-all duration-300 bg-white border-stone-200 cursor-pointer group"
+                >
+                  <Link href={`/missionaries/${missionary.id}`}>
+                    <CardHeader className="pb-4">
+                      <div className="relative w-32 h-32 mx-auto mb-4">
+                        <Image
+                          src={missionary.image || "/placeholder.svg"}
+                          alt={missionary.name}
+                          fill
+                          className="object-cover rounded-full group-hover:scale-105 transition-transform duration-300"
+                        />
                       </div>
-                      <div className="flex gap-2">
+                      <CardTitle className="text-lg text-stone-800 group-hover:text-primary-600 transition-colors">
+                        {missionary.name}
+                      </CardTitle>
+                      <div className="flex items-center justify-center text-sm text-stone-500 mb-2">
+                        <MapPin className="w-4 h-4 mr-1" />
+                        {missionary.location}
+                      </div>
+                      <Badge
+                        variant="secondary"
+                        className="bg-stone-100 text-stone-700"
+                      >
+                        {missionary.focus}
+                      </Badge>
+                    </CardHeader>
+                  </Link>
+                  <CardContent>
+                    <p className="text-sm text-stone-600 mb-4 line-clamp-3">
+                      {missionary.shortBio || missionary.mission}
+                    </p>
+                    <div className="flex items-center justify-center text-xs text-stone-500 mb-4">
+                      <Calendar className="w-3 h-3 mr-1" />
+                      {missionary.years} of service
+                    </div>
+                    <div className="flex gap-2">
                       <Button
-                          className="flex-1 bg-primary-600 hover:bg-primary-700 text-white transition-colors"
+                        className="flex-1 bg-primary-600 hover:bg-primary-700 text-white transition-colors"
                         onClick={(e) => {
                           e.preventDefault();
                           openDonationModal(
@@ -377,18 +319,50 @@ export default function MissionariesPage() {
                       >
                         Support {missionary.name.split(" ")[0]}
                       </Button>
-                        <Link href={`/missionaries/${missionary.slug}`} className="flex-1">
-                          <Button
-                            variant="outline"
-                            className="w-full border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white transition-colors"
-                          >
-                            Learn More
-                          </Button>
-                        </Link>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      <Link
+                        href={`/missionaries/${missionary.id}`}
+                        className="flex-1"
+                      >
+                        <Button
+                          variant="outline"
+                          className="w-full border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white transition-colors"
+                        >
+                          Learn More
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            {/* Pagination Controls */}
+            {pages > 1 && (
+              <div className="flex justify-center items-center gap-2 mt-10">
+                <button
+                  onClick={goToPrevious}
+                  disabled={page === 1}
+                  className="px-3 py-1 border rounded disabled:opacity-50"
+                >
+                  Previous
+                </button>
+                {Array.from({ length: pages }).map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => goToPage(idx + 1)}
+                    className={`px-3 py-1 border rounded ${
+                      page === idx + 1 ? "bg-blue-600 text-white" : ""
+                    }`}
+                  >
+                    {idx + 1}
+                  </button>
                 ))}
+                <button
+                  onClick={goToNext}
+                  disabled={page === pages}
+                  className="px-3 py-1 border rounded disabled:opacity-50"
+                >
+                  Next
+                </button>
               </div>
             )}
           </div>
