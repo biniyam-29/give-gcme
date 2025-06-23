@@ -2,29 +2,26 @@ import { notFound } from "next/navigation";
 import MissionaryDetail from "./missionary-detail";
 
 interface PageProps {
-  params?: Promise<{ id: string }>;
-  searchParams?: Promise<any>;
+  params?: Promise<{ id: string }> | { id: string };
+  searchParams?: any;
 }
 
 async function getMissionary(id: string) {
   try {
-    const response = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-      }/api/admin/missionaries`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch missionaries");
-    }
-
-    const data = await response.json();
-    const missionary = data.missionaries?.find((m: any) => m.id === id);
-
-    return missionary || null;
+    // Use host.docker.internal:3001 if running in Docker, otherwise localhost:3001
+    const base =
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
+      (process.env.DOCKER
+        ? "http://host.docker.internal:3001"
+        : "http://localhost:3001");
+    const response = await fetch(`${base}/api/admin/missionaries/${id}`, {
+      cache: "no-store",
+    });
+    if (!response.ok) throw new Error("Failed to fetch missionary");
+    const missionary = await response.json();
+    if (!missionary || missionary.error) return null;
+    return missionary;
   } catch (error) {
     console.error("Error fetching missionary:", error);
     return null;
@@ -32,7 +29,10 @@ async function getMissionary(id: string) {
 }
 
 export default async function MissionaryDetailPage({ params }: PageProps) {
-  const { id } = (await params) || {};
+  // Await params if it's a Promise (for Next.js server components)
+  const resolvedParams =
+    typeof params?.then === "function" ? await params : params;
+  const { id } = resolvedParams || {};
 
   if (!id) {
     notFound();

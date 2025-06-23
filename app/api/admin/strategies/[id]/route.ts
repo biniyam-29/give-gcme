@@ -24,8 +24,8 @@ export async function PUT(
     const impactQuote = formData.get("impactQuote") as string;
 
     // Handle image upload
-    const imageFile = formData.get("image") as File | null;
-    let imageBuffer: Buffer | undefined = undefined;
+    const imageFile = formData.get("image") as File | string | null;
+    let imageBuffer: Buffer | null = null;
 
     if (
       imageFile &&
@@ -34,6 +34,13 @@ export async function PUT(
     ) {
       const bytes = await imageFile.arrayBuffer();
       imageBuffer = Buffer.from(bytes);
+    } else if (typeof imageFile === "string") {
+      // Handle data URL or base64 string
+      let base64String = imageFile;
+      if (base64String.startsWith("data:image")) {
+        base64String = base64String.split(",")[1];
+      }
+      imageBuffer = Buffer.from(base64String, "base64");
     }
 
     const updateData: any = {
@@ -48,9 +55,17 @@ export async function PUT(
       impactQuote,
     };
 
-    // Only update image if a new one is provided
-    if (imageBuffer) {
-      updateData.image = imageBuffer;
+    // Only update image if a new one is provided or if explicitly cleared
+    if (formData.has("image")) {
+      if (
+        !imageFile ||
+        (typeof imageFile === "object" && imageFile.size === 0) ||
+        imageFile === "null"
+      ) {
+        updateData.image = null;
+      } else if (imageBuffer) {
+        updateData.image = imageBuffer;
+      }
     }
 
     const strategy = await prisma.strategy.update({
@@ -75,8 +90,9 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    await prisma.strategy.delete({
+    await prisma.strategy.update({
       where: { id },
+      data: { isDeleted: true },
     });
 
     return NextResponse.json({ message: "Strategy deleted successfully" });

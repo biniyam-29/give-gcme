@@ -23,6 +23,7 @@ RUN chmod +x docker-entrypoint.dev.sh
 
 # Expose the port
 EXPOSE 3000
+EXPOSE 3001
 EXPOSE 5555
 
 # Use the development entrypoint script

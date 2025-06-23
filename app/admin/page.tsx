@@ -26,6 +26,7 @@ import {
   Bell,
   User,
 } from "lucide-react";
+import { format } from "date-fns";
 
 // Main Admin Dashboard Component
 const AdminDashboard = () => {
@@ -35,70 +36,23 @@ const AdminDashboard = () => {
   const [modalType, setModalType] = useState("info");
   const [modalCallback, setModalCallback] = useState<(() => void) | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock data - replace with real API calls
-  const [dashboardData, setDashboardData] = useState({
-    totalDonations: 125000,
-    totalMissionaries: 45,
-    activeProjects: 23,
-    totalStrategies: 8,
-    monthlyGrowth: 12.5,
-    recentDonations: [
-      {
-        id: 1,
-        amount: 2500,
-        donor: "John Smith",
-        project: "Clean Water Initiative",
-        date: "2024-01-15",
-      },
-      {
-        id: 2,
-        amount: 1800,
-        donor: "Sarah Johnson",
-        project: "Education Program",
-        date: "2024-01-14",
-      },
-      {
-        id: 3,
-        amount: 3200,
-        donor: "Mike Davis",
-        project: "Medical Mission",
-        date: "2024-01-13",
-      },
-    ],
-    topProjects: [
-      {
-        name: "Clean Water Initiative",
-        raised: 45000,
-        goal: 60000,
-        progress: 75,
-      },
-      { name: "Education Program", raised: 32000, goal: 50000, progress: 64 },
-      { name: "Medical Mission", raised: 28000, goal: 40000, progress: 70 },
-    ],
-    recentActivities: [
-      {
-        type: "donation",
-        message: "New donation of $2,500 received",
-        time: "2 hours ago",
-      },
-      {
-        type: "project",
-        message: "Project 'Clean Water Initiative' updated",
-        time: "4 hours ago",
-      },
-      {
-        type: "missionary",
-        message: "New missionary profile created",
-        time: "6 hours ago",
-      },
-      {
-        type: "strategy",
-        message: "Strategy 'Community Development' modified",
-        time: "1 day ago",
-      },
-    ],
-  });
+  useEffect(() => {
+    setIsLoading(true);
+    fetch("/api/admin/dashboard")
+      .then(async (res) => {
+        if (!res.ok) throw new Error("Failed to fetch dashboard data");
+        const data = await res.json();
+        setDashboardData(data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setIsLoading(false);
+      });
+  }, []);
 
   const showCustomModal = (
     content: string,
@@ -128,8 +82,8 @@ const AdminDashboard = () => {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-          <p className="text-3xl font-bold text-gray-900">{value}</p>
-          {change && (
+          <p className="text-3xl font-bold text-[#001F54]">{value}</p>
+          {change !== undefined && (
             <div className="flex items-center mt-2">
               {changeType === "up" ? (
                 <ArrowUpRight className="w-4 h-4 text-green-500 mr-1" />
@@ -146,8 +100,8 @@ const AdminDashboard = () => {
             </div>
           )}
         </div>
-        <div className="p-3 bg-blue-50 rounded-lg">
-          <Icon className="w-6 h-6 text-blue-600" />
+        <div className="p-3 bg-[#001F54] bg-opacity-10 rounded-lg">
+          <Icon className="w-6 h-6 text-[#001F54]" />
         </div>
       </div>
     </div>
@@ -209,34 +163,52 @@ const AdminDashboard = () => {
     );
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f8fb]">
+        <span className="text-[#001F54] text-xl font-semibold">
+          Loading dashboard...
+        </span>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f8fb]">
+        <span className="text-red-600 text-xl font-semibold">{error}</span>
+      </div>
+    );
+  }
+  if (!dashboardData) return null;
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#f4f8fb]">
       <div className="p-8">
         {/* Header */}
         <header className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            <h2 className="text-3xl font-bold text-[#001F54] mb-2">
               Dashboard Overview
             </h2>
-            <p className="text-gray-600">
+            <p className="text-[#001F54] opacity-80">
               Welcome back! Here's what's happening with your mission platform.
             </p>
           </div>
           <div className="flex items-center space-x-3">
-            <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+            {/* <button className="p-2 text-[#001F54] hover:bg-[#001F54] hover:bg-opacity-10 rounded-lg transition-colors">
               <RefreshCw className="w-5 h-5" />
             </button>
-            <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+            <button className="p-2 text-[#001F54] hover:bg-[#001F54] hover:bg-opacity-10 rounded-lg transition-colors">
               <Download className="w-5 h-5" />
-            </button>
-            <div className="w-px h-6 bg-gray-300"></div>
+            </button> */}
+            <div className="w-px h-6 bg-[#001F54] bg-opacity-20"></div>
             <div className="flex items-center space-x-3 bg-white px-4 py-2 rounded-lg border border-gray-200">
               <img
-                src="https://placehold.co/32x32/4F46E5/ffffff?text=AD"
+                src="/logo/gcme-logo.png"
                 alt="Admin Avatar"
                 className="w-8 h-8 rounded-full"
               />
-              <span className="text-sm font-medium text-gray-700">Admin</span>
+              <span className="text-sm font-medium text-[#001F54]">Admin</span>
             </div>
           </div>
         </header>
@@ -249,29 +221,23 @@ const AdminDashboard = () => {
                 title="Total Donations"
                 value={`$${dashboardData.totalDonations.toLocaleString()}`}
                 icon={DollarSign}
-                change={dashboardData.monthlyGrowth}
-                changeType="up"
+                change={dashboardData.monthlyGrowth?.toFixed(1)}
+                changeType={dashboardData.monthlyGrowth >= 0 ? "up" : "down"}
               />
               <StatCard
                 title="Active Missionaries"
                 value={dashboardData.totalMissionaries}
                 icon={Users}
-                change={8.2}
-                changeType="up"
               />
               <StatCard
                 title="Active Projects"
                 value={dashboardData.activeProjects}
                 icon={Target}
-                change={-2.1}
-                changeType="down"
               />
               <StatCard
                 title="Strategies"
                 value={dashboardData.totalStrategies}
                 icon={TrendingUp}
-                change={0}
-                changeType="up"
               />
             </div>
 
@@ -280,32 +246,37 @@ const AdminDashboard = () => {
               {/* Recent Donations */}
               <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h3 className="text-lg font-semibold text-[#001F54]">
                     Recent Donations
                   </h3>
-                  <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                  <button className="text-sm text-[#001F54] hover:underline font-medium">
                     View All
                   </button>
                 </div>
                 <div className="space-y-4">
-                  {dashboardData.recentDonations.map((donation) => (
+                  {dashboardData.recentDonations.map((donation: any) => (
                     <div
                       key={donation.id}
-                      className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-4 bg-[#001F54] bg-opacity-5 rounded-lg"
                     >
                       <div>
-                        <p className="font-medium text-gray-900">
+                        <p className="font-medium text-[#001F54]">
                           {donation.donor}
                         </p>
-                        <p className="text-sm text-gray-600">
-                          {donation.project}
+                        <p className="text-sm text-[#001F54] opacity-80">
+                          {donation.project ||
+                            donation.missionary ||
+                            donation.strategy ||
+                            "General"}
                         </p>
                       </div>
                       <div className="text-right">
                         <p className="font-semibold text-green-600">
                           ${donation.amount.toLocaleString()}
                         </p>
-                        <p className="text-xs text-gray-500">{donation.date}</p>
+                        <p className="text-xs text-[#001F54] opacity-60">
+                          {format(new Date(donation.date), "yyyy-MM-dd HH:mm")}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -315,17 +286,30 @@ const AdminDashboard = () => {
               {/* Recent Activities */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h3 className="text-lg font-semibold text-[#001F54]">
                     Recent Activities
                   </h3>
-                  <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                  <button className="text-sm text-[#001F54] hover:underline font-medium">
                     View All
                   </button>
                 </div>
                 <div className="space-y-2">
-                  {dashboardData.recentActivities.map((activity, index) => (
-                    <ActivityItem key={index} activity={activity} />
-                  ))}
+                  {dashboardData.recentActivities.map(
+                    (activity: any, index: number) => (
+                      <div
+                        key={index}
+                        className="flex items-center space-x-2 p-2 rounded hover:bg-[#001F54] hover:bg-opacity-5 transition-colors"
+                      >
+                        <Activity className="w-4 h-4 text-[#001F54]" />
+                        <span className="text-sm text-[#001F54]">
+                          {activity.message}
+                        </span>
+                        <span className="ml-auto text-xs text-[#001F54] opacity-60">
+                          {format(new Date(activity.time), "yyyy-MM-dd HH:mm")}
+                        </span>
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             </div>
@@ -333,18 +317,52 @@ const AdminDashboard = () => {
             {/* Projects Progress */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-lg font-semibold text-[#001F54]">
                   Top Projects
                 </h3>
-                <button className="flex items-center space-x-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
+                <button className="flex items-center space-x-2 text-sm text-[#001F54] hover:underline font-medium">
                   <Plus className="w-4 h-4" />
                   <span>Add Project</span>
                 </button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {dashboardData.topProjects.map((project, index) => (
-                  <ProjectCard key={index} project={project} />
-                ))}
+                {dashboardData.topProjects.map(
+                  (project: any, index: number) => (
+                    <div
+                      key={index}
+                      className="bg-[#001F54] bg-opacity-5 rounded-lg p-4"
+                    >
+                      <h4 className="font-medium text-[#001F54] mb-1">
+                        {project.name}
+                      </h4>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm text-[#001F54] opacity-80">
+                          Raised
+                        </span>
+                        <span className="text-sm text-[#001F54] opacity-80">
+                          Goal
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-semibold text-[#001F54]">
+                          ${project.raised.toLocaleString()}
+                        </span>
+                        <span className="font-semibold text-[#001F54]">
+                          ${project.goal.toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="w-full bg-[#001F54] bg-opacity-10 rounded-full h-2">
+                        <div
+                          className="bg-[#001F54] h-2 rounded-full"
+                          style={{ width: `${project.progress}%` }}
+                        ></div>
+                      </div>
+                      <div className="text-xs text-[#001F54] opacity-70 mt-1">
+                        {project.progress}% funded
+                      </div>
+                    </div>
+                  )
+                )}
               </div>
             </div>
 

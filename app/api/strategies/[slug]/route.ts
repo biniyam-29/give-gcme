@@ -10,7 +10,7 @@ export async function GET(
   try {
     const { slug } = await params;
     const strategy = await prisma.strategy.findUnique({
-      where: { slug },
+      where: { slug, isDeleted: false },
     });
     if (!strategy) {
       return NextResponse.json(

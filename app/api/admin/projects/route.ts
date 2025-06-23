@@ -29,6 +29,9 @@ export async function GET(request: Request) {
       where.category = category;
     }
 
+    // Only include non-deleted projects
+    where.isDeleted = false;
+
     // Get projects with pagination
     const [projects, total] = await Promise.all([
       prisma.projects.findMany({
@@ -39,11 +42,12 @@ export async function GET(request: Request) {
           Strategy: {
             select: {
               title: true,
+              id: true,
             },
           },
         },
         orderBy: {
-          title: "asc",
+          createdAt: "desc",
         },
       }),
       prisma.projects.count({ where }),
@@ -108,31 +112,31 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
-    
+
     // Extract form fields
-    const title = formData.get('title') as string;
-    const slug = formData.get('slug') as string;
-    const shortDescription = formData.get('shortDescription') as string;
-    const category = formData.get('category') as string;
-    const location = formData.get('location') as string;
-    const duration = formData.get('duration') as string;
-    const teamSize = formData.get('teamSize') as string;
-    const fundingGoal = formData.get('fundingGoal') as string;
-    const fundingRaised = formData.get('fundingRaised') as string;
-    const beneficiaries = formData.get('beneficiaries') as string;
-    const problem = formData.get('problem') as string;
-    const solution = formData.get('solution') as string;
-    const urgency = formData.get('urgency') as string;
-    const urgencyFactors = formData.get('urgencyFactors') as string;
-    const impact = formData.get('impact') as string;
-    const timeLine = formData.get('timeLine') as string;
-    const testimonials = formData.get('testimonials') as string;
-    const strategyId = formData.get('strategyId') as string;
-    
+    const title = formData.get("title") as string;
+    const slug = formData.get("slug") as string;
+    const shortDescription = formData.get("shortDescription") as string;
+    const category = formData.get("category") as string;
+    const location = formData.get("location") as string;
+    const duration = formData.get("duration") as string;
+    const teamSize = formData.get("teamSize") as string;
+    const fundingGoal = formData.get("fundingGoal") as string;
+    const fundingRaised = formData.get("fundingRaised") as string;
+    const beneficiaries = formData.get("beneficiaries") as string;
+    const problem = formData.get("problem") as string;
+    const solution = formData.get("solution") as string;
+    const urgency = formData.get("urgency") as string;
+    const urgencyFactors = formData.get("urgencyFactors") as string;
+    const impact = formData.get("impact") as string;
+    const timeLine = formData.get("timeLine") as string;
+    const testimonials = formData.get("testimonials") as string;
+    const strategyId = formData.get("strategyId") as string;
+
     // Handle image upload
-    const imageFile = formData.get('image') as File | null;
+    const imageFile = formData.get("image") as File | null;
     let imageBuffer: Buffer | null = null;
-    
+
     if (imageFile) {
       const bytes = await imageFile.arrayBuffer();
       imageBuffer = Buffer.from(bytes);

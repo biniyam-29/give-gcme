@@ -53,7 +53,11 @@ const StrategiesPage = () => {
     setLoading(true);
     try {
       const data = await fetchStrategies();
-      setStrategies(data);
+      setStrategies(
+        Array.isArray(data.strategies)
+          ? data.strategies.filter((s) => !s.isDeleted)
+          : []
+      );
     } catch (e: any) {
       setError(e.message);
     }
@@ -97,6 +101,23 @@ const StrategiesPage = () => {
         impactQuote: "",
       });
       await loadStrategies();
+    } catch (e: any) {
+      setError(e.message);
+    }
+    setSaving(false);
+  };
+
+  const handleDelete = async (strategyId: string) => {
+    if (!window.confirm("Are you sure you want to delete this strategy?"))
+      return;
+    setSaving(true);
+    setError("");
+    try {
+      const res = await fetch(`/api/admin/strategies/${strategyId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to delete strategy");
+      setStrategies((prev) => prev.filter((s) => s.id !== strategyId));
     } catch (e: any) {
       setError(e.message);
     }
@@ -194,7 +215,10 @@ const StrategiesPage = () => {
                       >
                         <Edit className="w-4 h-4" />
                       </button>
-                      <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                      <button
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        onClick={() => handleDelete(strategy.id)}
+                      >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -498,12 +522,15 @@ const StrategiesPage = () => {
                         value.split(",").map((a: string) => a.trim())
                       )
                     );
-                  } else {
+                  } else if (key !== "image") {
                     formData.append(key, value);
                   }
                 });
                 if (imageFile) {
                   formData.append("image", imageFile);
+                } else if (imagePreview === null && editForm.image === null) {
+                  // User removed the image
+                  formData.append("image", "null");
                 }
                 const res = await fetch(
                   `/api/admin/strategies/${selectedStrategy.id}`,
@@ -674,17 +701,43 @@ const StrategiesPage = () => {
                   className="mb-2"
                 />
                 {imagePreview ? (
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-full max-h-40 object-cover rounded mb-2"
-                  />
+                  <>
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="w-full max-h-40 object-cover rounded mb-2"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImagePreview(null);
+                        setEditForm({ ...editForm, image: null });
+                        setImageFile(null);
+                      }}
+                      className="text-red-500 text-xs underline mt-1"
+                    >
+                      Remove Image
+                    </button>
+                  </>
                 ) : editForm.image ? (
-                  <img
-                    src={`data:image/jpeg;base64,${editForm.image}`}
-                    alt="Current"
-                    className="w-full max-h-40 object-cover rounded mb-2"
-                  />
+                  <>
+                    <img
+                      src={`data:image/jpeg;base64,${editForm.image}`}
+                      alt="Current"
+                      className="w-full max-h-40 object-cover rounded mb-2"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImagePreview(null);
+                        setEditForm({ ...editForm, image: null });
+                        setImageFile(null);
+                      }}
+                      className="text-red-500 text-xs underline mt-1"
+                    >
+                      Remove Image
+                    </button>
+                  </>
                 ) : null}
               </div>
             </div>

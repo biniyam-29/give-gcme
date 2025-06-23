@@ -52,18 +52,30 @@ export default function MissionariesPage() {
     title: "",
     description: "",
   });
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(12);
+  const [total, setTotal] = useState(0);
+  const [pages, setPages] = useState(1);
 
   // Fetch missionaries from API
   useEffect(() => {
     const fetchMissionaries = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/admin/missionaries");
+        const response = await fetch(
+          `/api/admin/missionaries?page=${page}&limit=${limit}`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch missionaries");
         }
         const data = await response.json();
         setMissionaries(data.missionaries || []);
+        if (data.pagination) {
+          setPage(data.pagination.page);
+          setLimit(data.pagination.limit);
+          setTotal(data.pagination.total);
+          setPages(data.pagination.pages);
+        }
       } catch (err) {
         console.error("Error fetching missionaries:", err);
         setError("Failed to load missionaries. Please try again later.");
@@ -73,7 +85,15 @@ export default function MissionariesPage() {
     };
 
     fetchMissionaries();
-  }, []);
+  }, [page, limit]);
+
+  // Pagination handlers
+  const goToPage = (p: number) => {
+    if (p < 1 || p > pages) return;
+    setPage(p);
+  };
+  const goToPrevious = () => goToPage(page - 1);
+  const goToNext = () => goToPage(page + 1);
 
   const openDonationModal = (
     type: "project" | "missionary",
@@ -228,86 +248,121 @@ export default function MissionariesPage() {
           </div>
         </section>
 
-        {/* Missionaries Grid */}
-        <section className="py-16 bg-stone-50">
+        {/* Missionaries List */}
+        <section className="py-12">
           <div className="container mx-auto px-4">
-            {filteredMissionaries.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-xl text-stone-600">
-                  {searchTerm
-                    ? "No missionaries found matching your search."
-                    : "No missionaries available at the moment."}
-                </p>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+              <div className="flex-1">
+                <Input
+                  type="text"
+                  placeholder="Search missionaries..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full md:w-96"
+                />
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                {filteredMissionaries.map((missionary) => (
-                  <Card
-                    key={missionary.id}
-                    className="text-center hover:shadow-lg transition-all duration-300 bg-white border-stone-200 cursor-pointer group"
-                  >
-                    <Link href={`/missionaries/${missionary.id}`}>
-                      <CardHeader className="pb-4">
-                        <div className="relative w-32 h-32 mx-auto mb-4">
-                          <Image
-                            src={missionary.image || "/placeholder.svg"}
-                            alt={missionary.name}
-                            fill
-                            className="object-cover rounded-full group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
-                        <CardTitle className="text-lg text-stone-800 group-hover:text-primary-600 transition-colors">
-                          {missionary.name}
-                        </CardTitle>
-                        <div className="flex items-center justify-center text-sm text-stone-500 mb-2">
-                          <MapPin className="w-4 h-4 mr-1" />
-                          {missionary.location}
-                        </div>
-                        <Badge
-                          variant="secondary"
-                          className="bg-stone-100 text-stone-700"
-                        >
-                          {missionary.focus}
-                        </Badge>
-                      </CardHeader>
-                    </Link>
-                    <CardContent>
-                      <p className="text-sm text-stone-600 mb-4 line-clamp-3">
-                        {missionary.shortBio || missionary.mission}
-                      </p>
-                      <div className="flex items-center justify-center text-xs text-stone-500 mb-4">
-                        <Calendar className="w-3 h-3 mr-1" />
-                        {missionary.years} of service
+              <div className="text-sm text-stone-600">
+                Showing page {page} of {pages} ({total} missionaries)
+              </div>
+            </div>
+            {/* Missionaries Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {filteredMissionaries.map((missionary) => (
+                <Card
+                  key={missionary.id}
+                  className="text-center hover:shadow-lg transition-all duration-300 bg-white border-stone-200 cursor-pointer group"
+                >
+                  <Link href={`/missionaries/${missionary.id}`}>
+                    <CardHeader className="pb-4">
+                      <div className="relative w-32 h-32 mx-auto mb-4">
+                        <Image
+                          src={missionary.image || "/placeholder.svg"}
+                          alt={missionary.name}
+                          fill
+                          className="object-cover rounded-full group-hover:scale-105 transition-transform duration-300"
+                        />
                       </div>
-                      <div className="flex gap-2">
+                      <CardTitle className="text-lg text-stone-800 group-hover:text-primary-600 transition-colors">
+                        {missionary.name}
+                      </CardTitle>
+                      <div className="flex items-center justify-center text-sm text-stone-500 mb-2">
+                        <MapPin className="w-4 h-4 mr-1" />
+                        {missionary.location}
+                      </div>
+                      <Badge
+                        variant="secondary"
+                        className="bg-stone-100 text-stone-700"
+                      >
+                        {missionary.focus}
+                      </Badge>
+                    </CardHeader>
+                  </Link>
+                  <CardContent>
+                    <p className="text-sm text-stone-600 mb-4 line-clamp-3">
+                      {missionary.shortBio || missionary.mission}
+                    </p>
+                    <div className="flex items-center justify-center text-xs text-stone-500 mb-4">
+                      <Calendar className="w-3 h-3 mr-1" />
+                      {missionary.years} of service
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        className="flex-1 bg-primary-600 hover:bg-primary-700 text-white transition-colors"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openDonationModal(
+                            "missionary",
+                            missionary.name,
+                            missionary.mission
+                          );
+                        }}
+                      >
+                        Support {missionary.name.split(" ")[0]}
+                      </Button>
+                      <Link
+                        href={`/missionaries/${missionary.id}`}
+                        className="flex-1"
+                      >
                         <Button
-                          className="flex-1 bg-primary-600 hover:bg-primary-700 text-white transition-colors"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            openDonationModal(
-                              "missionary",
-                              missionary.name,
-                              missionary.mission
-                            );
-                          }}
+                          variant="outline"
+                          className="w-full border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white transition-colors"
                         >
-                          Support {missionary.name.split(" ")[0]}
+                          Learn More
                         </Button>
-                        <Link
-                          href={`/missionaries/${missionary.id}`}
-                          className="flex-1"
-                        >
-                          <Button
-                            variant="outline"
-                            className="w-full border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white transition-colors"
-                          >
-                            Learn More
-                          </Button>
-                        </Link>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            {/* Pagination Controls */}
+            {pages > 1 && (
+              <div className="flex justify-center items-center gap-2 mt-10">
+                <button
+                  onClick={goToPrevious}
+                  disabled={page === 1}
+                  className="px-3 py-1 border rounded disabled:opacity-50"
+                >
+                  Previous
+                </button>
+                {Array.from({ length: pages }).map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => goToPage(idx + 1)}
+                    className={`px-3 py-1 border rounded ${
+                      page === idx + 1 ? "bg-blue-600 text-white" : ""
+                    }`}
+                  >
+                    {idx + 1}
+                  </button>
                 ))}
+                <button
+                  onClick={goToNext}
+                  disabled={page === pages}
+                  className="px-3 py-1 border rounded disabled:opacity-50"
+                >
+                  Next
+                </button>
               </div>
             )}
           </div>

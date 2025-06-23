@@ -27,13 +27,15 @@ model strategy {
   impactQuote     String?
   Users           user[]
   Projects        projects[]
+  Donation        Donation[]
+  isDeleted       Boolean    @default(false)
 }
 
 model user {
-  id                String    @id @default(uuid())
+  id                String     @id @default(uuid())
   name              String
   title             String?
-  email             String    @unique
+  email             String     @unique
   phone             String?
   shortBio          String?
   fullBio           String?
@@ -43,7 +45,7 @@ model user {
   website           String? // Fixed from webAdress typo
   experience        String?
   years             String? // Added for years of experience
-  mission           String? // Added for mission statement
+  mission           String? // Mission statement for the missionary
   focus             String? // Added for focus area
   status            String? // Added for active/inactive status
   prayerRequests    String[] // Assuming ARRAY maps to String[]
@@ -56,15 +58,17 @@ model user {
   livesImpacted     Int? // Number of lives impacted
   communitiesServed Int? // Number of communities served
   projectsCompleted Int? // Number of projects completed
-  Strategy          strategy? @relation(fields: [strategyId], references: [id])
+  Strategy          strategy?  @relation(fields: [strategyId], references: [id])
+  Donation          Donation[]
+  isDeleted         Boolean    @default(false)
 
   @@map("user") // Explicitly map to the 'user' table name if it's reserved or different from 'User'
 }
 
 model projects {
-  id               String    @id @default(uuid())
+  id               String     @id @default(uuid())
   title            String
-  slug             String    @unique
+  slug             String     @unique
   shortDescription String
   image            Bytes?
   category         String?
@@ -82,7 +86,41 @@ model projects {
   timeLine         Json?
   testimonials     Json?
   strategyId       String?
-  Strategy         strategy? @relation(fields: [strategyId], references: [id])
+  Strategy         strategy?  @relation(fields: [strategyId], references: [id])
+  Donation         Donation[]
+  isDeleted        Boolean    @default(false)
+  createdAt        DateTime   @default(now())
 
   @@map("Projects") // Explicitly map to the 'Projects' table name
+}
+
+model Donation {
+  id            String       @id @default(uuid())
+  amount        Float
+  donorName     String
+  donorEmail    String?
+  project       projects?    @relation(fields: [projectId], references: [id])
+  projectId     String?
+  missionary    user?        @relation(fields: [missionaryId], references: [id])
+  missionaryId  String?
+  strategy      strategy?    @relation(fields: [strategyId], references: [id])
+  strategyId    String?
+  createdAt     DateTime     @default(now())
+  status        String // e.g., 'completed', 'pending', 'failed'
+  paymentMethod String?
+  transaction   Transaction?
+  transactionId String?
+  isDeleted     Boolean      @default(false)
+}
+
+model Transaction {
+  id            String   @id @default(uuid())
+  donation      Donation @relation(fields: [donationId], references: [id])
+  donationId    String   @unique
+  amount        Float
+  status        String
+  paymentMethod String?
+  reference     String?
+  createdAt     DateTime @default(now())
+  isDeleted     Boolean  @default(false)
 }

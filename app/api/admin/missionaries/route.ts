@@ -33,6 +33,9 @@ export async function GET(request: Request) {
       where.type = type;
     }
 
+    // Only include non-deleted users
+    where.isDeleted = false;
+
     // Get missionaries with pagination
     const [missionaries, total] = await Promise.all([
       prisma.user.findMany({
@@ -65,6 +68,7 @@ export async function GET(request: Request) {
       experience: missionary.experience,
       type: missionary.type,
       strategy: missionary.Strategy?.title || "Unassigned",
+      strategyId: missionary.strategyId || "",
       image: missionary.image
         ? `data:image/jpeg;base64,${Buffer.from(missionary.image).toString(
             "base64"

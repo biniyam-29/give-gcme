@@ -93,7 +93,11 @@ export default function StrategiesSection({
       .then(async (res) => {
         if (!res.ok) throw new Error("Failed to fetch strategies");
         const data = await res.json();
-        setStrategies(data);
+        setStrategies(
+          Array.isArray(data.strategies)
+            ? data.strategies.filter((s) => !s.isDeleted)
+            : []
+        );
         setLoading(false);
       })
       .catch((err) => {
@@ -223,74 +227,82 @@ export default function StrategiesSection({
                     key={`strategy-group-${groupIndex}`}
                     className="flex flex-nowrap shrink-0"
                   >
-                    {strategies.map((strategy, index) => (
-                      <Card
-                        key={`${strategy.slug}-${groupIndex}-${index}`}
-                        className="flex-[0_0_400px] min-w-0 mr-6 md:mr-8 overflow-hidden hover:shadow-xl transition-all duration-300 bg-white border-neutral-200 cursor-pointer group transform hover:-translate-y-1"
-                      >
-                        <Link href={`/strategies/${strategy.slug}`}>
-                          <CardHeader className="flex flex-row items-center space-x-4 pb-2">
-                            <div className="p-3 rounded-full bg-primary-100 text-primary-600 flex-shrink-0">
-                              {(() => {
-                                const Icon =
-                                  iconMap[
-                                    strategy.icon as keyof typeof iconMap
-                                  ];
-                                return Icon ? (
-                                  <Icon className="w-8 h-8" />
-                                ) : null;
-                              })()}
-                            </div>
-                            <CardTitle className="text-xl text-neutral-800 group-hover:text-primary-600 transition-colors leading-tight">
-                              {strategy.title}
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <CardDescription className="text-neutral-600 line-clamp-3 mb-4">
-                              {strategy.description}
-                            </CardDescription>
-                            <h4 className="font-medium text-neutral-700 mb-2">
-                              Key Activities:
-                            </h4>
-                            <ul className="space-y-1 text-sm text-neutral-600">
-                              {(strategy.activities || strategy.keyPoints || [])
-                                .slice(0, 3)
-                                .map((point: string, pointIndex: number) => (
-                                  <li
-                                    key={pointIndex}
-                                    className="flex items-center"
-                                  >
-                                    <ArrowRight className="w-3 h-3 mr-2 text-primary-500 flex-shrink-0" />
-                                    <span>{point}</span>
+                    {Array.isArray(strategies) &&
+                      strategies.map((strategy, index) => (
+                        <Card
+                          key={`${strategy.slug}-${groupIndex}-${index}`}
+                          className="flex-[0_0_400px] min-w-0 mr-6 md:mr-8 overflow-hidden hover:shadow-xl transition-all duration-300 bg-white border-neutral-200 cursor-pointer group transform hover:-translate-y-1"
+                        >
+                          <Link href={`/strategies/${strategy.slug}`}>
+                            <CardHeader className="flex flex-row items-center space-x-4 pb-2">
+                              <div className="p-3 rounded-full bg-primary-100 text-primary-600 flex-shrink-0">
+                                {(() => {
+                                  const Icon =
+                                    iconMap[
+                                      strategy.icon as keyof typeof iconMap
+                                    ];
+                                  return Icon ? (
+                                    <Icon className="w-8 h-8" />
+                                  ) : null;
+                                })()}
+                              </div>
+                              <CardTitle className="text-xl text-neutral-800 group-hover:text-primary-600 transition-colors leading-tight">
+                                {strategy.title}
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <CardDescription className="text-neutral-600 line-clamp-3 mb-4">
+                                {strategy.description}
+                              </CardDescription>
+                              <h4 className="font-medium text-neutral-700 mb-2">
+                                Key Activities:
+                              </h4>
+                              <ul className="space-y-1 text-sm text-neutral-600">
+                                {(
+                                  strategy.activities ||
+                                  strategy.keyPoints ||
+                                  []
+                                )
+                                  .slice(0, 3)
+                                  .map((point: string, pointIndex: number) => (
+                                    <li
+                                      key={pointIndex}
+                                      className="flex items-center"
+                                    >
+                                      <ArrowRight className="w-3 h-3 mr-2 text-primary-500 flex-shrink-0" />
+                                      <span>{point}</span>
+                                    </li>
+                                  ))}
+                                {(
+                                  strategy.activities ||
+                                  strategy.keyPoints ||
+                                  []
+                                ).length > 3 && (
+                                  <li className="text-sm text-primary-600 font-medium mt-2">
+                                    +
+                                    {(
+                                      strategy.activities ||
+                                      strategy.keyPoints ||
+                                      []
+                                    ).length - 3}{" "}
+                                    more activities
                                   </li>
-                                ))}
-                              {(strategy.activities || strategy.keyPoints || [])
-                                .length > 3 && (
-                                <li className="text-sm text-primary-600 font-medium mt-2">
-                                  +
-                                  {(
-                                    strategy.activities ||
-                                    strategy.keyPoints ||
-                                    []
-                                  ).length - 3}{" "}
-                                  more activities
-                                </li>
-                              )}
-                            </ul>
-                          </CardContent>
-                        </Link>
-                        <div className="p-6 pt-0">
-                          <Button
-                            asChild
-                            className="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white shadow-lg"
-                          >
-                            <Link href={`/strategies/${strategy.slug}`}>
-                              Learn More
-                            </Link>
-                          </Button>
-                        </div>
-                      </Card>
-                    ))}
+                                )}
+                              </ul>
+                            </CardContent>
+                          </Link>
+                          <div className="p-6 pt-0">
+                            <Button
+                              asChild
+                              className="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white shadow-lg"
+                            >
+                              <Link href={`/strategies/${strategy.slug}`}>
+                                Learn More
+                              </Link>
+                            </Button>
+                          </div>
+                        </Card>
+                      ))}
                   </div>
                 ))}
             </div>

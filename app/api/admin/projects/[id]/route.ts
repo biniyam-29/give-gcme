@@ -10,61 +10,49 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const formData = await request.formData();
-
-    // Extract form fields
-    const title = formData.get("title") as string;
-    const slug = formData.get("slug") as string;
-    const shortDescription = formData.get("shortDescription") as string;
-    const category = formData.get("category") as string;
-    const location = formData.get("location") as string;
-    const duration = formData.get("duration") as string;
-    const teamSize = formData.get("teamSize") as string;
-    const fundingGoal = formData.get("fundingGoal") as string;
-    const fundingRaised = formData.get("fundingRaised") as string;
-    const beneficiaries = formData.get("beneficiaries") as string;
-    const problem = formData.get("problem") as string;
-    const solution = formData.get("solution") as string;
-    const urgency = formData.get("urgency") as string;
-    const urgencyFactors = formData.get("urgencyFactors") as string;
-    const impact = formData.get("impact") as string;
-    const timeLine = formData.get("timeLine") as string;
-    const testimonials = formData.get("testimonials") as string;
-    const strategyId = formData.get("strategyId") as string;
-
-    // Handle image upload
-    const imageFile = formData.get("image") as File | null;
-    let imageBuffer: Buffer | undefined = undefined;
-
-    if (imageFile) {
-      const bytes = await imageFile.arrayBuffer();
-      imageBuffer = Buffer.from(bytes);
-    }
+    const data = await request.json();
 
     const updateData: any = {
-      title,
-      slug,
-      shortDescription,
-      category,
-      location,
-      duration,
-      teamSize,
-      fundingGoal: fundingGoal?.toString(),
-      fundingRaised: fundingRaised?.toString() || "0",
-      beneficiaries,
-      problem,
-      solution,
-      urgency,
-      urgencyFactors: urgencyFactors ? JSON.parse(urgencyFactors) : [],
-      impact: impact ? JSON.parse(impact) : [],
-      timeLine: timeLine ? JSON.parse(timeLine) : null,
-      testimonials: testimonials ? JSON.parse(testimonials) : null,
-      strategyId,
+      title: data.title,
+      slug: data.slug,
+      shortDescription: data.shortDescription,
+      category: data.category,
+      location: data.location,
+      duration: data.duration,
+      teamSize: data.teamSize,
+      fundingGoal: data.fundingGoal?.toString(),
+      fundingRaised: data.fundingRaised?.toString() || "0",
+      beneficiaries: data.beneficiaries,
+      problem: data.problem,
+      solution: data.solution,
+      urgency: data.urgency,
+      urgencyFactors: Array.isArray(data.urgencyFactors)
+        ? data.urgencyFactors
+        : [],
+      impact: Array.isArray(data.impact) ? data.impact : [],
+      timeLine: data.timeLine || null,
+      testimonials: data.testimonials || null,
+      strategyId: data.strategyId,
     };
 
-    // Only update image if a new one is provided
-    if (imageBuffer) {
-      updateData.image = imageBuffer;
+    // Only update image if provided (handle image upload separately if needed)
+    if (data.image !== undefined) {
+      // If image is an empty object or falsy, set to null
+      if (
+        data.image === null ||
+        (typeof data.image === "object" && Object.keys(data.image).length === 0)
+      ) {
+        updateData.image = null;
+      } else if (typeof data.image === "string") {
+        // Handle data URL or base64 string
+        let base64String = data.image;
+        if (base64String.startsWith("data:image")) {
+          base64String = base64String.split(",")[1];
+        }
+        updateData.image = Buffer.from(base64String, "base64");
+      } else {
+        updateData.image = data.image;
+      }
     }
 
     const project = await prisma.projects.update({
@@ -89,8 +77,9 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    await prisma.projects.delete({
+    await prisma.projects.update({
       where: { id },
+      data: { isDeleted: true },
     });
 
     return NextResponse.json({ message: "Project deleted successfully" });

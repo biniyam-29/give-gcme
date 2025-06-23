@@ -16,5 +16,6 @@ echo "Seeding the database..."
 npm run prisma:seed
 
 # Start the application
+export PORT=3001
 echo "Starting the application..."
 npm start 

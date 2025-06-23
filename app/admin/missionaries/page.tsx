@@ -28,6 +28,15 @@ import {
   Upload,
   Image as ImageIcon,
 } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from "@/components/ui/pagination";
 
 const MissionariesPage = () => {
   const [missionaries, setMissionaries] = useState<any[]>([]);
@@ -48,21 +57,35 @@ const MissionariesPage = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [strategies, setStrategies] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [pages, setPages] = useState(1);
 
   // Fetch missionaries from API
-  const fetchMissionaries = async () => {
+  const fetchMissionaries = async (pageOverride?: number) => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
       if (searchTerm) params.append("search", searchTerm);
       if (filterStatus !== "all") params.append("status", filterStatus);
       if (filterType !== "all") params.append("type", filterType);
+      params.append("page", String(pageOverride || page));
+      params.append("limit", String(limit));
       // No filterStrategy param yet, but could be added to API
       const res = await fetch(`/api/admin/missionaries?${params.toString()}`);
       const data = await res.json();
       setMissionaries(data.missionaries || []);
+      if (data.pagination) {
+        setPage(data.pagination.page);
+        setLimit(data.pagination.limit);
+        setTotal(data.pagination.total);
+        setPages(data.pagination.pages);
+      }
     } catch (e) {
       setMissionaries([]);
+      setTotal(0);
+      setPages(1);
     }
     setLoading(false);
   };
@@ -70,7 +93,7 @@ const MissionariesPage = () => {
   useEffect(() => {
     fetchMissionaries();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, filterStatus, filterType]);
+  }, [searchTerm, filterStatus, filterType, page, limit]);
 
   // Fetch strategies from API
   useEffect(() => {
@@ -78,7 +101,8 @@ const MissionariesPage = () => {
       try {
         const res = await fetch("/api/admin/strategies");
         const data = await res.json();
-        setStrategies(data);
+        // Ensure strategies is always an array
+        setStrategies(Array.isArray(data) ? data : data.strategies || []);
       } catch (e) {
         setStrategies([]);
       }
@@ -172,6 +196,7 @@ const MissionariesPage = () => {
     );
     setEditForm({
       ...missionary,
+      mission: missionary.mission || "",
       supportNeeds: normalizedSupportNeeds,
       strategyId: missionary.strategyId || "",
     });
@@ -333,6 +358,14 @@ const MissionariesPage = () => {
     </button>
   );
 
+  // Pagination handlers
+  const goToPage = (p: number) => {
+    if (p < 1 || p > pages) return;
+    setPage(p);
+  };
+  const goToPrevious = () => goToPage(page - 1);
+  const goToNext = () => goToPage(page + 1);
+
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
       {/* Header */}
@@ -356,58 +389,64 @@ const MissionariesPage = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6 text-blue-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">
-                Total Missionaries
-              </p>
-              <p className="text-2xl font-bold text-gray-900">
-                {missionaries.length}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <Target className="w-6 h-6 text-green-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Active</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {missionaries.filter((m) => m.status === "Active").length}
-              </p>
+      <div className="mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="flex items-center">
+              <div className="w-12 h-12 bg-[#001F54] bg-opacity-10 rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 text-[#001F54]" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-[#001F54] opacity-80">
+                  Total Missionaries
+                </p>
+                <p className="text-2xl font-bold text-[#001F54]">
+                  {missionaries.length}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <Globe className="w-6 h-6 text-purple-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Locations</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {new Set(missionaries.map((m) => m.location)).size}
-              </p>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="flex items-center">
+              <div className="w-12 h-12 bg-[#001F54] bg-opacity-10 rounded-lg flex items-center justify-center">
+                <Target className="w-6 h-6 text-[#001F54]" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-[#001F54] opacity-80">
+                  Active
+                </p>
+                <p className="text-2xl font-bold text-[#001F54]">
+                  {missionaries.filter((m) => m.status === "Active").length}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-              <Clock className="w-6 h-6 text-orange-600" />
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="flex items-center">
+              <div className="w-12 h-12 bg-[#001F54] bg-opacity-10 rounded-lg flex items-center justify-center">
+                <Globe className="w-6 h-6 text-[#001F54]" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-[#001F54] opacity-80">
+                  Locations
+                </p>
+                <p className="text-2xl font-bold text-[#001F54]">
+                  {new Set(missionaries.map((m) => m.location)).size}
+                </p>
+              </div>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">
-                Avg. Experience
-              </p>
-              <p className="text-2xl font-bold text-gray-900">7+ years</p>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="flex items-center">
+              <div className="w-12 h-12 bg-[#001F54] bg-opacity-10 rounded-lg flex items-center justify-center">
+                <Clock className="w-6 h-6 text-[#001F54]" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-[#001F54] opacity-80">
+                  Avg. Experience
+                </p>
+                <p className="text-2xl font-bold text-[#001F54]">7+ years</p>
+              </div>
             </div>
           </div>
         </div>
@@ -462,174 +501,209 @@ const MissionariesPage = () => {
       </div>
 
       {/* Missionaries Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          {loading ? (
-            <div className="flex justify-center items-center p-8">
-              <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
-            </div>
-          ) : (
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-4 text-left">
-                    <SortableHeader field="name">Missionary</SortableHeader>
-                  </th>
-                  <th className="px-6 py-4 text-left">
-                    <SortableHeader field="location">Location</SortableHeader>
-                  </th>
-                  <th className="px-6 py-4 text-left">
-                    <SortableHeader field="focus">Focus Area</SortableHeader>
-                  </th>
-                  <th className="px-6 py-4 text-left">
-                    <SortableHeader field="type">Type</SortableHeader>
-                  </th>
-                  <th className="px-6 py-4 text-left">
-                    <SortableHeader field="strategy">Strategy</SortableHeader>
-                  </th>
-                  <th className="px-6 py-4 text-left">
-                    <SortableHeader field="status">Status</SortableHeader>
-                  </th>
-                  <th className="px-6 py-4 text-left">Contact</th>
-                  <th className="px-6 py-4 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {sortedMissionaries.map((missionary) => (
-                  <tr
-                    key={missionary.id}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center space-x-3">
-                        <img
-                          src={missionary.image || "/placeholder-user.jpg"}
-                          alt={missionary.name}
-                          className="w-12 h-12 rounded-full object-cover"
-                        />
-                        <div>
-                          <p className="font-medium text-gray-900">
-                            {missionary.name}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            {missionary.title}
-                          </p>
-                          <p className="text-xs text-gray-400 flex items-center">
-                            <Calendar className="w-3 h-3 mr-1" />
-                            {missionary.years} experience
-                          </p>
-                        </div>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto relative">
+        {/* Horizontal scroll cue */}
+        <div
+          className="hidden md:block pointer-events-none absolute right-4 top-4 z-10"
+          id="scroll-cue"
+        >
+          <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded shadow">
+            Scroll &rarr;
+          </span>
+        </div>
+        {loading ? (
+          <div className="flex justify-center items-center p-8">
+            <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+          </div>
+        ) : (
+          <table className="w-full min-w-[1200px]">
+            <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
+              <tr>
+                <th className="px-6 py-4 text-left">
+                  <SortableHeader field="name">Missionary</SortableHeader>
+                </th>
+                <th className="px-6 py-4 text-left">
+                  <SortableHeader field="location">Location</SortableHeader>
+                </th>
+                <th className="px-6 py-4 text-left">
+                  <SortableHeader field="focus">Focus Area</SortableHeader>
+                </th>
+                <th className="px-6 py-4 text-left">
+                  <SortableHeader field="type">Type</SortableHeader>
+                </th>
+                <th className="px-6 py-4 text-left">
+                  <SortableHeader field="strategy">Strategy</SortableHeader>
+                </th>
+                <th className="px-6 py-4 text-left">
+                  <SortableHeader field="status">Status</SortableHeader>
+                </th>
+                <th className="px-6 py-4 text-left">Contact</th>
+                <th className="px-6 py-4 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {sortedMissionaries.map((missionary) => (
+                <tr
+                  key={missionary.id}
+                  className="hover:bg-gray-50 transition-colors"
+                >
+                  <td className="px-6 py-4">
+                    <div className="flex items-center space-x-3">
+                      <img
+                        src={missionary.image || "/placeholder-user.jpg"}
+                        alt={missionary.name}
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
+                      <div>
+                        <p className="font-medium text-gray-900">
+                          {missionary.name}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {missionary.title}
+                        </p>
+                        <p className="text-xs text-gray-400 flex items-center">
+                          <Calendar className="w-3 h-3 mr-1" />
+                          {missionary.years} experience
+                        </p>
                       </div>
-                    </td>
-                    <td className="px-6 py-4">
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center space-x-1">
+                      <MapPin className="w-4 h-4 text-gray-400" />
+                      <span className="text-gray-700">
+                        {missionary.location}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="text-sm text-gray-700 max-w-xs truncate block">
+                      {missionary.focus}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        missionary.type === "Full-time"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-green-100 text-green-800"
+                      }`}
+                    >
+                      {missionary.type}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-gray-700">
+                    {missionary.strategy}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        missionary.status === "Active"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {missionary.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="space-y-1">
                       <div className="flex items-center space-x-1">
-                        <MapPin className="w-4 h-4 text-gray-400" />
-                        <span className="text-gray-700">
-                          {missionary.location}
+                        <Mail className="w-3 h-3 text-gray-400" />
+                        <span className="text-sm text-gray-600 truncate max-w-32">
+                          {missionary.email}
                         </span>
                       </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm text-gray-700 max-w-xs truncate block">
-                        {missionary.focus}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          missionary.type === "Full-time"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-green-100 text-green-800"
-                        }`}
-                      >
-                        {missionary.type}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-gray-700">
-                      {missionary.strategy}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          missionary.status === "Active"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {missionary.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="space-y-1">
+                      <div className="flex items-center space-x-1">
+                        <Phone className="w-3 h-3 text-gray-400" />
+                        <span className="text-sm text-gray-600">
+                          {missionary.phone}
+                        </span>
+                      </div>
+                      {missionary.website && (
                         <div className="flex items-center space-x-1">
-                          <Mail className="w-3 h-3 text-gray-400" />
+                          <Globe className="w-3 h-3 text-gray-400" />
                           <span className="text-sm text-gray-600 truncate max-w-32">
-                            {missionary.email}
+                            {missionary.website}
                           </span>
                         </div>
-                        <div className="flex items-center space-x-1">
-                          <Phone className="w-3 h-3 text-gray-400" />
-                          <span className="text-sm text-gray-600">
-                            {missionary.phone}
-                          </span>
-                        </div>
-                        {missionary.website && (
-                          <div className="flex items-center space-x-1">
-                            <Globe className="w-3 h-3 text-gray-400" />
-                            <span className="text-sm text-gray-600 truncate max-w-32">
-                              {missionary.website}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center justify-center space-x-2">
-                        <button
-                          onClick={() => handleView(missionary)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleEdit(missionary)}
-                          className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(missionary)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center justify-center space-x-2">
+                      <button
+                        onClick={() => handleView(missionary)}
+                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleEdit(missionary)}
+                        className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(missionary)}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
 
-        {/* Pagination */}
-        <div className="px-6 py-4 border-t border-gray-200">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-600">
-              Showing {missionaries.length} missionaries
-            </p>
-            <div className="flex items-center space-x-2">
-              <button className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">
-                Previous
-              </button>
-              <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded">
-                1
-              </button>
-              <button className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">
-                Next
-              </button>
-            </div>
-          </div>
+      {/* Pagination */}
+      <div className="px-6 py-4 border-t border-gray-200">
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-gray-600">
+            Showing page {page} of {pages} ({total} missionaries)
+          </p>
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  asChild
+                  onClick={goToPrevious}
+                  aria-disabled={page === 1}
+                  tabIndex={page === 1 ? -1 : 0}
+                  style={{
+                    pointerEvents: page === 1 ? "none" : undefined,
+                    opacity: page === 1 ? 0.5 : 1,
+                  }}
+                />
+              </PaginationItem>
+              {Array.from({ length: pages }).map((_, idx) => (
+                <PaginationItem key={idx}>
+                  <PaginationLink
+                    isActive={page === idx + 1}
+                    asChild
+                    onClick={() => goToPage(idx + 1)}
+                  >
+                    <span>{idx + 1}</span>
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  asChild
+                  onClick={goToNext}
+                  aria-disabled={page === pages}
+                  tabIndex={page === pages ? -1 : 0}
+                  style={{
+                    pointerEvents: page === pages ? "none" : undefined,
+                    opacity: page === pages ? 0.5 : 1,
+                  }}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
 
@@ -1033,7 +1107,7 @@ const MissionariesPage = () => {
                     {strategies.map((strategy) => (
                       <option key={strategy.id} value={strategy.id}>
                         {strategy.title}
-                    </option>
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -1438,7 +1512,7 @@ const MissionariesPage = () => {
                     {strategies.map((strategy) => (
                       <option key={strategy.id} value={strategy.id}>
                         {strategy.title}
-                    </option>
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -1491,6 +1565,47 @@ const MissionariesPage = () => {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Short Bio
+                </label>
+                <textarea
+                  value={editForm.shortBio || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, shortBio: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  rows={3}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Full Bio
+                </label>
+                <textarea
+                  value={editForm.fullBio || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, fullBio: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  rows={4}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Mission Statement
+                </label>
+                <textarea
+                  value={editForm.mission || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, mission: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  rows={3}
+                />
+              </div>
+
               {/* Support Needs Editing Section */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1512,8 +1627,8 @@ const MissionariesPage = () => {
                           setEditForm({ ...editForm, supportNeeds: updated });
                         }}
                         className="px-2 py-1 border rounded w-full"
-                  required
-                />
+                        required
+                      />
                       <input
                         type="number"
                         placeholder="Amount"

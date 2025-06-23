@@ -10,7 +10,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Users, Globe, ArrowRight, Clock, Target, Search } from "lucide-react";
+import {
+  Heart,
+  Users,
+  Globe,
+  ArrowRight,
+  Clock,
+  Target,
+  Search,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import DonationModal from "@/components/donation-modal";
@@ -19,16 +27,25 @@ import Footer from "@/components/footer";
 import { Input } from "@/components/ui/input";
 
 interface Project {
-  id: number;
+  id: string;
   slug: string;
   title: string;
-  description: string;
+  shortDescription: string;
   image: string;
   category: string;
+  location: string;
   duration: string;
   beneficiaries: string;
   teamSize: string;
   urgency: string;
+  fundingGoal: string;
+  fundingRaised: string;
+  problem: string;
+  solution: string;
+  impact: string[];
+  timeLine: any;
+  testimonials: any;
+  urgencyFactors: string[];
 }
 
 export default function ProjectsPage() {
@@ -46,28 +63,48 @@ export default function ProjectsPage() {
     title: "",
     description: "",
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(12);
+  const [total, setTotal] = useState(0);
+  const [pages, setPages] = useState(1);
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch('/api/projects');
+        setLoading(true);
+        setError(null);
+        const response = await fetch(
+          `/api/projects?page=${page}&limit=${limit}`
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch projects');
+          throw new Error("Failed to fetch projects");
         }
         const data = await response.json();
-        setProjects(data);
-      } catch (error) {
-        console.error('Error fetching projects:', error);
+        if (Array.isArray(data)) {
+          setProjects(data);
+          setTotal(data.length);
+          setPages(1);
+        } else {
+          setProjects(data.projects || []);
+          setTotal(data.pagination?.total || 0);
+          setPages(data.pagination?.pages || 1);
+        }
+        setLoading(false);
+      } catch (error: any) {
+        setError(error.message);
+        setLoading(false);
       }
     };
 
     fetchProjects();
-  }, []);
+  }, [page, limit]);
 
   const openDonationModal = (
     type: "project" | "missionary",
     title: string,
-    description?: string,
+    description?: string
   ) => {
     setDonationModal({
       isOpen: true,
@@ -86,14 +123,57 @@ export default function ProjectsPage() {
     });
   };
 
-  const categories = Array.from(new Set(projects.map(project => project.category)));
+  const categories = Array.from(
+    new Set(projects.map((project) => project.category))
+  );
 
-  const filteredProjects = projects.filter(project => {
-    const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         project.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = !selectedCategory || project.category === selectedCategory;
+  const filteredProjects = projects.filter((project) => {
+    const matchesSearch =
+      project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (project.shortDescription
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()) ??
+        false);
+    const matchesCategory =
+      !selectedCategory || project.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  // Pagination controls
+  const renderPagination = () => (
+    <div className="flex justify-center items-center space-x-2 mt-8">
+      <button
+        onClick={() => setPage((p) => Math.max(1, p - 1))}
+        disabled={page === 1}
+        className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+      >
+        Previous
+      </button>
+      {Array.from({ length: pages }, (_, i) => (
+        <button
+          key={i + 1}
+          onClick={() => setPage(i + 1)}
+          className={`px-3 py-1 rounded ${
+            page === i + 1
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 text-gray-700"
+          }`}
+        >
+          {i + 1}
+        </button>
+      ))}
+      <button
+        onClick={() => setPage((p) => Math.min(pages, p + 1))}
+        disabled={page === pages}
+        className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+      >
+        Next
+      </button>
+      <span className="ml-4 text-gray-500">
+        Page {page} of {pages} ({total} projects)
+      </span>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -103,9 +183,12 @@ export default function ProjectsPage() {
       <section className="relative py-24 overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#102C80]/5 to-[#0E276E]/5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23102C80' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }} />
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23102C80' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
         </div>
 
         {/* Content */}
@@ -120,25 +203,35 @@ export default function ProjectsPage() {
               Transforming Lives Through Faith
             </h1>
             <p className="text-xl text-neutral-600 max-w-2xl mx-auto mb-8">
-              Explore our diverse range of projects that are making a real difference in communities across Ethiopia. Each initiative represents our commitment to spreading hope and transformation.
+              Explore our diverse range of projects that are making a real
+              difference in communities across Ethiopia. Each initiative
+              represents our commitment to spreading hope and transformation.
             </p>
-            
+
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
               <div className="bg-white rounded-xl p-4 shadow-sm border border-neutral-100">
-                <div className="text-3xl font-bold text-primary-600 mb-1">7+</div>
+                <div className="text-3xl font-bold text-primary-600 mb-1">
+                  7+
+                </div>
                 <div className="text-sm text-neutral-600">Active Projects</div>
               </div>
               <div className="bg-white rounded-xl p-4 shadow-sm border border-neutral-100">
-                <div className="text-3xl font-bold text-primary-600 mb-1">11</div>
+                <div className="text-3xl font-bold text-primary-600 mb-1">
+                  11
+                </div>
                 <div className="text-sm text-neutral-600">Regions Reached</div>
               </div>
               <div className="bg-white rounded-xl p-4 shadow-sm border border-neutral-100">
-                <div className="text-3xl font-bold text-primary-600 mb-1">8.5K+</div>
+                <div className="text-3xl font-bold text-primary-600 mb-1">
+                  8.5K+
+                </div>
                 <div className="text-sm text-neutral-600">Lives Impacted</div>
               </div>
               <div className="bg-white rounded-xl p-4 shadow-sm border border-neutral-100">
-                <div className="text-3xl font-bold text-primary-600 mb-1">40+</div>
+                <div className="text-3xl font-bold text-primary-600 mb-1">
+                  40+
+                </div>
                 <div className="text-sm text-neutral-600">Team Members</div>
               </div>
             </div>
@@ -178,7 +271,9 @@ export default function ProjectsPage() {
               {categories.map((category) => (
                 <Button
                   key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
+                  variant={
+                    selectedCategory === category ? "default" : "outline"
+                  }
                   onClick={() => setSelectedCategory(category)}
                   className="text-sm"
                 >
@@ -193,100 +288,114 @@ export default function ProjectsPage() {
       {/* Projects Grid */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProjects.map((project) => (
-              <Card
-                key={project.id}
-                className="overflow-hidden hover:shadow-xl transition-all duration-300 bg-white border-neutral-200 cursor-pointer group transform hover:-translate-y-1"
-              >
-                <Link href={`/projects/${project.slug}`}>
-                  <div className="relative h-48">
-                    <Image
-                      src={project.image || "/placeholder.svg"}
-                      alt={project.title}
-                      fill
-                      className="object-cover"
-                    />
-                    <Badge
-                      className={`absolute top-3 right-3 text-white shadow-lg ${
-                        project.urgency === "Critical Need"
-                          ? "bg-primary-600"
-                          : project.urgency === "High Priority"
-                          ? "bg-primary-500"
-                          : "bg-secondary-500"
-                      }`}
-                    >
-                      {project.urgency}
-                    </Badge>
-                    <Badge className="absolute top-3 left-3 bg-neutral-700 text-white shadow-lg">
-                      {project.category}
-                    </Badge>
-                  </div>
-                  <CardHeader>
-                    <CardTitle className="text-xl text-neutral-800 group-hover:text-primary-600 transition-colors">
-                      {project.title}
-                    </CardTitle>
-                    <CardDescription className="text-neutral-600 line-clamp-2">
-                      {project.description}
-                    </CardDescription>
-                  </CardHeader>
-                </Link>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div className="flex items-center text-neutral-600">
-                        <Clock className="w-4 h-4 mr-2 text-primary-600" />
-                        <span className="font-medium">Duration:</span>
-                      </div>
-                      <div className="text-neutral-800">{project.duration}</div>
-
-                      <div className="flex items-center text-neutral-600">
-                        <Target className="w-4 h-4 mr-2 text-primary-600" />
-                        <span className="font-medium">Beneficiaries:</span>
-                      </div>
-                      <div className="text-neutral-800">
-                        {project.beneficiaries}
-                      </div>
-
-                      <div className="flex items-center text-neutral-600">
-                        <Users className="w-4 h-4 mr-2 text-primary-600" />
-                        <span className="font-medium">Team Size:</span>
-                      </div>
-                      <div className="text-neutral-800">{project.teamSize}</div>
-                    </div>
-                    <div className="flex space-x-3">
-                      <Link
-                        href={`/projects/${project.slug}`}
-                        className="flex-1"
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+            </div>
+          ) : error ? (
+            <div className="text-center text-red-500 py-8">{error}</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredProjects.map((project) => (
+                <Card
+                  key={project.id}
+                  className="overflow-hidden hover:shadow-xl transition-all duration-300 bg-white border-neutral-200 cursor-pointer group transform hover:-translate-y-1"
+                >
+                  <Link href={`/projects/${project.slug}`}>
+                    <div className="relative h-48">
+                      <Image
+                        src={project.image || "/placeholder.svg"}
+                        alt={project.title}
+                        fill
+                        className="object-cover"
+                      />
+                      <Badge
+                        className={`absolute top-3 right-3 text-white shadow-lg ${
+                          project.urgency === "Critical Need"
+                            ? "bg-primary-600"
+                            : project.urgency === "High Priority"
+                            ? "bg-primary-500"
+                            : "bg-secondary-500"
+                        }`}
                       >
-                        <Button
-                          variant="outline"
-                          className="w-full border-primary-600 text-primary-600 hover:bg-primary-50"
+                        {project.urgency}
+                      </Badge>
+                      <Badge className="absolute top-3 left-3 bg-neutral-700 text-white shadow-lg">
+                        {project.category}
+                      </Badge>
+                    </div>
+                    <CardHeader>
+                      <CardTitle className="text-xl text-neutral-800 group-hover:text-primary-600 transition-colors">
+                        {project.title}
+                      </CardTitle>
+                      <CardDescription className="text-neutral-600 line-clamp-2">
+                        {project.shortDescription}
+                      </CardDescription>
+                    </CardHeader>
+                  </Link>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div className="flex items-center text-neutral-600">
+                          <Clock className="w-4 h-4 mr-2 text-primary-600" />
+                          <span className="font-medium">Duration:</span>
+                        </div>
+                        <div className="text-neutral-800">
+                          {project.duration}
+                        </div>
+
+                        <div className="flex items-center text-neutral-600">
+                          <Target className="w-4 h-4 mr-2 text-primary-600" />
+                          <span className="font-medium">Beneficiaries:</span>
+                        </div>
+                        <div className="text-neutral-800">
+                          {project.beneficiaries}
+                        </div>
+
+                        <div className="flex items-center text-neutral-600">
+                          <Users className="w-4 h-4 mr-2 text-primary-600" />
+                          <span className="font-medium">Team Size:</span>
+                        </div>
+                        <div className="text-neutral-800">
+                          {project.teamSize}
+                        </div>
+                      </div>
+                      <div className="flex space-x-3">
+                        <Link
+                          href={`/projects/${project.slug}`}
+                          className="flex-1"
                         >
-                          Learn More
+                          <Button
+                            variant="outline"
+                            className="w-full border-primary-600 text-primary-600 hover:bg-primary-50"
+                          >
+                            Learn More
+                          </Button>
+                        </Link>
+                        <Button
+                          className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white shadow-lg"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            openDonationModal(
+                              "project",
+                              project.title,
+                              project.shortDescription
+                            );
+                          }}
+                        >
+                          Donate
                         </Button>
-                      </Link>
-                      <Button
-                        className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white shadow-lg"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          openDonationModal(
-                            "project",
-                            project.title,
-                            project.description
-                          );
-                        }}
-                      >
-                        Donate
-                      </Button>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </section>
+
+      {renderPagination()}
 
       <Footer />
 
@@ -300,4 +409,4 @@ export default function ProjectsPage() {
       />
     </div>
   );
-} 
+}

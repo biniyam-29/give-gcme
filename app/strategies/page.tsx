@@ -38,7 +38,11 @@ export default function StrategiesPage() {
       setLoading(true);
       const res = await fetch("/api/admin/strategies");
       const data = await res.json();
-      setStrategies(data);
+      setStrategies(
+        Array.isArray(data.strategies)
+          ? data.strategies.filter((s) => !s.isDeleted)
+          : []
+      );
       setLoading(false);
     }
     fetchStrategies();
@@ -109,6 +113,7 @@ export default function StrategiesPage() {
           {loading ? (
             <div className="col-span-full text-center text-lg">Loading...</div>
           ) : (
+            Array.isArray(strategies) &&
             strategies.map((strategy, index) => {
               const Icon = iconMap[strategy.icon as keyof typeof iconMap];
               return (

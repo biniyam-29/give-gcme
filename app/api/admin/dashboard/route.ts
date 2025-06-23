@@ -5,9 +5,9 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    // Get counts from database
+    // Get counts and stats from database
     const [
-      totalDonations,
+      totalDonationsAmount,
       totalMissionaries,
       activeProjects,
       totalStrategies,
@@ -15,83 +15,83 @@ export async function GET() {
       topProjects,
       recentActivities,
     ] = await Promise.all([
-      // Mock total donations calculation (replace with actual logic)
-      Promise.resolve(125000),
-
+      // Sum of all completed donations
+      prisma.donation.aggregate({
+        _sum: { amount: true },
+        where: { status: "completed" },
+      }),
       // Count missionaries
       prisma.user.count(),
-
       // Count active projects
-      prisma.projects.count(),
-
+      prisma.projects.count({ where: { isDeleted: false } }),
       // Count strategies
       prisma.strategy.count(),
-
-      // Get recent donations (mock data for now)
-      Promise.resolve([
-        {
-          id: 1,
-          amount: 2500,
-          donor: "John Smith",
-          project: "Clean Water Initiative",
-          date: "2024-01-15",
+      // Get recent donations
+      prisma.donation.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        include: {
+          project: true,
+          missionary: true,
+          strategy: true,
+          transaction: true,
         },
-        {
-          id: 2,
-          amount: 1800,
-          donor: "Sarah Johnson",
-          project: "Education Program",
-          date: "2024-01-14",
-        },
-        {
-          id: 3,
-          amount: 3200,
-          donor: "Mike Davis",
-          project: "Medical Mission",
-          date: "2024-01-13",
-        },
-      ]),
-
-      // Get top projects
+      }),
+      // Get top projects by donation sum
       prisma.projects.findMany({
         take: 3,
         orderBy: {
           fundingRaised: "desc",
         },
+        where: { isDeleted: false },
         select: {
+          id: true,
           title: true,
           fundingRaised: true,
           fundingGoal: true,
         },
       }),
-
-      // Get recent activities (mock data for now)
-      Promise.resolve([
-        {
-          type: "donation",
-          message: "New donation of $2,500 received",
-          time: "2 hours ago",
+      // Get recent activities (from donations)
+      prisma.donation.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        include: {
+          project: true,
+          missionary: true,
+          strategy: true,
         },
-        {
-          type: "project",
-          message: "Project 'Clean Water Initiative' updated",
-          time: "4 hours ago",
-        },
-        {
-          type: "missionary",
-          message: "New missionary profile created",
-          time: "6 hours ago",
-        },
-        {
-          type: "strategy",
-          message: "Strategy 'Community Development' modified",
-          time: "1 day ago",
-        },
-      ]),
+      }),
     ]);
 
-    // Calculate monthly growth (mock calculation)
-    const monthlyGrowth = 12.5;
+    // Calculate monthly growth (example: compare last 30 days to previous 30 days)
+    const now = new Date();
+    const lastMonth = new Date(now);
+    lastMonth.setDate(now.getDate() - 30);
+    const prevMonth = new Date(now);
+    prevMonth.setDate(now.getDate() - 60);
+    const [lastMonthSum, prevMonthSum] = await Promise.all([
+      prisma.donation.aggregate({
+        _sum: { amount: true },
+        where: {
+          status: "completed",
+          createdAt: { gte: lastMonth },
+        },
+      }),
+      prisma.donation.aggregate({
+        _sum: { amount: true },
+        where: {
+          status: "completed",
+          createdAt: { gte: prevMonth, lt: lastMonth },
+        },
+      }),
+    ]);
+    let monthlyGrowth = 0;
+    if (prevMonthSum._sum.amount && prevMonthSum._sum.amount > 0) {
+      monthlyGrowth =
+        (((lastMonthSum._sum.amount || 0) - prevMonthSum._sum.amount) /
+          prevMonthSum._sum.amount) *
+        100;
+    }
 
     // Format top projects data
     const formattedTopProjects = topProjects.map((project) => ({
@@ -107,15 +107,48 @@ export async function GET() {
         : 0,
     }));
 
+    // Format recent donations
+    const formattedRecentDonations = recentDonations.map((donation) => ({
+      id: donation.id,
+      amount: donation.amount,
+      donor: donation.donorName,
+      project: donation.project?.title || null,
+      missionary: donation.missionary?.name || null,
+      strategy: donation.strategy?.title || null,
+      date: donation.createdAt,
+      status: donation.status,
+      paymentMethod: donation.paymentMethod,
+      transactionId: donation.transaction?.id || null,
+    }));
+
+    // Format recent activities
+    const formattedRecentActivities = recentActivities.map((donation) => ({
+      type: donation.projectId
+        ? "project"
+        : donation.missionaryId
+        ? "missionary"
+        : donation.strategyId
+        ? "strategy"
+        : "donation",
+      message:
+        `New donation of $${donation.amount} received for ` +
+        (donation.project?.title ||
+          donation.missionary?.name ||
+          donation.strategy?.title ||
+          "General"),
+      time: donation.createdAt,
+    }));
+
     const dashboardData = {
-      totalDonations,
+      totalDonations: totalDonationsAmount._sum.amount || 0,
       totalMissionaries,
       activeProjects,
       totalStrategies,
       monthlyGrowth,
-      recentDonations,
+      recentDonations: formattedRecentDonations,
       topProjects: formattedTopProjects,
-      recentActivities,
+      recentActivities: formattedRecentActivities,
+      colorNavy: "#001F54",
     };
 
     return NextResponse.json(dashboardData);

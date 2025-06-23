@@ -6,8 +6,10 @@ const prisma = new PrismaClient();
 // GET - Fetch all strategies
 export async function GET() {
   try {
-    const strategies = await prisma.strategy.findMany();
-    return NextResponse.json(strategies);
+    const strategies = await prisma.strategy.findMany({
+      where: { isDeleted: false },
+    });
+    return NextResponse.json({ strategies });
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch strategies" },

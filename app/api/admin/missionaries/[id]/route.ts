@@ -74,6 +74,15 @@ export async function PUT(
       updateData.image = imageBuffer;
     }
 
+    // Check if the user exists before updating
+    const existing = await prisma.user.findUnique({ where: { id } });
+    if (!existing) {
+      return NextResponse.json(
+        { error: "Missionary not found" },
+        { status: 404 }
+      );
+    }
+
     const missionary = await prisma.user.update({
       where: { id },
       data: updateData,
@@ -96,8 +105,9 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    await prisma.user.delete({
+    await prisma.user.update({
       where: { id },
+      data: { isDeleted: true },
     });
 
     return NextResponse.json({ message: "Missionary deleted successfully" });
@@ -105,6 +115,64 @@ export async function DELETE(
     console.error("Delete Missionary API Error:", error);
     return NextResponse.json(
       { error: "Failed to delete missionary" },
+      { status: 500 }
+    );
+  }
+}
+
+// GET - Fetch a single missionary by id
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const missionary = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        Strategy: {
+          select: { title: true },
+        },
+      },
+    });
+    if (!missionary) {
+      return NextResponse.json(
+        { error: "Missionary not found" },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json({
+      id: missionary.id,
+      name: missionary.name,
+      title: missionary.title || "Missionary",
+      email: missionary.email,
+      phone: missionary.phone,
+      location: missionary.location,
+      qualification: missionary.qualification,
+      experience: missionary.experience,
+      type: missionary.type,
+      strategy: missionary.Strategy?.title || "Unassigned",
+      strategyId: missionary.strategyId || "",
+      image: missionary.image
+        ? `data:image/jpeg;base64,${Buffer.from(missionary.image).toString(
+            "base64"
+          )}`
+        : null,
+      status: missionary.status || "Active",
+      shortBio: missionary.shortBio,
+      fullBio: missionary.fullBio,
+      years: missionary.years,
+      mission: missionary.mission,
+      focus: missionary.focus,
+      website: missionary.website,
+      prayerRequests: missionary.prayerRequests,
+      recentUpdates: missionary.recentUpdates,
+      supportNeeds: missionary.supportNeeds,
+    });
+  } catch (error) {
+    console.error("Get Missionary API Error:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch missionary" },
       { status: 500 }
     );
   }
