@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     ]);
 
     // Map image field to base64 data URL if it's a Buffer
-    const projectsWithImageUrl = projects.map((project) => {
+    const projectsWithImageUrl = projects.map((project: any) => {
       let imageUrl = "";
       if (project.image) {
         if (typeof project.image === "string") {

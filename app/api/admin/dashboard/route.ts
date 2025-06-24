@@ -94,21 +94,27 @@ export async function GET() {
     }
 
     // Format top projects data
-    const formattedTopProjects = topProjects.map((project) => ({
-      name: project.title,
-      raised: parseInt(project.fundingRaised || "0"),
-      goal: parseInt(project.fundingGoal || "0"),
-      progress: project.fundingGoal
-        ? Math.round(
-            (parseInt(project.fundingRaised || "0") /
-              parseInt(project.fundingGoal)) *
-              100
-          )
-        : 0,
-    }));
+    const formattedTopProjects = topProjects.map(
+      (project: {
+        title: string;
+        fundingRaised: string | null;
+        fundingGoal: string | null;
+      }) => ({
+        name: project.title,
+        raised: parseInt(project.fundingRaised || "0"),
+        goal: parseInt(project.fundingGoal || "0"),
+        progress: project.fundingGoal
+          ? Math.round(
+              (parseInt(project.fundingRaised || "0") /
+                parseInt(project.fundingGoal || "0")) *
+                100
+            )
+          : 0,
+      })
+    );
 
     // Format recent donations
-    const formattedRecentDonations = recentDonations.map((donation) => ({
+    const formattedRecentDonations = recentDonations.map((donation: any) => ({
       id: donation.id,
       amount: donation.amount,
       donor: donation.donorName,
@@ -122,7 +128,7 @@ export async function GET() {
     }));
 
     // Format recent activities
-    const formattedRecentActivities = recentActivities.map((donation) => ({
+    const formattedRecentActivities = recentActivities.map((donation: any) => ({
       type: donation.projectId
         ? "project"
         : donation.missionaryId

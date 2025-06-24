@@ -3,6 +3,21 @@
 import React, { useEffect, useState } from "react";
 import { Plus, Trash2, Edit, Eye, Loader2 } from "lucide-react";
 
+interface Strategy {
+  id: string;
+  title: string;
+  description: string;
+  fullDescription: string;
+  slug: string;
+  icon: string;
+  activities: string[];
+  visionText: string;
+  involvedText: string;
+  impactQuote: string;
+  isDeleted?: boolean;
+  image?: string | null;
+}
+
 const fetchStrategies = async () => {
   const res = await fetch("/api/admin/strategies");
   if (!res.ok) throw new Error("Failed to fetch strategies");
@@ -26,7 +41,7 @@ const createStrategy = async (data: any) => {
 };
 
 const StrategiesPage = () => {
-  const [strategies, setStrategies] = useState<any[]>([]);
+  const [strategies, setStrategies] = useState<Strategy[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [form, setForm] = useState({
@@ -44,8 +59,22 @@ const StrategiesPage = () => {
   const [error, setError] = useState("");
   const [showViewModal, setShowViewModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedStrategy, setSelectedStrategy] = useState<any>(null);
-  const [editForm, setEditForm] = useState<any>({});
+  const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(
+    null
+  );
+  const [editForm, setEditForm] = useState<Strategy>({
+    id: "",
+    title: "",
+    description: "",
+    fullDescription: "",
+    slug: "",
+    icon: "",
+    activities: [],
+    visionText: "",
+    involvedText: "",
+    impactQuote: "",
+    isDeleted: false,
+  });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -55,7 +84,7 @@ const StrategiesPage = () => {
       const data = await fetchStrategies();
       setStrategies(
         Array.isArray(data.strategies)
-          ? data.strategies.filter((s) => !s.isDeleted)
+          ? data.strategies.filter((s: Strategy) => !s.isDeleted)
           : []
       );
     } catch (e: any) {
@@ -117,7 +146,9 @@ const StrategiesPage = () => {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete strategy");
-      setStrategies((prev) => prev.filter((s) => s.id !== strategyId));
+      setStrategies((prev) =>
+        prev.filter((s: Strategy) => s.id !== strategyId)
+      );
     } catch (e: any) {
       setError(e.message);
     }
@@ -205,8 +236,8 @@ const StrategiesPage = () => {
                           setEditForm({
                             ...strategy,
                             activities: Array.isArray(strategy.activities)
-                              ? strategy.activities.join(", ")
-                              : "",
+                              ? strategy.activities
+                              : [],
                           });
                           setImageFile(null);
                           setImagePreview(null);
@@ -542,7 +573,19 @@ const StrategiesPage = () => {
                 if (!res.ok) throw new Error("Failed to update strategy");
                 setShowEditModal(false);
                 setSelectedStrategy(null);
-                setEditForm({});
+                setEditForm({
+                  id: "",
+                  title: "",
+                  description: "",
+                  fullDescription: "",
+                  slug: "",
+                  icon: "",
+                  activities: [],
+                  visionText: "",
+                  involvedText: "",
+                  impactQuote: "",
+                  isDeleted: false,
+                });
                 await loadStrategies();
               } catch (e: any) {
                 setError(e.message);
@@ -632,9 +675,19 @@ const StrategiesPage = () => {
                   Activities (comma separated)
                 </label>
                 <textarea
-                  value={editForm.activities}
+                  value={
+                    Array.isArray(editForm.activities)
+                      ? editForm.activities.join(", ")
+                      : ""
+                  }
                   onChange={(e) =>
-                    setEditForm({ ...editForm, activities: e.target.value })
+                    setEditForm({
+                      ...editForm,
+                      activities: e.target.value
+                        .split(",")
+                        .map((s) => s.trim())
+                        .filter(Boolean),
+                    })
                   }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   rows={2}

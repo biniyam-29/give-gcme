@@ -20,8 +20,34 @@ import {
   BarChart3,
 } from "lucide-react";
 
+interface Project {
+  id: string;
+  title: string;
+  slug: string;
+  shortDescription: string;
+  category: string;
+  location: string;
+  duration: string;
+  teamSize: string;
+  fundingGoal: number;
+  fundingRaised: number;
+  beneficiaries: string;
+  problem: string;
+  solution: string;
+  urgency: string;
+  urgencyFactors: string[];
+  impact: string[];
+  timeLine: any;
+  testimonials: any;
+  strategy: string;
+  strategyId: string;
+  progress: number;
+  status: string;
+  image: string | null;
+}
+
 const ProjectsPage = () => {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -80,7 +106,7 @@ const ProjectsPage = () => {
   }, [page, limit]);
 
   const filteredProjects = projects
-    .filter((project) => {
+    .filter((project: Project) => {
       const matchesSearch =
         project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         project.shortDescription
@@ -93,9 +119,9 @@ const ProjectsPage = () => {
         filterCategory === "all" || project.category === filterCategory;
       return matchesSearch && matchesStatus && matchesCategory;
     })
-    .sort((a, b) => {
-      const aValue = a[sortField as keyof typeof a];
-      const bValue = b[sortField as keyof typeof b];
+    .sort((a: Project, b: Project) => {
+      const aValue = a[sortField as keyof Project];
+      const bValue = b[sortField as keyof Project];
       if (sortDirection === "asc") {
         return aValue > bValue ? 1 : -1;
       } else {
@@ -254,7 +280,7 @@ const ProjectsPage = () => {
     </button>
   );
 
-  const ProjectCard = ({ project }: { project: any }) => (
+  const ProjectCard = ({ project }: { project: Project }) => (
     <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start mb-4">
         <div>

@@ -669,7 +669,6 @@ const MissionariesPage = () => {
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
-                  asChild
                   onClick={goToPrevious}
                   aria-disabled={page === 1}
                   tabIndex={page === 1 ? -1 : 0}
@@ -683,7 +682,6 @@ const MissionariesPage = () => {
                 <PaginationItem key={idx}>
                   <PaginationLink
                     isActive={page === idx + 1}
-                    asChild
                     onClick={() => goToPage(idx + 1)}
                   >
                     <span>{idx + 1}</span>
@@ -692,7 +690,6 @@ const MissionariesPage = () => {
               ))}
               <PaginationItem>
                 <PaginationNext
-                  asChild
                   onClick={goToNext}
                   aria-disabled={page === pages}
                   tabIndex={page === pages ? -1 : 0}

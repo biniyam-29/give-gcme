@@ -54,7 +54,7 @@ export async function GET(request: Request) {
     ]);
 
     // Format the response
-    const formattedProjects = projects.map((project) => {
+    const formattedProjects = projects.map((project: any) => {
       const raised = parseInt(project.fundingRaised || "0");
       const goal = parseInt(project.fundingGoal || "0");
       const progress = goal > 0 ? Math.round((raised / goal) * 100) : 0;

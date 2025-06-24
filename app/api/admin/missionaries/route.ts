@@ -57,7 +57,7 @@ export async function GET(request: Request) {
     ]);
 
     // Format the response
-    const formattedMissionaries = missionaries.map((missionary) => ({
+    const formattedMissionaries = missionaries.map((missionary: any) => ({
       id: missionary.id,
       name: missionary.name,
       title: missionary.title || "Missionary",
