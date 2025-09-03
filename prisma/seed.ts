@@ -38,7 +38,21 @@ async function main() {
   await prisma.user.deleteMany();
   await prisma.strategy.deleteMany();
   await prisma.projects.deleteMany();
+  await prisma.authUser.deleteMany();
   console.log("🗑️  Cleared existing data");
+
+  // Create admin user for authentication
+  // Note: Password will need to be set through Better Auth sign-up flow
+  const adminUser = await prisma.authUser.create({
+    data: {
+      name: "Admin User",
+      email: "admin@gcme.org",
+      role: "admin",
+      emailVerified: new Date(),
+    },
+  });
+  console.log("👤 Created admin user: admin@gcme.org");
+  console.log("⚠️  Admin user created without password. Use sign-up flow to set password.");
 
   // Create strategies first
   const strategies = await Promise.all([
