@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Wait for the database to be ready
 echo "Waiting for database to be ready..."
@@ -9,13 +9,18 @@ echo "Database is ready!"
 
 # Run database migrations
 echo "Running database migrations..."
-npx prisma migrate deploy
+pnpm exec prisma migrate deploy
 
-# Seed the database
+# Seed the database (ignore errors if already seeded)
 echo "Seeding the database..."
-npm run prisma:seed
+pnpm run prisma:seed || echo "Database already seeded or seeding failed"
 
-# Start the application
-export PORT=3001
-echo "Starting the application..."
-npm start 
+# Determine mode based on NODE_ENV
+if [ "$NODE_ENV" = "development" ]; then
+  echo "Starting application in development mode..."
+  pnpm run dev
+else
+  echo "Starting application in production mode..."
+  export PORT=3001
+  pnpm start
+fi

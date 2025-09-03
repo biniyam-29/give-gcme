@@ -1,23 +1,58 @@
+version: '3.8'
+
 services:
   app:
     build: .
     ports:
-      - "3000:3000"
       - "3001:3001"
-      - "5555:5555"
-      - "8080:8080"
     environment:
+      - NODE_ENV=production
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/missionary_donation
+      - BETTER_AUTH_SECRET=your-super-secret-key-change-this-in-production-min-32-chars-long-enough-for-security
+      - BETTER_AUTH_URL=http://localhost:3001
+      - NEXTAUTH_URL=http://localhost:3001
       - PAYMENT_GATEWAY_URL=https://api.payment-gateway.abbirr.com/api/v1/telebirr/createorder
       - PAYMENT_GATEWAY_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInByb2plY3RJZCI6MTQsImlhdCI6MTc0OTQ3Mzg4MH0.njRe6slfyda6Im7fHLSnwp2h1fWyjIJAyQ6vU7Bh89I
-      - NEXT_PUBLIC_REDIRECT_URL=http://localhost:3000/thank-you
-      - NEXT_PUBLIC_NOTIFY_URL=http://localhost:3000/api/payment-notify
+      - NEXT_PUBLIC_REDIRECT_URL=http://localhost:3001/thank-you
+      - NEXT_PUBLIC_NOTIFY_URL=http://localhost:3001/api/payment-notify
+      - DOCKER=true
     depends_on:
-      - db
-    # volumes:
-    #   - .:/app
-    #   - /app/node_modules
-    #   - /app/.next
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+    volumes:
+      - ./.better-auth.sqlite:/app/.better-auth.sqlite
+
+  app-dev:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/missionary_donation
+      - BETTER_AUTH_SECRET=your-super-secret-key-change-this-in-production-min-32-chars-long-enough-for-security
+      - BETTER_AUTH_URL=http://localhost:3001
+      - NEXTAUTH_URL=http://localhost:3001
+      - PAYMENT_GATEWAY_URL=https://api.payment-gateway.abbirr.com/api/v1/telebirr/createorder
+      - PAYMENT_GATEWAY_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInByb2plY3RJZCI6MTQsImlhdCI6MTc0OTQ3Mzg4MH0.njRe6slfyda6Im7fHLSnwp2h1fWyjIJAyQ6vU7Bh89I
+      - NEXT_PUBLIC_REDIRECT_URL=http://localhost:3001/thank-you
+      - NEXT_PUBLIC_NOTIFY_URL=http://localhost:3001/api/payment-notify
+      - DOCKER=true
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+      - ./.better-auth.sqlite:/app/.better-auth.sqlite
+    profiles:
+      - dev
 
   db:
     image: postgres:14-alpine
@@ -29,6 +64,18 @@ services:
       - POSTGRES_DB=missionary_donation
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import MissionaryDetail from "./missionary-detail";
 
 interface PageProps {
-  params?: Promise<{ id: string }> | { id: string };
+  params: Promise<{ id: string }>;
   searchParams?: any;
 }
 
@@ -29,10 +29,8 @@ async function getMissionary(id: string) {
 }
 
 export default async function MissionaryDetailPage({ params }: PageProps) {
-  // Await params if it's a Promise (for Next.js server components)
-  const resolvedParams =
-    typeof params?.then === "function" ? await params : params;
-  const { id } = resolvedParams || {};
+  // Await params (always a Promise in Next.js 15)
+  const { id } = await params;
 
   if (!id) {
     notFound();

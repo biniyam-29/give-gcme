@@ -1,7 +1,35 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Plus, Trash2, Edit, Eye, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Plus, Edit, Trash2, Eye, MapPin, Calendar, Users, ChevronUp, ChevronDown, Target, Globe, Clock, Search, Download, Loader2, Mail, Phone, X, Heart, Upload, Save } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import { useAdminCheck } from "@/hooks/use-admin-check";
+
+// Force dynamic rendering to avoid SSG issues with hooks
+export const dynamic = 'force-dynamic';
 
 const fetchStrategies = async () => {
   const res = await fetch("/api/admin/strategies");
@@ -26,6 +54,7 @@ const createStrategy = async (data: any) => {
 };
 
 const StrategiesPage = () => {
+  const { isLoading: authLoading, isAdmin } = useAdminCheck();
   const [strategies, setStrategies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -49,13 +78,27 @@ const StrategiesPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+  // Show loading spinner while checking authentication
+  if (authLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  // If not admin, the useAdminCheck hook will redirect
+  if (!isAdmin) {
+    return null;
+  }
+
   const loadStrategies = async () => {
     setLoading(true);
     try {
       const data = await fetchStrategies();
       setStrategies(
         Array.isArray(data.strategies)
-          ? data.strategies.filter((s) => !s.isDeleted)
+          ? data.strategies.filter((s: any) => !s.isDeleted)
           : []
       );
     } catch (e: any) {
@@ -519,11 +562,11 @@ const StrategiesPage = () => {
                     formData.append(
                       key,
                       JSON.stringify(
-                        value.split(",").map((a: string) => a.trim())
+                        (value as string).split(",").map((a: string) => a.trim())
                       )
                     );
                   } else if (key !== "image") {
-                    formData.append(key, value);
+                    formData.append(key, value as string);
                   }
                 });
                 if (imageFile) {

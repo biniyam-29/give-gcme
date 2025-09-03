@@ -95,7 +95,7 @@ export default function StrategiesSection({
         const data = await res.json();
         setStrategies(
           Array.isArray(data.strategies)
-            ? data.strategies.filter((s) => !s.isDeleted)
+            ? data.strategies.filter((s: any) => !s.isDeleted)
             : []
         );
         setLoading(false);

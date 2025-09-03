@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAdminAuth } from "@/hooks/use-admin-auth";
+import { signOut } from "@/lib/auth-client";
 import {
   Heart,
   Activity,
@@ -12,6 +14,7 @@ import {
   BarChart3,
   Settings,
   User,
+  LogOut,
 } from "lucide-react";
 
 const navLinks = [
@@ -45,6 +48,24 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { session, isLoading, isAdmin, user } = useAdminAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f8fb]">
+        <div className="text-[#001F54] text-xl font-semibold">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return null; // The useAdminAuth hook will handle redirects
+  }
+
   return (
     <div className="min-h-screen flex" style={{ backgroundColor: "#f4f8fb" }}>
       <aside
@@ -77,13 +98,20 @@ export default function AdminLayout({
           className="mt-auto p-6 border-t border-white border-opacity-10"
           style={{ backgroundColor: "#001F54" }}
         >
-          {/* <div className="text-center">
+          <div className="text-center">
             <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-2">
               <User className="w-5 h-5 text-white" />
             </div>
-            <p className="text-sm font-medium">Admin User</p>
-            <p className="text-xs opacity-70">admin@give.com</p>
-          </div> */}
+            <p className="text-sm font-medium">{user?.name || "Admin User"}</p>
+            <p className="text-xs opacity-70">{user?.email}</p>
+            <button
+              onClick={handleSignOut}
+              className="mt-3 flex items-center justify-center w-full px-3 py-2 text-sm text-white bg-white bg-opacity-10 rounded-lg hover:bg-opacity-20 transition-colors"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </button>
+          </div>
         </div>
       </aside>
       <main className="flex-1 p-8">{children}</main>

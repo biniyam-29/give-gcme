@@ -1,37 +1,63 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
-  Target,
-  Plus,
-  Search,
-  Edit,
-  Trash2,
-  Eye,
-  DollarSign,
-  Calendar,
-  Users,
-  MapPin,
-  TrendingUp,
-  Download,
-  RefreshCw,
-  ChevronDown,
-  ChevronUp,
-  BarChart3,
-} from "lucide-react";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Plus, Edit, Trash2, Eye, ChevronUp, ChevronDown, MapPin, Calendar, TrendingUp, BarChart3, Search, DollarSign, Target, Users, Loader2 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import { useAdminCheck } from "@/hooks/use-admin-check";
 
-const ProjectsPage = () => {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
+// Force dynamic rendering to avoid SSG issues with hooks
+export const dynamic = 'force-dynamic';
+
+export default function AdminProjectsPage() {
+  const { isLoading: authLoading, isAdmin } = useAdminCheck();
+  const [projects, setProjects] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
-  const [filterCategory, setFilterCategory] = useState("all");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<any>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    goal: "",
+    raised: "",
+    status: "active",
+    image: "",
+    location: "",
+    category: "",
+    startDate: "",
+    endDate: "",
+  });
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [sortField, setSortField] = useState("title");
   const [sortDirection, setSortDirection] = useState("asc");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterCategory, setFilterCategory] = useState("all");
   const [showViewModal, setShowViewModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editForm, setEditForm] = useState<any>(null);
@@ -41,10 +67,24 @@ const ProjectsPage = () => {
   const [total, setTotal] = useState(0);
   const [pages, setPages] = useState(1);
 
+  // Show loading spinner while checking authentication
+  if (authLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  // If not admin, the useAdminCheck hook will redirect
+  if (!isAdmin) {
+    return null;
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
+        setIsLoading(true);
         setError(null);
 
         // Fetch projects
@@ -68,11 +108,11 @@ const ProjectsPage = () => {
             : []
         );
 
-        setLoading(false);
+        setIsLoading(false);
       } catch (err: any) {
         setError(err.message);
         setStrategies([]);
-        setLoading(false);
+        setIsLoading(false);
         console.error("Error fetching data:", err);
       }
     };
@@ -375,7 +415,7 @@ const ProjectsPage = () => {
     </div>
   );
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center py-12 bg-[#f4f8fb]">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#001F54]"></div>
@@ -1117,10 +1157,10 @@ const ProjectsPage = () => {
                     value={editForm.strategyId || ""}
                     onChange={handleEditFormChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    disabled={loading}
+                    disabled={isLoading}
                   >
                     <option value="">
-                      {loading ? "Loading strategies..." : "Select a strategy"}
+                      {isLoading ? "Loading strategies..." : "Select a strategy"}
                     </option>
                     {strategies.map((strategy) => (
                       <option key={strategy.id} value={strategy.id}>
@@ -1217,5 +1257,3 @@ const ProjectsPage = () => {
     </div>
   );
 };
-
-export default ProjectsPage;

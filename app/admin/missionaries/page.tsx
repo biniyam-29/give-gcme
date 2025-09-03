@@ -1,44 +1,47 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useAdminCheck } from "@/hooks/use-admin-check";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
-  Users,
-  Plus,
-  Search,
-  Filter,
-  Edit,
-  Trash2,
-  Eye,
-  MoreHorizontal,
-  Mail,
-  Phone,
-  MapPin,
-  Calendar,
-  Download,
-  RefreshCw,
-  ChevronDown,
-  ChevronUp,
-  Globe,
-  Heart,
-  Target,
-  Clock,
-  X,
-  Save,
-  Loader2,
-  Upload,
-  Image as ImageIcon,
-} from "lucide-react";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationPrevious,
   PaginationNext,
-  PaginationEllipsis,
+  PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Plus, Edit, Trash2, Eye, MapPin, Calendar, Users, ChevronUp, ChevronDown, Target, Globe, Clock, Search, Download, Mail, Phone, X, Heart, Upload, Save } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
-const MissionariesPage = () => {
+// Force dynamic rendering to avoid SSG issues with hooks
+export const dynamic = 'force-dynamic';
+
+export default function AdminMissionariesPage() {
+  const { isLoading: authLoading, isAdmin } = useAdminCheck();
   const [missionaries, setMissionaries] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -669,7 +672,6 @@ const MissionariesPage = () => {
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
-                  asChild
                   onClick={goToPrevious}
                   aria-disabled={page === 1}
                   tabIndex={page === 1 ? -1 : 0}
@@ -683,16 +685,14 @@ const MissionariesPage = () => {
                 <PaginationItem key={idx}>
                   <PaginationLink
                     isActive={page === idx + 1}
-                    asChild
                     onClick={() => goToPage(idx + 1)}
                   >
-                    <span>{idx + 1}</span>
+                    {idx + 1}
                   </PaginationLink>
                 </PaginationItem>
               ))}
               <PaginationItem>
                 <PaginationNext
-                  asChild
                   onClick={goToNext}
                   aria-disabled={page === pages}
                   tabIndex={page === pages ? -1 : 0}
@@ -1773,5 +1773,3 @@ const MissionariesPage = () => {
     </div>
   );
 };
-
-export default MissionariesPage;

@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
-    "dev:doc": "docker compose -f docker-compose.dev.yml up --build -d",
+    "dev:docker": "docker compose --profile dev up --build -d",
+    "docker:prod": "docker compose up --build -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
     "build": "next build",
     "start": "next start -p 3001",
     "lint": "next lint",
@@ -16,6 +19,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
     "@prisma/client": "^6.9.0",
+    "better-auth": "^1.0.1",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
     "@radix-ui/react-aspect-ratio": "1.1.1",

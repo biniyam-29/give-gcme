@@ -550,16 +550,12 @@ const projectsData = {
 };
 
 interface PageProps {
-  params?: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>
   searchParams?: Promise<any>
 }
 
 export default async function ProjectDetailPage({ params }: PageProps) {
-  const resolvedParams = await params
-  if (!resolvedParams) {
-    notFound()
-  }
-  const slug = resolvedParams.slug
+  const { slug } = await params
   const project = projectsData[slug as keyof typeof projectsData];
 
   if (!project) {
